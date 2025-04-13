@@ -1,0 +1,156 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../node_modules/@prisma/client "
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Author {
+  id           BigInt   @id @default(autoincrement()) @map("author_id")
+  name         String
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  bio          String?
+  profileImage String?  @map("profile_image")
+  isAdmin      Boolean  @default(false) @map("is_admin")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  posts        Post[]
+
+  @@map("author")
+}
+
+model Barista {
+  id          BigInt       @id @default(autoincrement()) @map("barista_id")
+  name        String
+  affiliation String?
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  posts       Post[]
+  socialLinks SocialLink[]
+
+  @@map("barista")
+}
+
+model SocialLink {
+  id        BigInt   @id @default(autoincrement()) @map("link_id")
+  baristaId BigInt   @map("barista_id")
+  platform  String
+  url       String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  barista   Barista  @relation(fields: [baristaId], references: [id])
+
+  @@map("social_link")
+}
+
+model Post {
+  id            BigInt      @id @default(autoincrement()) @map("post_id")
+  authorId      BigInt      @map("author_id")
+  baristaId     BigInt?     @map("barista_id")
+  title         String
+  summary       String?
+  content       String?
+  featuredImage String?     @map("featured_image")
+  grindSize     String?     @map("grind_size")
+  coffeeAmount  Int?        @map("coffee_amount")
+  waterAmount   Int?        @map("water_amount")
+  brewingTime   Int?        @map("brewing_time")
+  viewCount     Int         @default(0) @map("view_count")
+  isPublished   Boolean     @default(false) @map("is_published")
+  publishedAt   DateTime?   @map("published_at")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  author        Author      @relation(fields: [authorId], references: [id])
+  barista       Barista?    @relation(fields: [baristaId], references: [id])
+  steps         Step[]
+  equipment     Equipment[]
+  categories    Category[]
+  tags          PostTag[]
+
+  @@map("post")
+}
+
+model Step {
+  id          BigInt   @id @default(autoincrement()) @map("step_id")
+  postId      BigInt   @map("post_id")
+  stepOrder   Int      @map("step_order")
+  timeSeconds Int?     @map("time_seconds")
+  description String
+  image       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  post        Post     @relation(fields: [postId], references: [id])
+
+  @@map("step")
+}
+
+model Equipment {
+  id            BigInt        @id @default(autoincrement()) @map("equipment_id")
+  postId        BigInt        @map("post_id")
+  typeId        BigInt        @map("type_id")
+  name          String
+  brand         String?
+  description   String?
+  affiliateLink String?       @map("affiliate_link")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+  post          Post          @relation(fields: [postId], references: [id])
+  equipmentType EquipmentType @relation(fields: [typeId], references: [id])
+
+  @@map("equipment")
+}
+
+model EquipmentType {
+  id          BigInt      @id @default(autoincrement()) @map("type_id")
+  name        String
+  description String?
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+  equipment   Equipment[]
+
+  @@map("equipment_type")
+}
+
+model Category {
+  id          BigInt   @id @default(autoincrement()) @map("category_id")
+  name        String
+  description String?
+  slug        String   @unique
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  posts       Post[]
+
+  @@map("category")
+}
+
+model Tag {
+  id        BigInt    @id @default(autoincrement()) @map("tag_id")
+  name      String
+  slug      String    @unique
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  posts     PostTag[]
+
+  @@map("tag")
+}
+
+model PostTag {
+  postId    BigInt   @map("post_id")
+  tagId     BigInt   @map("tag_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  post      Post     @relation(fields: [postId], references: [id])
+  tag       Tag      @relation(fields: [tagId], references: [id])
+
+  @@id([postId, tagId])
+  @@map("post_tag")
+}
