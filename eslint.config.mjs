@@ -10,6 +10,18 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  // 無視するファイルやディレクトリを指定
+  {
+    ignores: [
+      'node_modules/**',
+      'dist/**',
+      'build/**',
+      'out/**',
+      '*.lock',
+    ],
+  },
+
+  // ESLintのルールを指定
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
 ];
 

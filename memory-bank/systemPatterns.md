@@ -2,81 +2,212 @@
 
 本プロジェクトは、Next.js の AppRouter 機能と、[bulletproof-react](https://github.com/pomber/bulletproof-react) のベストプラクティスに基づいたアーキテクチャを採用しています。本ドキュメントでは、全体の設計方針と各層の役割、フォルダ構成、エラーハンドリング、テスト戦略などについて記述します。
 
----
-
 ## 1. Next.js AppRouter の活用
 
 - **ファイルベースルーティング:**
-  - `/app` ディレクトリを利用してページやレイアウトを定義。
-  - 各ルートに対して、専用のエラーバウンダリやローディングコンポーネントを設定。
-
+  - `/app` ディレクトリを利用してページやレイアウトを定義
+  - 各ルートに対して、専用のエラーバウンダリやローディングコンポーネントを設定
 - **サーバーコンポーネントとクライアントコンポーネントの役割分離:**
-  - **サーバーコンポーネント:**
-    初期データのフェッチ、SEO 対策、レンダリングを担当。
-  - **クライアントコンポーネント:**
-    ユーザーインタラクション、動的な UI の制御を担当。
-
+  - **サーバーコンポーネント:** 初期データのフェッチ、SEO対策、レンダリングを担当
+  - **クライアントコンポーネント:** ユーザーインタラクション、動的なUIの制御を担当
 - **エラーハンドリングとローディング:**
-  各ルートで Next.js のエラーバウンダリとローディング UI を適切に配置し、ユーザー体験の向上を図る。
+  各ルートで Next.js のエラーバウンダリとローディング UI を適切に配置
 
----
+## 2. フォルダ構成とコンポーネント設計
 
-## 2. bulletproof-react に基づく設計パターン
+- **機能ベースの構成:**
+  - `/features`: 機能（ドメイン）ごとのコンポーネントとロジック
+    - `components/`: UI コンポーネント
+    - `data/`: データ定義やモックデータ
+    - `types/`: 型定義ファイル
+- **共通コンポーネント:**
+  - `/components`: 再利用可能な共通UIコンポーネント
+- **データベース関連:**
+  - `/db`: Prismaスキーマとマイグレーションファイル
 
-- **機能別フォルダ構成:**
-  アプリケーションを機能（ドメイン）ごとに分割し、各機能内に以下のサブフォルダを配置します:
-  - `components/`
-    UI（Presentational）コンポーネントを配置。
-  - `containers/`
-    ビジネスロジック、データフェッチ、状態管理を担当するコンテナコンポーネントを配置。
-  - `hooks/`
-    再利用可能なカスタムフックを管理。
-  - `types/`
-    TypeScript の型定義を集約。
-  - `utils/`
-    ユーティリティ関数やサービス層のロジックを配置。
-  - `__tests__/`
-    各機能ごとのテストコードを格納。
+## 3. データベース設計（PostgreSQL + Prisma）
 
-- **Container / Presentational 分離:**
-  ビジネスロジックと UI を明確に分離することで、テスト容易性と再利用性を向上させます。
+### ER図
 
-- **TypeScript の徹底:**
-  型安全性を確保するため、全体で TypeScript を活用し、各モジュールで適切な型定義を実施します。
+以下は本システムにおける主要なエンティティと、それらの関係性を表したER図です。これにより、データ構造の全体像を把握しやすくなります。
 
----
+```mermaid
+erDiagram
+    AUTHOR ||--o{ POST : creates
+    BARISTA ||--o{ POST : "developed recipe for"
+    POST ||--o{ STEP : "contains"
+    POST ||--o{ EQUIPMENT : "uses"
+    POST ||--o{ CATEGORY : "belongs to"
+    POST ||--o{ POST_TAG : "has"
+    TAG ||--o{ POST_TAG : "applied to"
+    CATEGORY ||--o{ POST : "contains"
+    BARISTA ||--o{ SOCIAL_LINK : "has"
+    EQUIPMENT_TYPE ||--o{ EQUIPMENT : "categorizes"
 
-## 3. API 層とデータフェッチ戦略
+    AUTHOR {
+        bigint author_id PK
+        varchar name
+        varchar email
+        varchar password_hash
+        text bio
+        varchar profile_image
+        boolean is_admin
+        timestamp created_at
+        timestamp updated_at
+    }
 
-- **Next.js API ルートの活用:**
-  - サーバー側でデータ取得や更新処理を担当する API エンドポイントは、`/app/api` 配下に実装します。
+    BARISTA {
+        bigint barista_id PK
+        varchar name
+        varchar affiliation
+        timestamp created_at
+        timestamp updated_at
+    }
 
-- **データフェッチ:**
-  - サーバーコンポーネントで初期データの取得を行い、クライアント側では必要に応じて SWR や React Query などのライブラリを併用し、データの再検証やキャッシュ管理を実施します。
+    SOCIAL_LINK {
+        bigint link_id PK
+        bigint barista_id FK
+        varchar platform
+        varchar url
+        timestamp created_at
+        timestamp updated_at
+    }
 
----
+    POST {
+        bigint post_id PK
+        bigint author_id FK
+        bigint barista_id FK
+        varchar title
+        text summary
+        text content
+        varchar grind_size
+        int coffee_amount
+        int water_amount
+        int view_count
+        boolean is_published
+        timestamp published_at
+        timestamp created_at
+        timestamp updated_at
+    }
 
-## 4. テストと品質保証
+    STEP {
+        bigint step_id PK
+        bigint post_id FK
+        int step_order
+        int time_seconds
+        text action
+        timestamp created_at
+        timestamp updated_at
+    }
 
-- **テスト戦略:**
-  - 各機能ごとにユニットテストおよび統合テストを配置し、システム全体の堅牢性を保証します。
+    EQUIPMENT_TYPE {
+        bigint type_id PK
+        varchar name
+        text description
+        timestamp created_at
+        timestamp updated_at
+    }
 
-- **コード品質ツール:**
-  - Prettier、ESLint などを利用して、コードの一貫性と品質を維持します。
+    EQUIPMENT {
+        bigint equipment_id PK
+        bigint post_id FK
+        bigint type_id FK
+        varchar name
+        varchar brand
+        text description
+        varchar affiliate_link
+        timestamp created_at
+        timestamp updated_at
+    }
 
----
+    CATEGORY {
+        bigint category_id PK
+        varchar name
+        text description
+        varchar slug
+        timestamp created_at
+        timestamp updated_at
+    }
 
-## まとめ
+    TAG {
+        bigint tag_id PK
+        varchar name
+        varchar slug
+        timestamp created_at
+        timestamp updated_at
+    }
 
-このシステムパターンは、Next.js AppRouter の先進機能と、bulletproof-react のモジュール化アプローチを組み合わせることで、以下のメリットを提供します：
+    POST_TAG {
+        bigint post_id FK
+        bigint tag_id FK
+        timestamp created_at
+    }
+```
 
-- **保守性と拡張性:**
-  機能単位でのフォルダ構成により、開発効率と再利用性が向上。
+### テーブル構造
 
-- **パフォーマンスと SEO:**
-  サーバーコンポーネントの活用により、初期レンダリングの高速化と SEO 効果の最大化。
+1. **posts**
+   - レシピの基本情報を管理
+   - タイトル、説明、抽出条件などを保持
 
-- **テスト容易性:**
-  ビジネスロジックと UI の分離により、各層ごとのテストが容易に実施可能。
+2. **steps**
+   - レシピの手順を管理
+   - 順序、時間、アクションを記録
 
-このアーキテクチャにより、当プロジェクトはスケーラブルかつ堅牢な基盤の上に構築され、今後の機能追加や改善が円滑に進むことが期待されます。
+3. **equipment**
+   - 使用する器具の情報を管理
+   - 名前、ブランド、アフィリエイトリンクを保持
+
+4. **categories**
+   - レシピのカテゴリ分類
+   - 名前、説明、スラッグを管理
+
+### リレーション
+
+- posts - steps: 1対多
+- posts - equipment: 多対多
+- posts - categories: 多対多
+
+## 4. データアクセス戦略
+
+- **Prisma Client の活用:**
+  - 型安全なデータアクセス
+  - トランザクション管理
+  - リレーション処理の効率化
+
+- **キャッシュ戦略:**
+  - サーバーサイドでのキャッシング
+  - 静的生成とISRの併用
+
+## 5. エラーハンドリングと例外処理
+
+- **データベースエラー:**
+  - Prisma エラーの適切なハンドリング
+  - ユーザーフレンドリーなエラーメッセージ
+
+- **API エラー:**
+  - HTTPステータスコードの適切な使用
+  - エラーレスポンスの標準化
+
+## 6. パフォーマンス最適化
+
+- **データベースクエリの最適化:**
+  - インデックス設計
+  - N+1問題の回避
+  - クエリの効率化
+
+- **フロントエンド最適化:**
+  - 画像の最適化
+  - コンポーネントの遅延ロード
+  - バンドルサイズの最適化
+
+## 7. セキュリティ対策
+
+- **データベースセキュリティ:**
+  - 環境変数による認証情報の保護
+  - アクセス制御の実装
+
+- **API セキュリティ:**
+  - 入力バリデーション
+  - CORS設定
+  - レート制限の実装
