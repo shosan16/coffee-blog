@@ -1,0 +1,133 @@
+---
+description: データベース設計図とアクセス戦略を説明するドキュメント
+globs:
+---
+
+# ER図
+
+```mermaid
+erDiagram
+    AUTHOR ||--o{ POST : creates
+    BARISTA ||--o{ POST : "developed recipe for"
+    POST ||--o{ STEP : "contains"
+    POST ||--o{ EQUIPMENT : "uses"
+    POST ||--o{ CATEGORY : "belongs to"
+    POST ||--o{ POST_TAG : "has"
+    TAG ||--o{ POST_TAG : "applied to"
+    CATEGORY ||--o{ POST : "contains"
+    BARISTA ||--o{ SOCIAL_LINK : "has"
+    EQUIPMENT_TYPE ||--o{ EQUIPMENT : "categorizes"
+
+    AUTHOR {
+        bigint author_id PK
+        varchar name
+        varchar email
+        varchar password_hash
+        text bio
+        varchar profile_image
+        boolean is_admin
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    BARISTA {
+        bigint barista_id PK
+        varchar name
+        varchar affiliation
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    SOCIAL_LINK {
+        bigint link_id PK
+        bigint barista_id FK
+        varchar platform
+        varchar url
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    POST {
+        bigint post_id PK
+        bigint author_id FK
+        bigint barista_id FK
+        varchar title
+        text summary
+        text content
+        varchar grind_size
+        int coffee_amount
+        int water_amount
+        int view_count
+        boolean is_published
+        timestamp published_at
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    STEP {
+        bigint step_id PK
+        bigint post_id FK
+        int step_order
+        int time_seconds
+        text action
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    EQUIPMENT_TYPE {
+        bigint type_id PK
+        varchar name
+        text description
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    EQUIPMENT {
+        bigint equipment_id PK
+        bigint post_id FK
+        bigint type_id FK
+        varchar name
+        varchar brand
+        text description
+        varchar affiliate_link
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    CATEGORY {
+        bigint category_id PK
+        varchar name
+        text description
+        varchar slug
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    TAG {
+        bigint tag_id PK
+        varchar name
+        varchar slug
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    POST_TAG {
+        bigint post_id FK
+        bigint tag_id FK
+        timestamp created_at
+    }
+```
+
+## データアクセス戦略
+
+- **Prisma Client の活用:**
+  - 型安全なデータアクセス
+  - トランザクション管理
+  - リレーション処理の効率化
+
+## パフォーマンス最適化
+
+- **データベースクエリの最適化:**
+  - インデックス設計
+  - N+1問題の回避
+  - クエリの効率化

@@ -1,0 +1,121 @@
+---
+description: componentsディレクトリの内部構造
+globs: **/*.tsx, src/**/*.tsx, app/**/*.tsx
+---
+
+# componentsディレクトリの内部構造
+
+```
+components/
+├── elements/
+│   ├── button/
+│   │   ├── Button.tsx
+│   │   ├── Button.test.tsx
+│   │   └── index.ts
+│   ├── icon/
+│   └── input/
+├── form/
+│   ├── checkbox/
+│   ├── radio-group/
+│   └── select/
+├── layout/
+│   ├── container/
+│   ├── grid/
+│   └── section/
+└── feedback/
+    ├── alert/
+    ├── modal/
+    └── toast/
+```
+
+# UI要素のカテゴリ分類
+
+```
+elements/             // 基本的なUI要素
+  ├── avatar/         // ユーザーアバター画像
+  ├── badge/          // 通知バッジやステータス表示
+  ├── button/         // 各種ボタン
+  ├── divider/        // 区切り線
+  ├── icon/           // アイコン
+  ├── image/          // 画像表示
+  ├── input/          // テキスト入力
+  ├── link/           // リンク要素
+  ├── spinner/        // ローディングスピナー
+  ├── tag/            // タグ表示
+  └── typography/     // 見出し、段落などのテキスト要素
+
+form/                 // フォーム関連要素
+  ├── checkbox/       // チェックボックス
+  ├── field/          // フォームフィールド（ラベル+入力）
+  ├── file-input/     // ファイルアップロード
+  ├── form/           // フォームコンテナ
+  ├── input-group/    // 入力グループ
+  ├── radio-group/    // ラジオボタングループ
+  ├── select/         // ドロップダウン選択
+  ├── switch/         // トグルスイッチ
+  ├── textarea/       // 複数行テキスト入力
+  └── validation/     // バリデーションメッセージ
+
+layout/               // レイアウト要素
+  ├── box/            // 基本コンテナ
+  ├── card/           // カード型コンテナ
+  ├── container/      // メインコンテナ
+  ├── divider/        // 区切り線
+  ├── flex/           // フレックスコンテナ
+  ├── grid/           // グリッドレイアウト
+  ├── section/        // セクション区切り
+  └── stack/          // 垂直/水平スタック
+
+feedback/             // フィードバック表示
+  ├── alert/          // アラートメッセージ
+  ├── error/          // エラー表示
+  ├── loading/        // ローディング表示
+  ├── progress/       // プログレスバー
+  ├── skeleton/       // スケルトンローディング
+  ├── spinner/        // ローディングスピナー
+  └── toast/          // トースト通知
+
+navigation/           // ナビゲーション要素
+  ├── breadcrumb/     // パンくずリスト
+  ├── drawer/         // ドロワーメニュー
+  ├── menu/           // メニュー
+  ├── navbar/         // ナビゲーションバー
+  ├── pagination/     // ページネーション
+  ├── sidebar/        // サイドバー
+  ├── stepper/        // ステップナビゲーション
+  └── tabs/           // タブナビゲーション
+
+overlay/              // オーバーレイUI要素
+  ├── dialog/         // ダイアログ
+  ├── drawer/         // スライドインパネル
+  ├── dropdown/       // ドロップダウンメニュー
+  ├── modal/          // モーダルウィンドウ
+  ├── popover/        // ポップオーバー
+  └── tooltip/        // ツールチップ
+
+data-display/         // データ表示要素
+  ├── avatar/         // ユーザーアバター
+  ├── badge/          // バッジ表示
+  ├── calendar/       // カレンダー表示
+  ├── card/           // 情報カード
+  ├── chart/          // グラフ・チャート
+  ├── list/           // リスト表示
+  ├── stat/           // 統計数値表示
+  ├── table/          // テーブル表示
+  └── timeline/       // タイムライン表示
+
+utils/                // ユーティリティコンポーネント
+  ├── clipboard/      // クリップボード操作
+  ├── error-boundary/ // エラーバウンダリ
+  ├── infinite-scroll/// 無限スクロール
+  ├── portal/         // Reactポータル
+  ├── resize-observer/// サイズ監視
+  └── transitions/    // トランジション効果
+
+media/                // メディア関連要素
+  ├── audio-player/   // 音声プレーヤー
+  ├── carousel/       // 画像カルーセル
+  ├── image-gallery/  // 画像ギャラリー
+  ├── image/          // 最適化画像
+  └── video-player/   // 動画プレーヤー
+```
