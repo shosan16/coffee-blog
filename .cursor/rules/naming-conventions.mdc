@@ -1,0 +1,43 @@
+---
+description: 命名規則のガイドライン
+globs: **/*.ts, **/*.tsx, **/*.js, **/*.jsx
+---
+
+# 命名規則
+
+## ファイル名
+
+| 種類 | ルール | 例 |
+| --- | --- | --- |
+| **フォルダ名** | `kebab-case` | `user-profile`, `auth-hooks` |
+| **Next.js 固有のファイル名** | `lowercase` | `page.tsx`, `layout.tsx`, `route.ts` |
+| **Componentファイル名** | `PascalCase` | `UserProfile.tsx`, `SubmitButton.tsx` |
+| **その他ファイル名** | `camelCase` | `apiClient.ts`, `validationUtils.ts`, `useFetchData.ts`
+（ユーティリティ関数、カスタムフック、型定義、API クライアントなど） |
+
+## テストファイル名
+
+| テスト対象 | ファイル名 | 配置場所 |
+| --- | --- | --- |
+| **コンポーネント** | `[コンポーネント名].test.tsx` | 実装ファイルと同じディレクトリ |
+| **フック** | `[フック名].test.ts` | 実装ファイルと同じディレクトリ |
+| **ユーティリティ** | `[ユーティリティ名].test.ts` | 実装ファイルと同じディレクトリ |
+| **APIクライアント** | `[APIクライアント名].test.ts` | 実装ファイルと同じディレクトリ |
+
+## コード要素
+
+| 種類 | ルール | 例 |
+| --- | --- | --- |
+| **変数** | `camelCase` | `userName`, `itemCount` |
+| **変数(真偽値)** | `camelCase`
+ (`is`, `can`, `has`, `should`等で始める) | `isLoading`, `isVisible`, `canSubmit`, `hasPermission`, `shouldUpdate` |
+| **定数** | `CONSTANT_CASE` | `MAX_USER_COUNT`, `API_ENDPOINT` |
+| **関数(通常)** | `camelCase` | `getUserData()`, `calculateTotalPrice()` |
+| **関数(カスタムフック)** | `camelCase`
+(`use` で始める) | `useAuthStatus()`, `useFetchData()` |
+| **関数(イベントハンドラ)** | `camelCase`
+ (`handle` または `on` で始める) | **内部処理:** `handleClick()`, `handleSubmit()`<br>**Props:** `onClick()`, `onSubmit()` |
+| **コンポーネント** | `PascalCase` | `<UserProfile />`, `<SubmitButton />` |
+| **型エイリアス** | `PascalCase` | `type UserProfile = {...}`, `type RequestParams = {...}` |
+| **型定義のプロパティ** | `camelCase` | `{ clientCode: number; userName: string; isActive: boolean; }` |
+
