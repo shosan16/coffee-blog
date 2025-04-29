@@ -1,5 +1,5 @@
 import { RecipeCard } from '@/features/recipes/components/RecipeCard';
-import { recipes } from '@/features/recipes/data/recipes';
+import { recipes } from '@/features/recipes/data/mock-data-recipes';
 
 export default function Home() {
   return (

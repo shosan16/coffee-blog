@@ -1,6 +1,7 @@
 ---
-description: componentsディレクトリの内部構造
-globs: **/*.tsx, src/**/*.tsx, app/**/*.tsx
+description:
+globs: **/*.tsx
+alwaysApply: false
 ---
 
 # componentsディレクトリの内部構造

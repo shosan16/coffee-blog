@@ -5,13 +5,32 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../../../node_modules/@prisma/client "
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum GrindSize {
+  EXTRA_FINE
+  FINE
+  MEDIUM_FINE
+  MEDIUM
+  MEDIUM_COARSE
+  COARSE
+  EXTRA_COARSE
+}
+
+enum RoastLevel {
+  LIGHT
+  LIGHT_MEDIUM
+  MEDIUM
+  MEDIUM_DARK
+  DARK
+  FRENCH
 }
 
 model Author {
@@ -20,7 +39,6 @@ model Author {
   email        String   @unique
   passwordHash String   @map("password_hash")
   bio          String?
-  profileImage String?  @map("profile_image")
   isAdmin      Boolean  @default(false) @map("is_admin")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
@@ -54,29 +72,33 @@ model SocialLink {
 }
 
 model Post {
-  id            BigInt      @id @default(autoincrement()) @map("post_id")
-  authorId      BigInt      @map("author_id")
-  baristaId     BigInt?     @map("barista_id")
-  title         String
-  summary       String?
-  content       String?
-  featuredImage String?     @map("featured_image")
-  grindSize     String?     @map("grind_size")
-  coffeeAmount  Int?        @map("coffee_amount")
-  waterAmount   Int?        @map("water_amount")
-  brewingTime   Int?        @map("brewing_time")
-  viewCount     Int         @default(0) @map("view_count")
-  isPublished   Boolean     @default(false) @map("is_published")
-  publishedAt   DateTime?   @map("published_at")
-  createdAt     DateTime    @default(now()) @map("created_at")
-  updatedAt     DateTime    @updatedAt @map("updated_at")
-  author        Author      @relation(fields: [authorId], references: [id])
-  barista       Barista?    @relation(fields: [baristaId], references: [id])
-  steps         Step[]
-  equipment     Equipment[]
-  categories    Category[]
-  tags          PostTag[]
+  id          BigInt      @id @default(autoincrement()) @map("post_id")
+  authorId    BigInt      @map("author_id")
+  baristaId   BigInt?     @map("barista_id")
+  title       String
+  summary     String?
+  remarks     String?     @map("remarks")
+  grindSize   GrindSize?  @map("grind_size")
+  roastLevel  RoastLevel  @map("roast_level")
+  beanWeight  Int?        @map("bean_weight")
+  waterAmount Int?        @map("water_amount")
+  waterTemp   Int?        @map("water_temp")
+  brewingTime Int?        @map("brewing_time")
+  viewCount   Int         @default(0) @map("view_count")
+  isPublished Boolean     @default(false) @map("is_published")
+  publishedAt DateTime?   @map("published_at")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+  author      Author      @relation(fields: [authorId], references: [id])
+  barista     Barista?    @relation(fields: [baristaId], references: [id])
+  steps       Step[]
+  equipment   Equipment[]
+  tags        PostTag[]
 
+  @@index([roastLevel])
+  @@index([grindSize])
+  @@index([beanWeight])
+  @@index([waterTemp])
   @@map("post")
 }
 
@@ -86,7 +108,6 @@ model Step {
   stepOrder   Int      @map("step_order")
   timeSeconds Int?     @map("time_seconds")
   description String
-  image       String?
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
   post        Post     @relation(fields: [postId], references: [id])
@@ -119,18 +140,6 @@ model EquipmentType {
   equipment   Equipment[]
 
   @@map("equipment_type")
-}
-
-model Category {
-  id          BigInt   @id @default(autoincrement()) @map("category_id")
-  name        String
-  description String?
-  slug        String   @unique
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  posts       Post[]
-
-  @@map("category")
 }
 
 model Tag {

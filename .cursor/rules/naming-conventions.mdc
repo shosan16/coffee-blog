@@ -1,6 +1,7 @@
 ---
 description: 命名規則のガイドライン
-globs: **/*.ts, **/*.tsx, **/*.js, **/*.jsx
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
 ---
 
 # 命名規則
