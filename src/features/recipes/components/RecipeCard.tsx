@@ -8,12 +8,12 @@ type RecipeCardProps = {
 
 export function RecipeCard({ recipe }: RecipeCardProps) {
   return (
-    <Card className="transition-all hover:shadow-md">
+    <Card className="h-56 w-full justify-center transition-all hover:shadow-md">
       <CardHeader>
         <CardTitle>{recipe.title}</CardTitle>
         <p className="text-muted-foreground text-sm">{recipe.description}</p>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <Bean className="h-4 w-4" />

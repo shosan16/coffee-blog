@@ -1,7 +1,7 @@
 #############################
 # Development Stage
 #############################
-FROM node:20-alpine AS development
+FROM node:20.11.1-alpine3.19 AS development
 
 WORKDIR /app
 
@@ -23,15 +23,15 @@ CMD ["npm", "run", "dev"]
 #############################
 # Production Stage
 #############################
-FROM node:20-alpine AS production
+FROM node:20.11.1-alpine3.19 AS production
 
 WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
 
-# Install only production dependencies
-RUN npm install --production
+# Install only production dependencies and skip husky install
+RUN npm pkg delete scripts.prepare && npm install --omit=dev
 
 # Copy the rest of the application
 COPY . .
