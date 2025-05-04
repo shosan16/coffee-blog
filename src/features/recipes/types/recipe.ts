@@ -1,14 +1,11 @@
 export type Recipe = {
-  id: string;
+  id: bigint;
   title: string;
-  description: string;
+  summary: string;
   equipment: string[];
-  brewMethod: string;
   roastLevel: string;
   grindSize: string;
-  coffeeAmount: string;
-  waterTemp: string;
-  totalWater: string;
-  createdAt: Date;
-  updatedAt: Date;
+  beanWeight: number;
+  waterTemp: number;
+  waterAmount: number;
 };

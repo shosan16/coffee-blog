@@ -1,6 +1,7 @@
 ---
-description: 「どうやってつくるのか？」「いつまでに完成させるのか？」という実行計画
-globs: 
+description: プロジェクトの概要。目的・背景などが記載されている。
+globs:
+alwaysApply: false
 ---
 # コーヒーレシピブログ プロジェクト概要
 

@@ -1,6 +1,7 @@
 ---
 description: TypeScriptベストプラクティス
-globs: **/*.ts, **/*.tsx
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
 ---
 
 # TypeScriptベストプラクティス

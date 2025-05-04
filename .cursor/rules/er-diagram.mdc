@@ -1,8 +1,8 @@
 ---
 description: データベース設計図とアクセス戦略を説明するドキュメント
 globs:
+alwaysApply: false
 ---
-
 # ER図
 
 ```mermaid
@@ -11,20 +11,18 @@ erDiagram
     BARISTA ||--o{ POST : "developed recipe for"
     POST ||--o{ STEP : "contains"
     POST ||--o{ EQUIPMENT : "uses"
-    POST ||--o{ CATEGORY : "belongs to"
     POST ||--o{ POST_TAG : "has"
     TAG ||--o{ POST_TAG : "applied to"
-    CATEGORY ||--o{ POST : "contains"
     BARISTA ||--o{ SOCIAL_LINK : "has"
     EQUIPMENT_TYPE ||--o{ EQUIPMENT : "categorizes"
 
     AUTHOR {
         bigint author_id PK
-        varchar name
-        varchar email
-        varchar password_hash
+        text name
+        text email
+        text password_hash
         text bio
-        varchar profile_image
+        text profile_image
         boolean is_admin
         timestamp created_at
         timestamp updated_at
@@ -32,8 +30,8 @@ erDiagram
 
     BARISTA {
         bigint barista_id PK
-        varchar name
-        varchar affiliation
+        text name
+        text affiliation
         timestamp created_at
         timestamp updated_at
     }
@@ -41,8 +39,8 @@ erDiagram
     SOCIAL_LINK {
         bigint link_id PK
         bigint barista_id FK
-        varchar platform
-        varchar url
+        text platform
+        text url
         timestamp created_at
         timestamp updated_at
     }
@@ -51,12 +49,15 @@ erDiagram
         bigint post_id PK
         bigint author_id FK
         bigint barista_id FK
-        varchar title
+        text title
         text summary
-        text content
-        varchar grind_size
-        int coffee_amount
+        text remarks
+        text grind_size
+        text roast_level
+        int bean_weight
         int water_amount
+        int water_temp
+        int brewing_time
         int view_count
         boolean is_published
         timestamp published_at
@@ -69,14 +70,15 @@ erDiagram
         bigint post_id FK
         int step_order
         int time_seconds
-        text action
+        text description
+        text image
         timestamp created_at
         timestamp updated_at
     }
 
     EQUIPMENT_TYPE {
         bigint type_id PK
-        varchar name
+        text name
         text description
         timestamp created_at
         timestamp updated_at
@@ -86,27 +88,18 @@ erDiagram
         bigint equipment_id PK
         bigint post_id FK
         bigint type_id FK
-        varchar name
-        varchar brand
+        text name
+        text brand
         text description
-        varchar affiliate_link
-        timestamp created_at
-        timestamp updated_at
-    }
-
-    CATEGORY {
-        bigint category_id PK
-        varchar name
-        text description
-        varchar slug
+        text affiliate_link
         timestamp created_at
         timestamp updated_at
     }
 
     TAG {
         bigint tag_id PK
-        varchar name
-        varchar slug
+        text name
+        text slug
         timestamp created_at
         timestamp updated_at
     }
@@ -117,6 +110,26 @@ erDiagram
         timestamp created_at
     }
 ```
+
+## テーブル構造
+
+1. **posts**
+   - レシピの基本情報を管理
+   - タイトル、説明、抽出条件などを保持
+
+2. **steps**
+   - レシピの手順を管理
+   - 順序、時間、アクションを記録
+
+3. **equipment**
+   - 使用する器具の情報を管理
+   - 名前、ブランド、アフィリエイトリンクを保持
+
+## リレーション
+
+- posts - steps: 1対多
+- posts - equipment: 多対多
+- posts - tags: 多対多（post_tagを介して）
 
 ## データアクセス戦略
 

@@ -1,6 +1,7 @@
 ---
 description: TypeScriptとTailwind UIを使用したNext.jsのベストプラクティス
-globs: **/*.tsx, **/*.ts, src/**/*.ts, src/**/*.tsx
+globs:
+alwaysApply: false
 ---
 
 # Next.jsベストプラクティス

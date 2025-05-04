@@ -1,6 +1,7 @@
 ---
 description: アプリケーションアーキテクチャの原則とパターン
-globs: **/*.ts, **/*.tsx
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
 ---
 
 # アプリケーションアーキテクチャの原則とパターン
