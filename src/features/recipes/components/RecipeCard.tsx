@@ -1,14 +1,13 @@
 import { Bean, Droplet, Settings } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
-import { Recipe } from '../types/recipe';
+import { Recipe } from '@/types/recipe';
 
 type RecipeCardProps = {
   recipe: Recipe;
 };
 
-export function RecipeCard({ recipe }: RecipeCardProps) {
+export default function RecipeCard({ recipe }: RecipeCardProps) {
   return (
     <Card className="h-56 w-full justify-center transition-all hover:shadow-md">
       <CardHeader>
