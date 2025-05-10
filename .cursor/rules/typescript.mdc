@@ -7,7 +7,7 @@ alwaysApply: false
 # TypeScriptベストプラクティス
 
 ## 型システム
-- オブジェクト定義には `interface` よりも `type` を優先する
+- オブジェクト定義には`type` を使う
 - `any` の使用を避け、未知の型には `unknown` を優先する
 - 厳格なTypeScript設定を使用する
 - TypeScriptの組み込みユーティリティ型を活用する

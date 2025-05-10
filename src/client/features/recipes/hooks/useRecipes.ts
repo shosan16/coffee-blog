@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 
-import { fetchRecipes } from '@/features/recipes/lib/recipeApi';
-import { RecipeFilters, RecipeListResponse } from '@/features/recipes/types/api';
+import { RecipeFilters, RecipeListResponse } from '@/client/features/recipes/types/api';
+import { fetchRecipes } from '@/client/features/recipes/utils/recipeApi';
 
 export function useRecipes(filters: RecipeFilters) {
   const { data, error, isLoading, mutate } = useSWR<RecipeListResponse>(
