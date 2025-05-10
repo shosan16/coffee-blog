@@ -33,9 +33,6 @@ module.exports = {
       },
     ],
 
-    // 絶対パスを強制する
-    'import/no-relative-parent-imports': 'error',
-
     // DRY原則
     'no-duplicate-imports': 'error',
     'import/no-duplicates': 'error',

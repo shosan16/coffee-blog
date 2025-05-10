@@ -798,7 +798,7 @@ async function main() {
 
     // 投稿のタイトルと概要を生成
     const title = generateTitle();
-    const summary = `${coffeeOrigin}産の豆を使った${brewingMethod}のレシピです。${faker.lorem.sentence(faker.number.int({ min: 5, max: 15 }))}`;
+    const summary = `${coffeeOrigin}産の豆を使った${brewingMethod}のレシピです。`;
 
     // 備考を生成
     const remarks = faker.helpers.arrayElement([
