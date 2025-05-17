@@ -1,7 +1,7 @@
 import { Bean, Droplet, Settings } from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Recipe } from '@/types/recipe';
+import { Recipe } from '@/client/features/recipes/types/recipe';
+import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/ui/card';
 
 type RecipeCardProps = {
   recipe: Recipe;

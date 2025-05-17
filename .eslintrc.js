@@ -76,6 +76,7 @@ module.exports = {
         '@typescript-eslint/no-explicit-any': 'error',
         '@typescript-eslint/no-non-null-assertion': 'error',
         '@typescript-eslint/prefer-readonly': 'error',
+        '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
 
         // 命名規則
         '@typescript-eslint/naming-convention': [

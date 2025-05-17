@@ -2,7 +2,9 @@ import { PrismaClient, RoastLevel, GrindSize } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
-import type { Recipe, RecipeListResponse, ErrorResponse } from '@/types/recipe';
+import { RecipeListResponse } from '@/client/features/recipes/types/api';
+import type { Recipe } from '@/server/features/recipes/types/recipe';
+import type { ErrorResponse } from '@/server/shared/api-error';
 
 // PrismaClientのグローバルインスタンスを宣言
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
