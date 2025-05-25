@@ -1,5 +1,5 @@
 ---
-description: プロジェクトのディレクトリ構造と各ディレクトリの役割
+description: フロントエンドのディレクトリ構造
 globs:
 alwaysApply: false
 ---

@@ -1,0 +1,123 @@
+---
+description: バックエンドのディレクトリ構造
+globs:
+alwaysApply: false
+---
+
+
+# プロジェクト構造
+
+## ディレクトリ構造
+
+
+```
+server/
+│   ├── errors/                                # 共通エラーハンドリング
+│   │   ├── custom-errors.ts                   # カスタムエラークラス
+│   │   └── error-handler.ts                   # グローバルエラーハンドラー
+│   ├── middleware/                            # 共通ミドルウェア
+│   │   ├── authentication.ts                  # 認証ミドルウェア
+│   │   ├── logging.ts                         # ロギングミドルウェア
+│   │   └── validation.ts                      # バリデーション共通ミドルウェア
+│   ├── types/                                 # 共通型定義
+│   │   ├── common.types.ts                    # 汎用的な型定義
+│   │   └── pagination.types.ts                # ページネーション関連の型
+│   ├── utils/                                 # 共通ユーティリティ
+│   │   ├── date.utils.ts                      # 日付関連ユーティリティ
+│   │   ├── file.utils.ts                      # ファイル操作ユーティリティ
+│   │   └── string.utils.ts                    # 文字列操作ユーティリティ
+│   └── config/                                # 設定関連
+│       ├── environment.ts                     # 環境変数
+│       └── constants.ts                       # アプリケーション全体の定数
+├── features/recipes/
+│   ├── create/
+│   │   ├── validation.ts                      # バリデーション
+│   │   ├── service.ts                         # ビジネスロジック
+│   │   ├── service.test.ts                    # テスト
+│   │   ├── types.ts                           # 型定義
+│   │   ├── test-helpers.ts                    # テスト用モックデータ・ヘルパー関数
+│   │   ├── controller.ts                      # コントローラー
+│   │   ├── utils.ts                           # 作成専用ユーティリティ
+│   │   └── utils.test.ts                      # ユーティリティのテスト
+│   ├── search/
+│   │   ├── validation.ts
+│   │   ├── service.ts
+│   │   ├── service.test.ts
+│   │   ├── types.ts
+│   │   ├── test-helpers.ts
+│   │   ├── controller.ts
+│   │   ├── utils.ts
+│   │   └── utils.test.ts
+│   ├── update/
+│   │   ├── validation.ts
+│   │   ├── service.ts
+│   │   ├── service.test.ts
+│   │   ├── types.ts
+│   │   ├── test-helpers.ts
+│   │   ├── controller.ts
+│   │   ├── utils.ts
+│   │   └── utils.test.ts
+│   ├── delete/
+│   │   ├── validation.ts
+│   │   ├── service.ts
+│   │   ├── service.test.ts
+│   │   ├── types.ts
+│   │   ├── test-helpers.ts
+│   │   ├── controller.ts
+│   │   ├── utils.ts
+│   │   └── utils.test.ts
+│   └── shared/                                # レシピ機能内の共通コンポーネント
+│       ├── repository.ts                      # 共通データアクセス
+│       ├── repository.test.ts                 # レポジトリのテスト
+│       ├── types.ts                           # 共通型
+│       ├── test-helpers.ts                    # テスト用モックデータ・ヘルパー関数
+│       ├── utils.ts                           # 共通ユーティリティ
+│       └── utils.test.ts                      # 共通ユーティリティのテスト
+```
+
+
+## import 規則
+
+コードの依存関係を明確にするため、以下のインポート規則に従う。
+
+1. **パスの指定方法**:
+   - 相対パス（`../` や `./`）ではなく、絶対パス（`@/`）を使用する
+   - 例: `import { fetchRecipes } from '@/features/recipes/lib/recipeApi';`
+   - これによりファイル移動時の参照エラーを減らし、コードの可読性を向上させる
+
+2. **機能間のインポート**:
+   - 他の機能からインポートする場合は公開APIを通じて行うことが推奨される
+   - 例: `import { useAuth } from '@/features/auth'`
+
+## 依存関係の方向性
+
+- `app/`は`features/`と`shared/`からインポートできる
+- `features/`は`shared/`からインポートできるが、`app/`からはインポートできない
+- `shared/`は他のどのディレクトリからもインポートできない（循環依存を防ぐため）
+
+```mermaid
+graph TD
+    %% 大枠の定義（バックエンド版）
+    subgraph Project
+        subgraph shared["shared (共通モジュール)"]
+            errors["errors/"]
+            middleware["middleware/"]
+            types["types/"]
+            utils["utils/"]
+            config["config/"]
+        end
+
+        subgraph features["features (ドメインごとの機能)"]
+            recipes["feature/**/"]
+        end
+
+        subgraph application["application (エントリポイント)"]
+            api["src/app/api/**/route.ts"]
+        end
+
+        %% 依存関係の方向性（矢印はインポート元 → インポート先）
+        application --> shared
+        application --> features
+        features --> shared
+    end
+```
