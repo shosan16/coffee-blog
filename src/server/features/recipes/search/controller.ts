@@ -23,9 +23,13 @@ export class SearchRecipesController {
 
     return {
       ...params,
-      roastLevel: params.roastLevel?.split(',').map((level) => level as RoastLevel),
-      grindSize: params.grindSize?.split(',').map((size) => size as GrindSize),
-      equipment: params.equipment?.split(','),
+      roastLevel: params.roastLevel
+        ? params.roastLevel.split(',').map((level) => level as RoastLevel)
+        : undefined,
+      grindSize: params.grindSize
+        ? params.grindSize.split(',').map((size) => size as GrindSize)
+        : undefined,
+      equipment: params.equipment ? params.equipment.split(',') : undefined,
       beanWeight: params.beanWeight ? JSON.parse(params.beanWeight) : undefined,
       waterTemp: params.waterTemp ? JSON.parse(params.waterTemp) : undefined,
     };
@@ -88,7 +92,6 @@ export class SearchRecipesController {
       );
     }
 
-    console.error('Unexpected error:', error);
     return NextResponse.json(
       {
         code: 'INTERNAL_SERVER_ERROR',

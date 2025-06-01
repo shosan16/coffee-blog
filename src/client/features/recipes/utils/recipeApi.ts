@@ -11,7 +11,6 @@ export async function fetchRecipes(filters: RecipeFilters = {}): Promise<RecipeL
       cache: 'no-store',
     });
   } catch (error) {
-    console.error('レシピ取得エラー:', error);
     // APIがない場合やエラーの場合はモックデータを返す
     return {
       recipes: [],

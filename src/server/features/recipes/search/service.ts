@@ -115,7 +115,7 @@ export class SearchRecipesService {
     const orderBy: PrismaOrderByClause = {};
 
     if (params.sort) {
-      orderBy[params.sort] = params.order || 'asc';
+      orderBy[params.sort] = params.order ?? 'asc';
     } else {
       orderBy.id = 'asc'; // デフォルトはID昇順
     }
@@ -126,7 +126,7 @@ export class SearchRecipesService {
   /**
    * ページネーション設定を構築する
    */
-  private buildPaginationClause(params: SearchRecipesParams) {
+  private buildPaginationClause(params: SearchRecipesParams): { skip: number; take: number } {
     const skip = (params.page - 1) * params.limit;
     const take = params.limit;
 
@@ -140,13 +140,13 @@ export class SearchRecipesService {
     return posts.map((post) => ({
       id: post.id.toString(),
       title: post.title,
-      summary: post.summary || '',
+      summary: post.summary ?? '',
       equipment: post.equipment.map((eq) => eq.name),
       roastLevel: post.roastLevel,
       grindSize: post.grindSize,
-      beanWeight: post.beanWeight || 0,
-      waterTemp: post.waterTemp || 0,
-      waterAmount: post.waterAmount || 0,
+      beanWeight: post.beanWeight ?? 0,
+      waterTemp: post.waterTemp ?? 0,
+      waterAmount: post.waterAmount ?? 0,
     }));
   }
 

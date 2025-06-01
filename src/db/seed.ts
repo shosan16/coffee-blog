@@ -2,11 +2,11 @@ import { faker } from '@faker-js/faker/locale/ja';
 import { PrismaClient, GrindSize, RoastLevel } from '@prisma/client';
 
 // グローバル変数の宣言
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
+const globalForPrisma = global as unknown as { prisma?: PrismaClient };
 
 // PrismaClientのシングルトンインスタンスを作成
 const prisma =
-  globalForPrisma.prisma ||
+  globalForPrisma.prisma ??
   new PrismaClient({
     datasources: {
       db: {
@@ -197,7 +197,7 @@ const TITLE_TEMPLATES = [
   '{{抽出方法}}で{{原産地}}豆の香りを最大限に引き出す',
 ];
 
-async function main() {
+async function main(): Promise<void> {
   console.log(`Start seeding ...`);
 
   // EquipmentTypeの作成
@@ -400,11 +400,8 @@ async function main() {
       where: { id: BigInt(i + 4) },
       update: {},
       create: {
-        name: faker.person.lastName() + ' ' + faker.word.sample(),
-        affiliation:
-          faker.company.name() +
-          ' ' +
-          faker.helpers.arrayElement(['カフェ', 'コーヒーハウス', 'ロースタリー', '珈琲館']),
+        name: `${faker.person.lastName()} ${faker.word.sample()}`,
+        affiliation: `${faker.company.name()} ${faker.helpers.arrayElement(['カフェ', 'コーヒーハウス', 'ロースタリー', '珈琲館'])}`,
         socialLinks: {
           create: [
             {
@@ -740,7 +737,7 @@ async function main() {
   const additionalPosts = [];
 
   // タイトル生成関数
-  const generateTitle = () => {
+  const generateTitle = (): string => {
     const template = faker.helpers.arrayElement(TITLE_TEMPLATES);
     return template
       .replace('{{原産地}}', faker.helpers.arrayElement(COFFEE_ORIGINS))
@@ -749,7 +746,7 @@ async function main() {
   };
 
   // ランダムな日付を生成する関数
-  const randomPastDate = () => {
+  const randomPastDate = (): Date => {
     // 過去1年以内でランダムな日付を生成
     const daysAgo = faker.number.int({ min: 1, max: 365 });
     return new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
@@ -845,23 +842,23 @@ async function main() {
             const typeIdStr = randomType.id.toString();
 
             // 機器タイプに基づいて適切なリストから選択
-            const equipmentList = EQUIPMENT_MAP[typeIdStr] || [];
+            const equipmentList = EQUIPMENT_MAP[typeIdStr] ?? [];
             const equipmentName = faker.helpers.arrayElement(equipmentList);
 
             // ブランド名をマッピングから取得
-            const brandName = BRAND_MAP[equipmentName] || equipmentName.split(' ')[0];
+            const brandName = BRAND_MAP[equipmentName] ?? equipmentName.split(' ')[0];
 
             // 器具の説明文
-            const typeDescriptions = EQUIPMENT_DESCRIPTIONS[typeIdStr] || [];
+            const typeDescriptions = EQUIPMENT_DESCRIPTIONS[typeIdStr] ?? [];
             const description = faker.helpers.arrayElement(
-              typeDescriptions || ['高品質な器具です']
+              typeDescriptions.length > 0 ? typeDescriptions : ['高品質な器具です']
             );
 
             return {
               typeId: randomType.id,
               name: equipmentName,
               brand: brandName,
-              description: description,
+              description,
               affiliateLink: faker.helpers.maybe(
                 () => `${IMAGE_BASE_URL}/${faker.helpers.slugify(equipmentName)}`,
                 { probability: 0.7 }

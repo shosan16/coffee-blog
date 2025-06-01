@@ -62,7 +62,7 @@ export function parseFiltersFromSearchParams<T extends Record<string, unknown>>(
       try {
         (filters as Record<string, unknown>)[param] = JSON.parse(value);
       } catch (e) {
-        console.error(`${param}の解析エラー:`, e);
+        // JSON解析エラーの場合は無視
       }
     }
   });

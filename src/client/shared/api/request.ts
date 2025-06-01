@@ -47,7 +47,7 @@ export async function apiRequest<T>(endpoint: string, options: ApiRequestOptions
     const baseUrl =
       typeof window !== 'undefined'
         ? window.location.origin // ブラウザ環境
-        : process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
+        : (process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:3000');
 
     let urlObj: URL;
     try {
@@ -79,12 +79,11 @@ export async function apiRequest<T>(endpoint: string, options: ApiRequestOptions
       const errorData = await response.json().catch(() => ({
         message: 'APIからのレスポンスが正常ではありません',
       }));
-      throw new Error(errorData.message || 'APIリクエストエラー');
+      throw new Error(errorData.message ?? 'APIリクエストエラー');
     }
 
     return await response.json();
   } catch (error) {
-    console.error('APIリクエストエラー:', error);
     throw error;
   }
 }

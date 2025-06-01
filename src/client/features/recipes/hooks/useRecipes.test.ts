@@ -361,7 +361,7 @@ describe('useRecipes', () => {
 
       // Assert - 確認: 不変条件の検証（型安全性の保持）
       // 両方の結果が同じ型構造を持つことを確認
-      const checkResultStructure = (result: typeof result1.current) => {
+      const checkResultStructure = (result: typeof result1.current): void => {
         expect(result).toHaveProperty('recipes');
         expect(result).toHaveProperty('pagination');
         expect(result).toHaveProperty('isLoading');

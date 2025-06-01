@@ -68,7 +68,17 @@ export function createSearchParams(
 /**
  * テスト用のレシピデータを生成する（コントローラーテスト用）
  */
-export function createMockRecipes(count: number = 1) {
+export function createMockRecipes(count: number = 1): Array<{
+  id: string;
+  title: string;
+  summary: string;
+  equipment: string[];
+  roastLevel: RoastLevel;
+  grindSize: GrindSize;
+  beanWeight: number;
+  waterTemp: number;
+  waterAmount: number;
+}> {
   return Array.from({ length: count }, (_, index) => ({
     id: `recipe-${index + 1}`,
     title: `テストレシピ ${index + 1}`,
@@ -85,7 +95,30 @@ export function createMockRecipes(count: number = 1) {
 /**
  * テスト用のPrismaレシピデータを生成する（サービステスト用）
  */
-export function createMockPrismaRecipes(count: number = 1) {
+export function createMockPrismaRecipes(count: number = 1): Array<{
+  id: bigint;
+  title: string;
+  summary: string;
+  roastLevel: RoastLevel;
+  grindSize: GrindSize;
+  beanWeight: number;
+  waterTemp: number;
+  waterAmount: number;
+  isPublished: boolean;
+  equipment: Array<{
+    name: string;
+    equipmentType: {
+      id: bigint;
+      name: string;
+    };
+  }>;
+  tags: Array<{
+    tag: {
+      id: bigint;
+      name: string;
+    };
+  }>;
+}> {
   return Array.from({ length: count }, (_, index) => ({
     id: BigInt(index + 1),
     title: `テストレシピ ${index + 1}`,
@@ -123,7 +156,25 @@ export function createMockSearchResult(
   recipeCount: number = 1,
   currentPage: number = 1,
   totalItems: number = 1
-) {
+): {
+  recipes: Array<{
+    id: string;
+    title: string;
+    summary: string;
+    equipment: string[];
+    roastLevel: RoastLevel;
+    grindSize: GrindSize;
+    beanWeight: number;
+    waterTemp: number;
+    waterAmount: number;
+  }>;
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalItems: number;
+    itemsPerPage: number;
+  };
+} {
   return {
     recipes: createMockRecipes(recipeCount),
     pagination: {
@@ -156,7 +207,19 @@ export function createFullSearchParams(): SearchRecipesParams {
 /**
  * null値を含むテスト用レシピデータを生成する
  */
-export function createMockRecipeWithNulls() {
+export function createMockRecipeWithNulls(): {
+  id: bigint;
+  title: string;
+  summary: string | null;
+  roastLevel: RoastLevel;
+  grindSize: GrindSize | null;
+  beanWeight: number | null;
+  waterTemp: number | null;
+  waterAmount: number | null;
+  isPublished: boolean;
+  equipment: Array<unknown>;
+  tags: Array<unknown>;
+} {
   return {
     id: BigInt(1),
     title: 'テストレシピ',
