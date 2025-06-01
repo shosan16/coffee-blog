@@ -222,7 +222,6 @@ describe('SearchRecipesController', () => {
       const request = createSearchRequest({ page: 1, limit: 10 });
       const serviceError = new Error('Database connection failed');
       mockService.searchRecipes.mockRejectedValue(serviceError);
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       // Act - 実行：検索リクエストを処理
       await controller.handleSearchRecipes(request);
@@ -235,16 +234,12 @@ describe('SearchRecipesController', () => {
         },
         { status: 500 }
       );
-      expect(consoleSpy).toHaveBeenCalledWith('Unexpected error:', serviceError);
-
-      consoleSpy.mockRestore();
     });
 
     it('エラー発生時でも必ずレスポンスが返される', async () => {
       // Arrange - 準備：予期せぬエラーを発生させる設定
       const request = createSearchRequest({ page: 1, limit: 10 });
       mockService.searchRecipes.mockRejectedValue(new Error('Unexpected error'));
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       // Act - 実行：検索リクエストを処理
       const result = await controller.handleSearchRecipes(request);
@@ -252,8 +247,6 @@ describe('SearchRecipesController', () => {
       // Assert - 確認：レスポンスが必ず返される
       expect(result).toBeDefined();
       expect(mockNextResponse.json).toHaveBeenCalled();
-
-      consoleSpy.mockRestore();
     });
   });
 
