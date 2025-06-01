@@ -28,9 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={`${roboto.variable} ${notoSansJP.variable} antialiased`}>
-        {children}
-      </body>
+      <body className={`${roboto.variable} ${notoSansJP.variable} antialiased`}>{children}</body>
     </html>
   );
 }
