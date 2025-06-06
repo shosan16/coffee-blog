@@ -29,7 +29,7 @@ export default async function Home({
   const initialData = await fetchRecipes(filters);
 
   return (
-    <main className="container mx-auto p-4">
+    <main className="container mx-auto px-4 py-8">
       <h1 className="mb-8 text-3xl font-bold">コーヒーレシピ一覧</h1>
       <RecipeList initialData={initialData} />
     </main>
