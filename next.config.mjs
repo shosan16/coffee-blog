@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+export const nextConfig = {
   /* config options here */
   distDir: '.next',
   // sourceディレクトリをルートとして設定
@@ -7,5 +7,3 @@ const nextConfig = {
     appDir: true
   }
 };
-
-export default nextConfig;
