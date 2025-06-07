@@ -7,13 +7,24 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+      - /app/.next
+      - /app/.turbo # Turbopackキャッシュも除外
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
     command: npm run dev
     depends_on:
       - db
+    # ヘルスチェック追加
+    healthcheck:
+      test:
+        ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:3000/api/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   # PostgreSQL service
   db:
@@ -23,9 +34,14 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=db
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U user -d db']
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   pgdata:
