@@ -2,7 +2,6 @@ import { Bean, Droplet, Settings, ChefHat } from 'lucide-react';
 
 import { Recipe } from '@/client/features/recipes/types/recipe';
 import { Badge } from '@/client/shared/ui/badge';
-import { Button } from '@/client/shared/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/ui/card';
 
 type RecipeCardProps = {
@@ -11,13 +10,13 @@ type RecipeCardProps = {
 
 export default function RecipeCard({ recipe }: RecipeCardProps) {
   return (
-    <Card className="group h-full w-full overflow-hidden border-amber-100 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <Card className="group grid h-full w-full grid-rows-[auto_1fr_auto] overflow-hidden border-amber-100 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-red-500/10" />
         <CardHeader className="relative">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <CardTitle className="text-lg font-bold text-gray-900 transition-colors group-hover:text-amber-800">
+              <CardTitle className="line-clamp-2 text-lg font-bold text-gray-900 transition-colors group-hover:text-amber-800">
                 {recipe.title}
               </CardTitle>
               <p className="mt-2 line-clamp-2 text-sm text-gray-600">{recipe.summary}</p>
@@ -31,7 +30,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
         </CardHeader>
       </div>
 
-      <CardContent className="space-y-4">
+      <CardContent className="flex-1 space-y-4">
         {/* レシピ情報 */}
         <div className="grid grid-cols-1 gap-3">
           <div className="flex items-center gap-3 rounded-lg border border-amber-100 bg-amber-50 p-2">
@@ -76,17 +75,6 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
               {recipe.grindSize}
             </Badge>
           )}
-        </div>
-
-        {/* アクションボタン */}
-        <div className="pt-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full transition-colors group-hover:border-amber-300 group-hover:bg-amber-50 group-hover:text-amber-800"
-          >
-            レシピを見る
-          </Button>
         </div>
       </CardContent>
     </Card>

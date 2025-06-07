@@ -73,16 +73,31 @@ Claude Codeは、以下のルールを必要に応じて自動的に参照・適
 ### 技術スタック
 
 - **フロントエンド**: Next.js 15（App Router）、React 18、TypeScript
-- **UI**: Tailwind CSS、Radix UI、Lucide Reactアイコン
+- **UI**: Tailwind CSS、**shadcn/ui**、Radix UI、Lucide Reactアイコン
 - **データベース**: PostgreSQL with Prisma ORM
 - **状態管理**: データフェッチング用SWR、クライアント状態用Zustand
-- **テスト**: Vitest with Testing Library、jsdom環境
+- **テスト**: **Vitest with Testing Library**、jsdom環境
 - **バリデーション**: スキーマバリデーション用Zod
 - **フォーム**: React Hook Form
 
+### 開発手法
+
+#### テスト駆動開発（TDD）
+
+- **テストファースト**: 新機能の実装前に、期待される動作を定義するテストを先に作成
+- **レッドグリーンリファクタ**: 失敗するテスト → 最小限の実装で成功 → リファクタリングのサイクル
+- **包括的テスト**: ユニットテスト、統合テスト、エンドツーエンドテストを組み合わせて品質を保証
+
+#### UI コンポーネント設計
+
+- **shadcn/ui優先**: 新しいUIコンポーネントが必要な場合は、まずshadcn/uiライブラリから適切なコンポーネントを選択
+- **カスタマイズ**: shadcn/uiコンポーネントをベースに、プロジェクト固有の要件に合わせてカスタマイズ
+- **一貫性**: デザインシステムの一貫性を保つため、独自コンポーネントの作成は最小限に留める
+
 ### プロジェクト構造
 
-コードベースは機能ベースのアーキテクチャに従い、クライアントとサーバーコードを明確に分離しています：
+コードベースは機能ベースのアーキテクチャに従い、クライアントとサーバーコードを明確に分離しています。
+テストはコロケーション方式で配置しています。
 
 ```
 src/
@@ -90,19 +105,29 @@ src/
 ├── client/                 # クライアントサイドコード
 │   ├── features/           # 機能固有のコード（レシピ）
 │   │   └── recipes/
-│   │       ├── components/ # Reactコンポーネント
+│   │       ├── components/ # Reactコンポーネント（shadcn/uiベース）
+│   │       │   ├── RecipeCard.tsx
+│   │       │   ├── RecipeCard.test.tsx
+│   │       │   ├── RecipeList.tsx
+│   │       │   └── RecipeList.test.tsx
 │   │       ├── hooks/      # カスタムフック（useRecipes）
+│   │       │   ├── useRecipes.ts
+│   │       │   └── useRecipes.test.ts
 │   │       ├── types/      # TypeScript型定義
 │   │       └── utils/      # 機能ユーティリティ
+│   │           ├── recipeUtils.ts
+│   │           └── recipeUtils.test.ts
 │   ├── lib/               # クライアントライブラリ
 │   └── shared/            # 共有クライアントユーティリティ
 │       ├── api/           # APIリクエストユーティリティ
-│       ├── ui/            # 共有UIコンポーネント
+│       ├── ui/            # 共有UIコンポーネント（shadcn/uiベース）
 │       └── utils/         # 共有ユーティリティ
 ├── server/                # サーバーサイドコード
 │   ├── features/          # 機能固有のサーバーロジック
 │   │   └── recipes/
 │   │       └── search/    # レシピ検索機能
+│   │           ├── searchService.ts
+│   │           └── searchService.test.ts
 │   └── shared/            # 共有サーバーユーティリティ
 └── db/                    # データベーススキーマとマイグレーション
 ```
@@ -123,17 +148,10 @@ src/
 1. **機能ベース構成**: ファイルタイプではなく機能（レシピ）でコードを整理
 2. **絶対インポート**: 相対パスの問題を避けるため、すべてのインポートで`@/`プレフィックスを使用
 3. **型安全性**: Zodバリデーションによる包括的なTypeScriptカバレッジ
-4. **テスト**: 各機能にVitestを使用した専用テストファイル
-5. **API構造**: `src/app/api/`のNext.js APIルート
-6. **コンポーネントパターン**: `src/client/shared/ui/`の共有UIコンポーネント
-
-### 開発メモ
-
-- アプリケーションは日本語設定を使用（レイアウトで`lang="ja"`）
-- データベーススキーマはテーブル/カラム名にsnake_caseを使用するが、TypeScriptではcamelCase
-- クライアントサイドのデータフェッチングには`useRecipes`フックでSWRを使用
-- テストはテストデータ生成にfaker.jsを使用
-- プリコミットフック用にHuskyとlint-stagedを設定
+4. **テスト駆動開発**: 各機能にVitestを使用したテストファイル、テストファーストアプローチ
+5. **shadcn/uiコンポーネント**: 一貫したデザインシステムのためのshadcn/uiコンポーネント活用
+6. **API構造**: `src/app/api/`のNext.js APIルート
+7. **コンポーネントパターン**: `src/client/shared/ui/`の共有UIコンポーネント
 
 ### インポートルール
 
@@ -141,3 +159,13 @@ src/
 - 可能な場合は機能のパブリックAPIからインポート
 - 依存関係の方向に従う：`app/` → `features/` → `shared/`
 - コンポーネントには`export default function`、その他すべてには`export const`を使用
+- shadcn/uiコンポーネントは`@/components/ui/`から、カスタムコンポーネントは適切な機能ディレクトリからインポート
+
+### 開発ワークフロー
+
+1. **要件定義**: 実装する機能の要件を明確にする
+2. **テスト設計**: 期待される動作を定義するテストを作成
+3. **UI設計**: shadcn/uiコンポーネントを活用したUIを設計
+4. **実装**: テストが通るよう最小限の実装から開始
+5. **リファクタリング**: コード品質を向上させながら、テストが継続的に通ることを確認
+6. **統合**: 機能を既存のシステムに統合し、回帰テストを実行

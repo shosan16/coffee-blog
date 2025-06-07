@@ -22,7 +22,7 @@ type RecipePaginationProps = {
 export default function RecipePagination({
   currentPage,
   totalPages,
-  totalItems,
+  totalItems: _totalItems,
 }: RecipePaginationProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -95,11 +95,6 @@ export default function RecipePagination({
 
   return (
     <div className="flex flex-col items-center space-y-4">
-      {/* ページ情報 */}
-      <div className="text-sm text-gray-600">
-        {currentPage} / {totalPages} ページ （全{totalItems}件）
-      </div>
-
       {/* ページネーション */}
       <Pagination>
         <PaginationContent>
