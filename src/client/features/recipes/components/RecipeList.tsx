@@ -56,8 +56,8 @@ export default function RecipeList({ initialData }: RecipeListProps) {
       {/* ローディング状態 */}
       {isLoading && (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="animate-pulse">
+          {Array.from({ length: 8 }, () => ({ id: crypto.randomUUID() })).map((item) => (
+            <div key={item.id} className="animate-pulse">
               <div className="space-y-4 rounded-xl border border-gray-200 bg-white/60 p-6">
                 <div className="flex items-start justify-between">
                   <div className="flex-1 space-y-2">

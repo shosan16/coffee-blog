@@ -1,9 +1,8 @@
+/* eslint-disable import/no-default-export */
 /** @type {import('next').NextConfig} */
-export const nextConfig = {
+const nextConfig = {
   /* config options here */
-  distDir: '.next',
-  // sourceディレクトリをルートとして設定
-  experimental: {
-    appDir: true
-  }
+  distDir: '.next'
 };
+
+export default nextConfig;
