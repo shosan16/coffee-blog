@@ -14,6 +14,12 @@ RUN npm install
 # Copy the rest of the application
 COPY . .
 
+# .nextディレクトリの権限設定
+RUN mkdir -p .next && chown -R node:node .next
+
+# nodeユーザーに切り替え
+USER node
+
 # Expose port 3000
 EXPOSE 3000
 
