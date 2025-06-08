@@ -11,7 +11,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/client/shared/ui/pagination';
+} from '@/client/shared/shadcn/pagination';
 
 type RecipePaginationProps = {
   currentPage: number;

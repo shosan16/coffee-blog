@@ -1,11 +1,10 @@
-import { Coffee, Search, Filter } from 'lucide-react';
+import { Coffee, Search } from 'lucide-react';
 import { type ReadonlyURLSearchParams } from 'next/navigation';
 
+import LazyRecipeFilter from '@/client/features/recipes/components/filter/LazyRecipeFilter';
 import RecipeList from '@/client/features/recipes/components/RecipeList';
 import { parseFiltersFromSearchParams } from '@/client/features/recipes/utils/filter';
 import { fetchRecipes } from '@/client/features/recipes/utils/recipeApi';
-import { Badge } from '@/client/shared/ui/badge';
-import { Button } from '@/client/shared/ui/button';
 
 export default async function Home({
   searchParams,
@@ -41,20 +40,10 @@ export default async function Home({
             <Coffee className="mb-6 h-16 w-16 text-amber-200" />
             <h1 className="mb-4 text-5xl font-bold tracking-tight">Coffee Recipe Collection</h1>
             <p className="mb-8 max-w-2xl text-xl text-amber-100">
-              プロのバリスタが厳選した最高のコーヒーレシピで、 おうちカフェを極上の体験に
+              プロのバリスタが考案した最高のコーヒーレシピで
+              <br />
+              おうちカフェを極上の体験に
             </p>
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="secondary" className="border-white/30 bg-white/20 text-white">
-                <Coffee className="h-3 w-3" />
-                {initialData.pagination.totalItems}+ レシピ
-              </Badge>
-              <Badge variant="secondary" className="border-white/30 bg-white/20 text-white">
-                プロ仕様
-              </Badge>
-              <Badge variant="secondary" className="border-white/30 bg-white/20 text-white">
-                詳細手順
-              </Badge>
-            </div>
           </div>
         </div>
       </div>
@@ -62,29 +51,34 @@ export default async function Home({
       {/* Search & Filter Section */}
       <div className="sticky top-0 z-10 border-b bg-white/70 py-6 backdrop-blur-sm">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-2">
-              <Search className="h-5 w-5 text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">
-                {initialData.pagination.totalItems}件のレシピが見つかりました
-              </span>
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm">
-                <Filter className="h-4 w-4" />
-                フィルター
-              </Button>
-              <Button variant="outline" size="sm">
-                並び替え
-              </Button>
-            </div>
+          <div className="flex items-center gap-2">
+            <Search className="h-5 w-5 text-gray-600" />
+            <span className="text-sm font-medium text-gray-700">
+              {initialData.pagination.totalItems}件のレシピが見つかりました
+            </span>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <RecipeList initialData={initialData} />
+        <div className="flex gap-8">
+          {/* メインコンテンツ */}
+          <div className="min-w-0 flex-1">
+            {/* モバイル用フィルター */}
+            <div className="mb-6 lg:hidden">
+              <LazyRecipeFilter />
+            </div>
+
+            <RecipeList initialData={initialData} />
+          </div>
+          {/* サイドバー（フィルター） */}
+          <aside className="hidden w-80 flex-shrink-0 lg:block">
+            <div className="sticky top-32">
+              <LazyRecipeFilter />
+            </div>
+          </aside>
+        </div>
       </main>
 
       {/* Footer */}

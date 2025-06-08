@@ -1,14 +1,15 @@
 import { Bean, Droplet, Settings, ChefHat } from 'lucide-react';
+import React from 'react';
 
 import { Recipe } from '@/client/features/recipes/types/recipe';
-import { Badge } from '@/client/shared/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/ui/card';
+import { Badge } from '@/client/shared/shadcn/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
 
 type RecipeCardProps = {
   recipe: Recipe;
 };
 
-export default function RecipeCard({ recipe }: RecipeCardProps) {
+const RecipeCard = React.memo(function RecipeCard({ recipe }: RecipeCardProps) {
   return (
     <Card className="group grid h-full w-full grid-rows-[auto_1fr_auto] overflow-hidden border-amber-100 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       <div className="relative">
@@ -79,4 +80,6 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
       </CardContent>
     </Card>
   );
-}
+});
+
+export default RecipeCard;

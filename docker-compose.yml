@@ -4,11 +4,12 @@ services:
     build:
       context: .
       target: development
+    platform: linux/amd64
     volumes:
       - .:/app
       - /app/node_modules
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - NODE_ENV=development
     command: npm run dev
@@ -18,12 +19,13 @@ services:
   # PostgreSQL service
   db:
     image: postgres:17.4
+    platform: linux/amd64
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=db
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
 

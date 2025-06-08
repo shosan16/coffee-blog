@@ -1,214 +1,502 @@
-# レシピ検索テストファイル書き換え実装計画
+# プロジェクト全体 リンターエラー解消計画
 
-## 現状分析
+## 目的
 
-### 現在のテストファイルの問題点
+プロジェクト全体で発生している ESLint エラーを体系的に解消し、コード品質とメンテナンス性を向上させる。
 
-#### search-recipes.service.test.ts の課題
+## エラー分析
 
-1. **Contract Testの過度な使用**
-   - 「事前条件」「事後条件」「不変条件」というコメントが多用されているが、これは契約ベーステストの考え方
-   - test-ruleでは「振る舞いをテスト」することを推奨しており、実装の詳細に依存しすぎている
+### 発生しているエラー種別
 
-2. **テスト名の改善余地**
-   - 「事前条件: 〜」「事後条件: 〜」という形式は認知負荷が高い
-   - test-ruleでは「説明的で意味のあるテスト名（日本語も可）」を推奨
+1. **Resolve Error: Failed to load native binding** - ESLint設定の問題
+2. **import/order** - インポート順序違反 (47件)
+3. **import/no-duplicates** - 重複インポート (23件)
+4. **@typescript-eslint/no-unused-vars** - 未使用変数 (5件)
+5. **@typescript-eslint/explicit-function-return-type** - 関数戻り値型未定義 (12件)
+6. **@typescript-eslint/prefer-nullish-coalescing** - null/undefined チェック最適化 (3件)
+7. **import/prefer-default-export** - デフォルトエクスポート推奨 (8件)
+8. **no-nested-ternary** - ネストした三項演算子 (1件)
+9. **react-hooks/exhaustive-deps** - useEffect依存配列不完全 (1件)
+10. **@typescript-eslint/no-unnecessary-condition** - 不要な条件分岐 (4件)
+11. **no-console** - console文使用 (5件)
+12. **@typescript-eslint/no-explicit-any** - any型使用 (4件)
 
-3. **テスト構造の改善点**
-   - AAA（Arrange-Act-Assert）パターンが明確でない
-   - モックの設定が複雑で理解しにくい
+## 実装ステップ
 
-4. **古典学派アプローチの不徹底**
-   - Prismaクライアント全体をモック化しているが、管理下の依存としてテストDBを使用すべき可能性
+### フェーズ1: 基盤修正（優先度: 高）
 
-#### search-recipes.controller.test.ts の課題
+**時間見積もり: 2時間**
 
-1. **類似した課題**
-   - service.test.tsと同様の契約ベーステストの問題
-   - テスト名とテスト構造の改善余地
+#### 1.1 ESLint設定修正
 
-2. **統合テストとしての不完全性**
-   - 実際のHTTPリクエスト処理をテストしていない
-   - Next.jsのRoute Handlerとしての動作確認が不十分
+**現在の.eslintrc.jsの問題点:**
 
-## 改善方針
+1. **import/order設定が現実的でない**
+   - `'newlines-between': 'always'` が厳しすぎる
+   - アルファベット順ソートが他の順序ルールと競合
 
-### 1. テストアプローチの変更
+2. **エクスポートルールの競合**
+   - `import/no-default-export`と`import/prefer-default-export`が競合している
 
-- **契約ベーステスト → 振る舞いベーステスト**
-- **古典学派アプローチの徹底**
-  - 共有依存（DB）のみモック化
-  - 管理下の依存は実物を使用
+3. **TypeScript戻り値型ルールが厳しすぎる**
+   - 段階的導入が必要
 
-### 2. テスト名とメッセージの改善
+4. **any型の即座禁止**
+   - 段階的に解消すべき
 
-- **認知負荷の最小化**
-- **System 1（直感的思考）で理解できるテスト名**
-- **日本語での説明的なテスト名**
+**修正内容:**
 
-### 3. テスト構造の統一
+```javascript
+// 修正版 .eslintrc.js の主要変更点
 
-- **AAA（Arrange-Act-Assert）パターンの明確化**
-- **ヘルパー関数による共通セットアップの抽出**
-- **テストデータの動的生成**
+module.exports = {
+  // ... existing config ...
 
-## 具体的な書き換え計画
+  rules: {
+    // インポート順序を現実的に調整
+    'import/order': [
+      'error',
+      {
+        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+        'newlines-between': 'never', // 常に空行を要求しない
+        alphabetize: { order: 'asc', caseInsensitive: true },
+        pathGroups: [
+          {
+            pattern: '@/**',
+            group: 'internal',
+            position: 'before'
+          }
+        ],
+        pathGroupsExcludedImportTypes: ['builtin']
+      }
+    ],
 
-### search-recipes.service.test.ts
+    // コンソール使用を開発環境では許可
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
 
-#### Before (現在の問題のあるテスト例)
+    // エクスポートルールの統一
+    'import/no-default-export': 'off', // デフォルト禁止を一旦解除
+    'import/prefer-default-export': 'off', // 推奨も一旦解除
+  },
+
+  overrides: [
+    // TypeScriptファイル共通設定を緩和
+    {
+      files: ['**/*.ts', '**/*.tsx'],
+      rules: {
+        // any型を段階的に解消するため警告に変更
+        '@typescript-eslint/no-explicit-any': 'warn',
+
+        // 不要な条件分岐チェックを警告に緩和
+        '@typescript-eslint/no-unnecessary-condition': 'warn',
+
+        // nullish coalescingを警告に緩和
+        '@typescript-eslint/prefer-nullish-coalescing': 'warn',
+      }
+    },
+
+    // .tsファイルの戻り値型を段階的導入
+    {
+      files: ['**/*.ts'],
+      rules: {
+        // 一旦警告に変更、段階的にerrorに移行
+        '@typescript-eslint/explicit-function-return-type': 'warn',
+      }
+    },
+
+    // 特定ディレクトリでのルール緩和
+    {
+      files: [
+        'src/client/shared/components/**/*.ts',
+        'src/client/shared/components/**/*.tsx'
+      ],
+      rules: {
+        // コンポーネントライブラリでは戻り値型を一旦緩和
+        '@typescript-eslint/explicit-function-return-type': 'off',
+      }
+    },
+
+    // デフォルトエクスポートの明確な使い分け
+    {
+      files: [
+        // Next.jsページファイル
+        '**/app/**/page.{tsx,jsx}',
+        '**/app/**/layout.{tsx,jsx}',
+        '**/app/**/loading.{tsx,jsx}',
+        '**/app/**/error.{tsx,jsx}',
+        '**/app/**/not-found.{tsx,jsx}',
+        '**/pages/**/*.{tsx,jsx}',
+        // メインコンポーネントファイル
+        '**/components/**/index.{ts,tsx}',
+      ],
+      rules: {
+        'import/prefer-default-export': 'error',
+        'import/no-default-export': 'off',
+      }
+    },
+
+    {
+      files: [
+        // ユーティリティファイル
+        '**/utils/**/*.ts',
+        '**/hooks/**/*.ts',
+        '**/types/**/*.ts',
+        // 非メインコンポーネント
+        '**/components/**/*.{ts,tsx}',
+        '!**/components/**/index.{ts,tsx}',
+      ],
+      rules: {
+        'import/prefer-default-export': 'off',
+        'import/no-default-export': 'off', // 柔軟に対応
+      }
+    }
+  ]
+};
+```
+
+**追加で確認・修正が必要な項目:**
+
+- [ ] `package.json`の依存関係確認（eslint-import-resolver関連）
+- [ ] TypeScriptプロジェクト設定との整合性確認
+- [ ] IDE/エディタ設定との連携確認
+
+#### 1.2 パッケージ依存関係の確認
+
+**確認すべき依存関係:**
+
+```json
+{
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^13.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-import-resolver-typescript": "^3.6.0"
+  }
+}
+```
+
+**追加推奨パッケージ:**
+
+```json
+{
+  "devDependencies": {
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-unused-imports": "^3.0.0"
+  }
+}
+```
+
+#### 1.3 段階的移行計画
+
+**Phase 1a: 即座に適用（エラー解消優先）**
+
+- import/order の設定緩和
+- any型、戻り値型の警告化
+- エクスポートルール競合解消
+
+**Phase 1b: 1週間後に適用（品質向上）**
+
+- 未使用インポートの自動削除設定
+- より厳密な命名規則の適用
+
+**Phase 1c: 1ヶ月後に適用（厳格化）**
+
+- any型の段階的error化
+- 戻り値型必須の段階的適用
+
+### フェーズ2: インポート整理（優先度: 高）
+
+**時間見積もり: 3時間**
+
+#### 2.1 インポート順序統一
+
+**修正対象:** 47ファイル
+
+**正しい順序:**
+
+1. React関連インポート
+2. 外部ライブラリ
+3. 内部ライブラリ（@/で始まるもの）
+4. 相対パス（./で始まるもの）
+5. 型インポート（type修飾子付き）
+
+**修正例:**
 
 ```typescript
-it('事前条件: 有効なSearchRecipesParamsが渡されること', async () => {
-  // 事前条件: 必須パラメータが存在する
-  expect(mockSearchParams.page).toBeGreaterThan(0);
-  // ... モックの設定とテスト実行
-});
+// 修正前
+import { cn } from '@/client/lib/tailwind'
+import React from 'react'
+import type { ComboboxProps } from './types'
+
+// 修正後
+import React from 'react'
+import { cn } from '@/client/lib/tailwind'
+import type { ComboboxProps } from './types'
 ```
 
-#### After (改善後)
+#### 2.2 重複インポート解消
+
+**修正対象:** 23ファイル
+
+**修正方針:**
 
 ```typescript
-describe('検索条件に基づくレシピ取得', () => {
-  it('ページネーション付きでレシピ一覧を取得できる', async () => {
-    // Arrange - テストデータの準備
-    const searchParams = createSearchParams({ page: 1, limit: 10 });
-    const expectedRecipes = createMockRecipes(10);
+// 修正前
+import React from 'react'
+import { useState } from 'react'
 
-    // Act - 検索実行
-    const result = await service.searchRecipes(searchParams);
-
-    // Assert - 結果検証
-    expect(result.recipes).toHaveLength(10);
-    expect(result.pagination.currentPage).toBe(1);
-  });
-});
+// 修正後
+import React, { useState } from 'react'
 ```
 
-#### 主な変更点
+### フェーズ3: TypeScript型安全性向上（優先度: 中）
 
-1. **テスト名の日本語化と意図の明確化**
-2. **AAA パターンの明確な分離**
-3. **ヘルパー関数による重複排除**
-4. **データベーステストの導入検討**
+**時間見積もり: 2時間**
 
-### search-recipes.controller.test.ts
+#### 3.1 関数戻り値型の明示
 
-#### 改善方針
+**対象ファイル:**
 
-1. **Next.js Route Handlerとしての統合テスト**
-2. **実際のHTTPリクエストレスポンスのテスト**
-3. **エラーハンドリングの改善**
+- `src/client/shared/components/combobox/hooks/useClickOutside.ts`
+- `src/client/shared/components/combobox/hooks/useCombobox.ts`
+- `src/client/shared/components/combobox/hooks/useComboboxKeyboard.ts`
+- `src/client/shared/components/combobox/utils/accessibility.ts`
 
-#### 新しいテスト構造
+**修正例:**
 
 ```typescript
-describe('レシピ検索API', () => {
-  describe('正常系', () => {
-    it('基本的な検索リクエストで正しいレスポンスを返す', async () => {
-      // Arrange
-      const request = createSearchRequest({ page: 1, limit: 10 });
+// 修正前
+const useClickOutside = (callback: () => void) => {
+  // 実装
+}
 
-      // Act
-      const response = await controller.handleSearchRecipes(request);
-
-      // Assert
-      expect(response.status).toBe(200);
-      const data = await response.json();
-      expect(data).toHaveProperty('recipes');
-      expect(data).toHaveProperty('pagination');
-    });
-  });
-
-  describe('異常系', () => {
-    it('無効なページ番号でバリデーションエラーを返す', async () => {
-      // テスト実装
-    });
-  });
-});
+// 修正後
+const useClickOutside = (callback: () => void): React.RefObject<HTMLElement> => {
+  // 実装
+}
 ```
 
-## テストユーティリティの新規作成
+#### 3.2 any型の型安全化
 
-### 必要なヘルパー関数
+**対象ファイル:**
 
-1. **createSearchParams** - テスト用検索パラメータ生成
-2. **createMockRecipes** - テスト用レシピデータ生成
-3. **createSearchRequest** - テスト用リクエストオブジェクト生成
-4. **setupTestDatabase** - テストDB初期化（統合テストの場合）
+- `src/client/shared/components/combobox/ComboboxDropdown.tsx`
+- `src/client/shared/components/combobox/ComboboxInput.tsx`
+- `src/client/shared/components/combobox/ComboboxOption.tsx`
 
-### ファイル構成
+**修正方針:**
 
-```
-src/server/features/recipes/search/
-├── search-recipes.service.test.ts     # 改善後
-├── search-recipes.controller.test.ts  # 改善後
-└── test-utils/                        # 新規作成
-    ├── mock-data.ts                    # テストデータ生成
-    ├── request-helpers.ts              # リクエスト関連ヘルパー
-    └── db-helpers.ts                   # DB関連ヘルパー（必要に応じて）
+```typescript
+// 修正前
+const handleEvent = (event: any) => { /* ... */ }
+
+// 修正後
+const handleEvent = (event: React.KeyboardEvent<HTMLInputElement>) => { /* ... */ }
 ```
 
-## 実装順序
+### フェーズ4: エクスポート最適化（優先度: 低）
 
-### Phase 1: テストユーティリティの作成
+**時間見積もり: 1時間**
 
-1. `test-utils/mock-data.ts` - モックデータ生成関数
-2. `test-utils/request-helpers.ts` - リクエストヘルパー関数
+#### 4.1 デフォルトエクスポート対応
 
-### Phase 2: Service テストの書き換え
+**対象ファイル:**
 
-1. テスト構造の統一（AAA パターン）
-2. テスト名の改善（日本語化）
-3. ヘルパー関数の活用
-4. 不要な契約テストの削除
+- `src/client/shared/components/combobox/` 配下の各ファイル
+- `src/client/shared/components/combobox/utils/` 配下の各ファイル
 
-### Phase 3: Controller テストの書き換え
+**修正方針:**
 
-1. 統合テストとしての改善
-2. エラーハンドリングテストの充実
-3. レスポンス形式の検証改善
+- 単一エクスポートファイルはデフォルトエクスポートに変更
+- 複数エクスポートが必要な場合は名前付きエクスポートを維持
 
-### Phase 4: 品質確認
+### フェーズ5: React最適化（優先度: 中）
 
-1. カバレッジの確認（80%以上維持）
-2. テスト実行速度の確認
-3. テストの可読性確認
+**時間見積もり: 1時間**
 
-## 品質基準
+#### 5.1 useEffect依存配列修正
 
-### テストの4本の柱への対応
+**対象ファイル:**
 
-1. **退行に対する保護** - 重要なビジネスロジックのカバレッジ維持
-2. **リファクタリングへの耐性** - 実装詳細ではなく振る舞いをテスト
-3. **迅速なフィードバック** - テスト実行時間の短縮
-4. **保守のしやすさ** - 認知負荷の低いテストコード
+- `src/client/features/recipes/hooks/useRecipeFilter.ts`
 
-### 成功基準
+**修正例:**
 
-- [ ] テスト名が日本語で意図が明確
-- [ ] AAA パターンが明確に分離されている
-- [ ] 重複コードがヘルパー関数に抽出されている
-- [ ] エラーメッセージが分かりやすい
-- [ ] テスト実行時間が改善されている
-- [ ] カバレッジが維持されている（80%以上）
+```typescript
+// 修正前
+useEffect(() => {
+  // currentFiltersを使用している
+}, []) // 依存配列に currentFilters が不足
 
-## リスク管理
+// 修正後
+useEffect(() => {
+  // currentFiltersを使用している
+}, [currentFilters])
+```
 
-### 潜在的リスク
+#### 5.2 nullish coalescing演算子の適用
 
-1. **テスト書き換え中のカバレッジ低下**
-   - 対策: 段階的な書き換えによる継続的な検証
+**対象ファイル:**
 
-2. **既存のバグ検出能力の低下**
-   - 対策: 改善前後でのテスト結果比較
+- `src/client/shared/components/combobox/ComboboxInput.tsx`
+- `src/client/shared/components/combobox/utils/accessibility.ts`
 
-3. **開発効率の一時的低下**
-   - 対策: ヘルパー関数の再利用による長期的な効率化
+**修正例:**
 
-### マイルストーン
+```typescript
+// 修正前
+const value = props.value || ''
 
-- [ ] Week 1: テストユーティリティ作成完了
-- [ ] Week 2: Service テスト書き換え完了
-- [ ] Week 3: Controller テスト書き換え完了
-- [ ] Week 4: 品質確認・最終調整完了
+// 修正後
+const value = props.value ?? ''
+```
+
+### フェーズ6: コード品質向上（優先度: 低）
+
+**時間見積もり: 30分**
+
+#### 6.1 ネストした三項演算子の解消
+
+**対象ファイル:**
+
+- `src/client/shared/components/combobox/ComboboxDropdown.tsx`
+
+**修正方針:**
+
+```typescript
+// 修正前
+const content = isOpen ? (hasOptions ? <OptionsList /> : <NoOptions />) : null
+
+// 修正後
+const getContent = (): React.ReactNode => {
+  if (!isOpen) return null
+  return hasOptions ? <OptionsList /> : <NoOptions />
+}
+const content = getContent()
+```
+
+#### 6.2 不要な条件分岐の削除
+
+**対象ファイル:**
+
+- `src/client/features/recipes/components/filter/RecipeFilter.test.tsx`
+- `src/client/features/recipes/hooks/useRecipeFilter.ts`
+- `src/client/shared/components/combobox/Combobox.tsx`
+
+**修正方針:**
+
+- 型ガードで明らかに真となる条件の削除
+- 論理演算子の最適化
+
+#### 6.3 console文の適切な処理
+
+**対象ファイル:**
+
+- `src/server/shared/database/prisma.ts`
+
+**修正方針:**
+
+```typescript
+// 修正前
+console.log('Database connecting...')
+
+// 修正後
+// 開発環境でのみ表示、または適切なロガーライブラリの使用
+if (process.env.NODE_ENV === 'development') {
+  console.log('Database connecting...')
+}
+```
+
+## 実行順序とバッチ処理
+
+### バッチ1: 基盤修正
+
+1. ESLint設定修正
+2. 未使用変数削除
+
+### バッチ2: インポート整理
+
+1. 重複解消（自動修正可能）
+2. 順序修正（ESLint --fix対応）
+
+### バッチ3: 型安全性
+
+1. 関数戻り値型追加
+2. any型の具体化
+
+### バッチ4: 最適化
+
+1. エクスポート形式統一
+2. React hooks最適化
+3. 細かいコード品質向上
+
+## 自動化可能な修正
+
+以下のエラーは ESLint の `--fix` オプションで自動修正可能：
+
+- `import/order`
+- `import/no-duplicates`
+- `@typescript-eslint/prefer-nullish-coalescing`（一部）
+
+## 手動修正が必要な項目
+
+- `@typescript-eslint/explicit-function-return-type`
+- `@typescript-eslint/no-explicit-any`
+- `import/prefer-default-export`
+- `react-hooks/exhaustive-deps`
+- `no-nested-ternary`
+
+## 検証項目
+
+### 各フェーズ完了後の確認事項
+
+- [ ] `npm run lint` でエラーが0件
+- [ ] `npm run type-check` でTypeScriptエラーが0件
+- [ ] `npm run test` で全テストが通過
+- [ ] アプリケーションが正常に起動・動作
+
+## 継続的改善
+
+### 今後の予防策
+
+1. **pre-commit hook** の導入
+
+   ```json
+   {
+     "husky": {
+       "hooks": {
+         "pre-commit": "lint-staged"
+       }
+     },
+     "lint-staged": {
+       "*.{ts,tsx}": ["eslint --fix", "git add"]
+     }
+   }
+   ```
+
+2. **CI/CDでのlint必須化**
+   - GitHub Actions等でlintチェック追加
+   - merge前の必須チェック項目化
+
+3. **エディタ設定の統一**
+   - `.vscode/settings.json` での自動修正設定
+   - Prettier連携の最適化
+
+## 成功指標
+
+- [ ] ESLintエラー 0件達成
+- [ ] TypeScriptエラー 0件達成
+- [ ] 全テスト通過維持
+- [ ] アプリケーション動作正常性確認
+- [ ] コードレビューでの品質向上確認
+
+## 注意事項
+
+- **破綻的変更の回避**: 既存APIの互換性を維持
+- **段階的修正**: 一度に大量修正せず、段階的に実施
+- [ ] テスト実行**: 各修正後の動作確認を徹底
+- **チーム共有**: 修正方針をチーム内で事前共有

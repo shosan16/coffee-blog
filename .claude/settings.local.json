@@ -5,7 +5,18 @@
       "Bash(ls:*)",
       "Bash(npm run build:*)",
       "Bash(npm run lint)",
-      "Bash(npm run dev:*)"
+      "Bash(curl:*)",
+      "Bash(docker-compose logs:*)",
+      "Bash(docker-compose ps:*)",
+      "Bash(docker-compose exec:*)",
+      "Bash(docker-compose restart:*)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(rmdir:*)",
+      "Bash(find:*)",
+      "Bash(cp:*)",
+      "Bash(npm run test:*)",
+      "Bash(npm test:*)"
     ],
     "deny": []
   }

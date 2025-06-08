@@ -23,11 +23,16 @@ export type RecipeFilters = {
   roastLevel?: RoastLevel[];
   grindSize?: GrindSize[];
   equipment?: string[];
+  equipmentType?: string[];
   beanWeight?: {
     min?: number;
     max?: number;
   };
   waterTemp?: {
+    min?: number;
+    max?: number;
+  };
+  waterAmount?: {
     min?: number;
     max?: number;
   };
