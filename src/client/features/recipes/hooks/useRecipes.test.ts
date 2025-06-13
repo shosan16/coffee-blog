@@ -99,7 +99,7 @@ describe('useRecipes', () => {
         limit: 5,
         roastLevel: [RoastLevel.MEDIUM],
         grindSize: [GrindSize.MEDIUM],
-        equipment: ['V60'],
+        equipment: ['HARIO V60'],
         beanWeight: { min: 15, max: 20 },
         waterTemp: { min: 90, max: 95 },
         search: 'ドリップ',

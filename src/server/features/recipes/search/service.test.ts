@@ -12,6 +12,8 @@ import {
 // Prismaクライアントをモック化
 vi.mock('@/server/shared/database/prisma', () => ({
   prisma: {
+    $connect: vi.fn(),
+    $disconnect: vi.fn(),
     post: {
       count: vi.fn(),
       findMany: vi.fn(),
@@ -21,6 +23,8 @@ vi.mock('@/server/shared/database/prisma', () => ({
 
 // モックPrismaの型定義
 type MockPrisma = {
+  $connect: ReturnType<typeof vi.fn>;
+  $disconnect: ReturnType<typeof vi.fn>;
   post: {
     count: ReturnType<typeof vi.fn>;
     findMany: ReturnType<typeof vi.fn>;
@@ -38,6 +42,9 @@ describe('SearchRecipesService', () => {
     // モックされたPrismaインスタンスを取得
     const prismaModule = await import('@/server/shared/database/prisma');
     mockPrisma = prismaModule.prisma as unknown as MockPrisma;
+
+    // $connectのモックを設定
+    mockPrisma.$connect.mockResolvedValue(undefined);
   });
 
   describe('基本的なレシピ検索', () => {
@@ -140,7 +147,8 @@ describe('SearchRecipesService', () => {
 
       // Assert - 確認： WHERE句に器具名条件が含まれる
       const whereClause = mockPrisma.post.findMany.mock.calls[0][0].where;
-      expect(whereClause.equipment.some.name.in).toEqual(['V60', 'Chemex']);
+      expect(whereClause.AND).toBeDefined();
+      expect(whereClause.AND[0].equipment.some.name.in).toEqual(['V60', 'Chemex']);
     });
 
     it('豆の重量範囲でフィルタリングできる', async () => {
@@ -190,11 +198,49 @@ describe('SearchRecipesService', () => {
       const whereClause = mockPrisma.post.findMany.mock.calls[0][0].where;
       expect(whereClause.roastLevel.in).toEqual([RoastLevel.MEDIUM]);
       expect(whereClause.grindSize.in).toEqual([GrindSize.MEDIUM]);
-      expect(whereClause.equipment.some.name.in).toEqual(['V60']);
+      expect(whereClause.AND).toBeDefined();
+      expect(whereClause.AND[0].equipment.some.name.in).toEqual(['V60']);
       expect(whereClause.beanWeight.gte).toBe(15);
       expect(whereClause.beanWeight.lte).toBe(25);
       expect(whereClause.waterTemp.gte).toBe(85);
       expect(whereClause.waterTemp.lte).toBe(95);
+    });
+
+    it('水量範囲でフィルタリングできる', async () => {
+      // Arrange - 準備： 水量範囲フィルターを含む検索パラメータを設定
+      const searchParams = createSearchParams({
+        waterAmount: { min: 200, max: 300 },
+      });
+      mockPrisma.post.count.mockResolvedValue(0);
+      mockPrisma.post.findMany.mockResolvedValue([]);
+
+      // Act - 実行： 水量範囲フィルター付きで検索を実行
+      await service.searchRecipes(searchParams);
+
+      // Assert - 確認： WHERE句に水量範囲条件が含まれる
+      const whereClause = mockPrisma.post.findMany.mock.calls[0][0].where;
+      expect(whereClause.waterAmount.gte).toBe(200);
+      expect(whereClause.waterAmount.lte).toBe(300);
+    });
+
+    it('器具タイプでフィルタリングできる', async () => {
+      // Arrange - 準備： 器具タイプフィルターを含む検索パラメータを設定
+      const searchParams = createSearchParams({
+        equipmentType: ['ドリッパー', 'グラインダー'],
+      });
+      mockPrisma.post.count.mockResolvedValue(0);
+      mockPrisma.post.findMany.mockResolvedValue([]);
+
+      // Act - 実行： 器具タイプフィルター付きで検索を実行
+      await service.searchRecipes(searchParams);
+
+      // Assert - 確認： WHERE句に器具タイプ条件が含まれる
+      const whereClause = mockPrisma.post.findMany.mock.calls[0][0].where;
+      expect(whereClause.AND).toHaveLength(1);
+      expect(whereClause.AND[0].equipment.some.equipmentType.name.in).toEqual([
+        'ドリッパー',
+        'グラインダー',
+      ]);
     });
   });
 

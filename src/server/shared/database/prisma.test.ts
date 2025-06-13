@@ -1,5 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+// Prismaクライアントをモック化
+vi.mock('@prisma/client', () => ({
+  PrismaClient: vi.fn().mockImplementation(() => ({
+    $connect: vi.fn(),
+    $disconnect: vi.fn(),
+    post: {
+      count: vi.fn(),
+      findMany: vi.fn(),
+    },
+  })),
+}));
+
 // グローバル変数の型定義
 type GlobalWithPrisma = {
   prisma?: unknown;

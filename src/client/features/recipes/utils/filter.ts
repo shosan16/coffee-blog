@@ -25,9 +25,10 @@ export function parseFiltersFromSearchParams(searchParams: ReadonlyURLSearchPara
       roastLevel: (level) => level as RoastLevel,
       grindSize: (size) => size as GrindSize,
       equipment: (item) => item,
+      equipmentType: (item) => item,
     },
 
     // JSON形式パラメータ
-    jsonParams: ['beanWeight', 'waterTemp'],
+    jsonParams: ['beanWeight', 'waterTemp', 'waterAmount'],
   });
 }

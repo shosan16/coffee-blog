@@ -22,7 +22,7 @@ describe('parseFiltersFromSearchParams', () => {
         order: 'desc',
         roastLevel: 'LIGHT,MEDIUM',
         grindSize: 'FINE,MEDIUM_FINE',
-        equipment: 'V60,Chemex',
+        equipment: 'HARIO V60,CHEMEX',
         beanWeight: '{"min":15,"max":25}',
         waterTemp: '{"min":85,"max":95}',
       });
@@ -39,7 +39,7 @@ describe('parseFiltersFromSearchParams', () => {
         order: 'desc',
         roastLevel: [RoastLevel.LIGHT, RoastLevel.MEDIUM],
         grindSize: [GrindSize.FINE, GrindSize.MEDIUM_FINE],
-        equipment: ['V60', 'Chemex'],
+        equipment: ['HARIO V60', 'CHEMEX'],
         beanWeight: { min: 15, max: 25 },
         waterTemp: { min: 85, max: 95 },
       });
@@ -99,7 +99,7 @@ describe('parseFiltersFromSearchParams', () => {
       const searchParams = createSearchParams({
         roastLevel: 'LIGHT,MEDIUM,DARK',
         grindSize: 'FINE,COARSE',
-        equipment: 'V60,Chemex,Kalita',
+        equipment: 'HARIO V60,CHEMEX,Kalita Wave',
       });
 
       // Act - 実行：フィルター条件を解析
@@ -109,7 +109,7 @@ describe('parseFiltersFromSearchParams', () => {
       expect(result).toEqual({
         roastLevel: [RoastLevel.LIGHT, RoastLevel.MEDIUM, RoastLevel.DARK],
         grindSize: [GrindSize.FINE, GrindSize.COARSE],
-        equipment: ['V60', 'Chemex', 'Kalita'],
+        equipment: ['HARIO V60', 'CHEMEX', 'Kalita Wave'],
       });
     });
 
@@ -313,7 +313,7 @@ describe('parseFiltersFromSearchParams', () => {
       // Arrange - 準備：単一要素の配列パラメータを含むSearchParamsを作成
       const searchParams = createSearchParams({
         roastLevel: 'LIGHT',
-        equipment: 'V60',
+        equipment: 'HARIO V60',
       });
 
       // Act - 実行：フィルター条件を解析
@@ -322,7 +322,7 @@ describe('parseFiltersFromSearchParams', () => {
       // Assert - 確認：単一要素配列が正しく処理されることを検証
       expect(result).toEqual({
         roastLevel: [RoastLevel.LIGHT],
-        equipment: ['V60'],
+        equipment: ['HARIO V60'],
       });
     });
 
@@ -377,7 +377,7 @@ describe('parseFiltersFromSearchParams', () => {
     it('カンマを含む機器名が正しく配列として解析される', () => {
       // Arrange - 準備：カンマを含む機器名を含むSearchParamsを作成
       const searchParams = createSearchParams({
-        equipment: 'Hario V60,Chemex 6-cup,Kalita Wave 185',
+        equipment: 'HARIO V60,CHEMEX 6-cup,Kalita Wave 185',
       });
 
       // Act - 実行：フィルター条件を解析
@@ -385,7 +385,7 @@ describe('parseFiltersFromSearchParams', () => {
 
       // Assert - 確認：カンマを含む機器名が正しく配列として解析されることを検証
       expect(result).toEqual({
-        equipment: ['Hario V60', 'Chemex 6-cup', 'Kalita Wave 185'],
+        equipment: ['HARIO V60', 'CHEMEX 6-cup', 'Kalita Wave 185'],
       });
     });
   });

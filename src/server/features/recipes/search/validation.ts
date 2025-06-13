@@ -8,6 +8,7 @@ export const searchRecipesQuerySchema = z.object({
   roastLevel: z.array(z.nativeEnum(RoastLevel)).optional(),
   grindSize: z.array(z.nativeEnum(GrindSize)).optional(),
   equipment: z.array(z.string()).optional(),
+  equipmentType: z.array(z.string()).optional(),
   beanWeight: z
     .object({
       min: z.number().optional(),
@@ -15,6 +16,12 @@ export const searchRecipesQuerySchema = z.object({
     })
     .optional(),
   waterTemp: z
+    .object({
+      min: z.number().optional(),
+      max: z.number().optional(),
+    })
+    .optional(),
+  waterAmount: z
     .object({
       min: z.number().optional(),
       max: z.number().optional(),

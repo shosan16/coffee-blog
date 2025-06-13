@@ -1,7 +1,7 @@
 ---
-description: プロジェクトの概要。目的・背景などが記載されている。
+description:
 globs:
-alwaysApply: false
+alwaysApply: true
 ---
 # コーヒーレシピブログ プロジェクト概要
 

@@ -15,8 +15,10 @@ export type SearchRecipesParams = {
   roastLevel?: RoastLevel[];
   grindSize?: GrindSize[];
   equipment?: string[];
+  equipmentType?: string[];
   beanWeight?: RangeFilter;
   waterTemp?: RangeFilter;
+  waterAmount?: RangeFilter;
   search?: string;
   sort?: string;
   order?: 'asc' | 'desc';
@@ -57,9 +59,24 @@ export type PrismaWhereClause = {
     gte?: number;
     lte?: number;
   };
+  waterAmount?: {
+    gte?: number;
+    lte?: number;
+  };
   OR?: Array<{
     title?: { contains: string; mode: 'insensitive' };
     summary?: { contains: string; mode: 'insensitive' };
+  }>;
+  AND?: Array<{
+    equipment?: {
+      some: {
+        equipmentType: {
+          name: {
+            in: string[];
+          };
+        };
+      };
+    };
   }>;
 };
 

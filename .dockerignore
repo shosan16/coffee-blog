@@ -1,0 +1,56 @@
+# === 必須：プラットフォーム問題防止 ===
+node_modules/
+
+# === セキュリティ ===
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+
+# === ビルド最適化 ===
+# Build outputs
+.next/
+dist/
+build/
+coverage/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# === 開発環境固有 ===
+# IDEとエディタ
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS固有ファイル
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# === バージョン管理 ===
+.git/
+.gitignore
+README.md
+CHANGELOG.md
+
+# === Docker関連 ===
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# === テスト関連 ===
+.nyc_output/
+coverage/
+.jest/
