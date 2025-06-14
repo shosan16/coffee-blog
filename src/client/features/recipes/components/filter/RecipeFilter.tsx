@@ -218,7 +218,9 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
                 <div className="mt-3 flex items-center gap-2 rounded-md border border-blue-200 bg-blue-50 p-3">
                   <div className="h-2 w-2 animate-pulse rounded-full bg-blue-500"></div>
                   <p className="text-sm font-medium text-blue-700">
-                    変更があります。「絞り込む」ボタンを押して適用してください。
+                    変更があります。
+                    <br />
+                    絞り込むボタンを押して適用してください。
                   </p>
                 </div>
               )}
