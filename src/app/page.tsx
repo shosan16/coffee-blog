@@ -74,7 +74,7 @@ export default async function Home({
           </div>
           {/* サイドバー（フィルター） */}
           <aside className="hidden w-100 flex-shrink-0 lg:block">
-            <div className="sticky top-32">
+            <div className="top-32">
               <LazyRecipeFilter />
             </div>
           </aside>
