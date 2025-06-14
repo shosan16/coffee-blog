@@ -7,14 +7,14 @@ const nextConfig = {
       // クライアントサイドのバンドルからサーバー専用のライブラリを除外
       config.resolve.fallback = {
         ...config.resolve.fallback,
-        'pino': false,
+        pino: false,
         'pino-pretty': false,
       };
     }
     return config;
   },
   // サーバー専用の外部ライブラリを指定
-  serverExternalPackages: ['pino', 'pino-pretty']
+  serverExternalPackages: ['pino', 'pino-pretty'],
 };
 
 export default nextConfig;
