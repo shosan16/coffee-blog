@@ -119,23 +119,11 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg font-semibold">フィルター条件</CardTitle>
-              <div className="flex items-center gap-2">
-                {activeFilterCount > 0 && (
-                  <span className="text-sm text-gray-500">
-                    {activeFilterCount}個のフィルター適用中
-                  </span>
-                )}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleResetFilters}
-                  disabled={isLoading || activeFilterCount === 0}
-                  className="text-xs"
-                >
-                  <RotateCcw className="mr-1 h-3 w-3" />
-                  リセット
-                </Button>
-              </div>
+              {activeFilterCount > 0 && (
+                <span className="text-sm text-gray-500">
+                  {activeFilterCount}個のフィルター適用中
+                </span>
+              )}
             </div>
           </CardHeader>
 
