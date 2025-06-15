@@ -1,15 +1,13 @@
-import { Bean, Droplet, Settings, Coffee, Timer, ThermometerSun } from 'lucide-react';
-import React from 'react';
+import { Bean, Droplet, Settings, Coffee } from 'lucide-react';
 
 import { Recipe } from '@/client/features/recipes/types/recipe';
-import { Badge } from '@/client/shared/shadcn/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
 
 type RecipeCardProps = {
   recipe: Recipe;
 };
 
-const RecipeCard = React.memo(function RecipeCard({ recipe }: RecipeCardProps) {
+export default function RecipeCard({ recipe }: RecipeCardProps) {
   return (
     <Card className="group flex h-full w-full flex-col overflow-hidden border-2 border-amber-200 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-amber-300 hover:shadow-xl">
       {/* コーヒーの染みのような装飾 */}
@@ -57,7 +55,7 @@ const RecipeCard = React.memo(function RecipeCard({ recipe }: RecipeCardProps) {
           <div className="group/item relative overflow-hidden rounded-xl bg-gradient-to-r from-orange-100 to-amber-100 p-3 shadow-sm transition-all hover:shadow-md">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-white/60 shadow-sm">
-                <ThermometerSun className="h-5 w-5 text-orange-800" />
+                <Droplet className="h-5 w-5 text-orange-800" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="mb-0.5 text-xs font-bold tracking-wider text-orange-800/80 uppercase">
@@ -109,6 +107,4 @@ const RecipeCard = React.memo(function RecipeCard({ recipe }: RecipeCardProps) {
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-amber-900/10 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
     </Card>
   );
-});
-
-export default RecipeCard;
+}
