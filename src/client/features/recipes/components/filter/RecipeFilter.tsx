@@ -119,23 +119,11 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg font-semibold">フィルター条件</CardTitle>
-              <div className="flex items-center gap-2">
-                {activeFilterCount > 0 && (
-                  <span className="text-sm text-gray-500">
-                    {activeFilterCount}個のフィルター適用中
-                  </span>
-                )}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleResetFilters}
-                  disabled={isLoading || activeFilterCount === 0}
-                  className="text-xs"
-                >
-                  <RotateCcw className="mr-1 h-3 w-3" />
-                  リセット
-                </Button>
-              </div>
+              {activeFilterCount > 0 && (
+                <span className="text-sm text-gray-500">
+                  {activeFilterCount}個のフィルター適用中
+                </span>
+              )}
             </div>
           </CardHeader>
 
@@ -218,7 +206,9 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
                 <div className="mt-3 flex items-center gap-2 rounded-md border border-blue-200 bg-blue-50 p-3">
                   <div className="h-2 w-2 animate-pulse rounded-full bg-blue-500"></div>
                   <p className="text-sm font-medium text-blue-700">
-                    変更があります。「絞り込む」ボタンを押して適用してください。
+                    変更があります。
+                    <br />
+                    絞り込むボタンを押して適用してください。
                   </p>
                 </div>
               )}

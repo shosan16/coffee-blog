@@ -38,10 +38,10 @@ npm install --save-dev vitest @vitest/ui jsdom @testing-library/react @testing-l
 **vitest.config.ts**
 
 ```typescript
-import path from 'path'
+import path from 'path';
 
-import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [react()],
@@ -56,13 +56,13 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-})
+});
 ```
 
 **src/test/setup.ts**
 
 ```typescript
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom';
 
 // グローバルなテスト設定をここに追加
 // 例: モックの設定、テスト環境の初期化など

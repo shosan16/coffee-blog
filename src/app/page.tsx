@@ -73,8 +73,8 @@ export default async function Home({
             <RecipeList initialData={initialData} />
           </div>
           {/* サイドバー（フィルター） */}
-          <aside className="hidden w-80 flex-shrink-0 lg:block">
-            <div className="sticky top-32">
+          <aside className="hidden w-100 flex-shrink-0 lg:block">
+            <div className="top-32">
               <LazyRecipeFilter />
             </div>
           </aside>

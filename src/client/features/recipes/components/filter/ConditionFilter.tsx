@@ -4,34 +4,12 @@ import { RoastLevel, GrindSize } from '@prisma/client';
 import React, { useMemo, useCallback } from 'react';
 
 import Label from '@/client/shared/shadcn/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/client/shared/shadcn/select';
+import MultiCombobox, {
+  type MultiComboboxItem,
+} from '@/client/shared/components/multi-combobox/MultiCombobox';
+import { ROAST_LEVELS, GRIND_SIZES, type OptionItem } from '@/client/shared/constants/filters';
 
 import RangeSlider from './RangeSlider';
-
-const ROAST_LEVELS = [
-  { value: 'LIGHT', label: 'ライト' },
-  { value: 'LIGHT_MEDIUM', label: 'ライトミディアム' },
-  { value: 'MEDIUM', label: 'ミディアム' },
-  { value: 'MEDIUM_DARK', label: 'ミディアムダーク' },
-  { value: 'DARK', label: 'ダーク' },
-  { value: 'FRENCH', label: 'フレンチ' },
-] as const;
-
-const GRIND_SIZES = [
-  { value: 'EXTRA_FINE', label: 'エクストラファイン' },
-  { value: 'FINE', label: 'ファイン' },
-  { value: 'MEDIUM_FINE', label: 'ミディアムファイン' },
-  { value: 'MEDIUM', label: 'ミディアム' },
-  { value: 'MEDIUM_COARSE', label: 'ミディアムコース' },
-  { value: 'COARSE', label: 'コース' },
-  { value: 'EXTRA_COARSE', label: 'エクストラコース' },
-] as const;
 
 type ConditionFilterProps = {
   roastLevels: RoastLevel[];
@@ -60,109 +38,99 @@ const ConditionFilter = React.memo(function ConditionFilter({
   onWaterAmountChange,
   className = '',
 }: ConditionFilterProps) {
-  const roastLevelTags = useMemo(() => {
-    return roastLevels.map((level) => {
-      const levelLabel = ROAST_LEVELS.find((l) => l.value === level)?.label;
-      return (
-        <span key={level} className="rounded bg-blue-100 px-2 py-1 text-xs text-blue-800">
-          {levelLabel}
-        </span>
-      );
-    });
-  }, [roastLevels]);
+  // OptionItemをMultiComboboxItem形式に変換するヘルパー関数
+  const convertToMultiComboboxItems = (items: OptionItem[]): MultiComboboxItem[] => {
+    return items.map((item) => ({
+      id: item.id,
+      label: item.label,
+      value: item.value,
+      disabled: item.disabled,
+    }));
+  };
 
-  const grindSizeTags = useMemo(() => {
-    return grindSizes.map((size) => {
-      const sizeLabel = GRIND_SIZES.find((s) => s.value === size)?.label;
-      return (
-        <span key={size} className="rounded bg-green-100 px-2 py-1 text-xs text-green-800">
-          {sizeLabel}
-        </span>
-      );
-    });
-  }, [grindSizes]);
+  // MultiCombobox用の定数を生成
+  const roastLevelItems = useMemo(() => convertToMultiComboboxItems(ROAST_LEVELS), []);
+  const grindSizeItems = useMemo(() => convertToMultiComboboxItems(GRIND_SIZES), []);
 
+  // 選択されている焙煎度をMultiComboboxItem形式に変換
+  const selectedRoastLevels = useMemo(() => {
+    return roastLevels
+      .map((level) => roastLevelItems.find((item) => item.value === level))
+      .filter((item): item is MultiComboboxItem => item !== undefined);
+  }, [roastLevels, roastLevelItems]);
+
+  // 選択されている挽き目をMultiComboboxItem形式に変換
+  const selectedGrindSizes = useMemo(() => {
+    return grindSizes
+      .map((size) => grindSizeItems.find((item) => item.value === size))
+      .filter((item): item is MultiComboboxItem => item !== undefined);
+  }, [grindSizes, grindSizeItems]);
+
+  // 焙煎度選択ハンドラー
   const handleRoastLevelSelect = useCallback(
-    (value: string) => {
-      const roastLevel = value as RoastLevel;
-      if (roastLevels.includes(roastLevel)) {
-        onRoastLevelChange(roastLevels.filter((level) => level !== roastLevel));
-      } else {
-        onRoastLevelChange([...roastLevels, roastLevel]);
-      }
+    (item: MultiComboboxItem) => {
+      const roastLevel = item.value as RoastLevel;
+      onRoastLevelChange([...roastLevels, roastLevel]);
     },
     [roastLevels, onRoastLevelChange]
   );
 
+  // 焙煎度削除ハンドラー
+  const handleRoastLevelDelete = useCallback(
+    (item: MultiComboboxItem) => {
+      const roastLevel = item.value as RoastLevel;
+      onRoastLevelChange(roastLevels.filter((level) => level !== roastLevel));
+    },
+    [roastLevels, onRoastLevelChange]
+  );
+
+  // 挽き目選択ハンドラー
   const handleGrindSizeSelect = useCallback(
-    (value: string) => {
-      const grindSize = value as GrindSize;
-      if (grindSizes.includes(grindSize)) {
-        onGrindSizeChange(grindSizes.filter((size) => size !== grindSize));
-      } else {
-        onGrindSizeChange([...grindSizes, grindSize]);
-      }
+    (item: MultiComboboxItem) => {
+      const grindSize = item.value as GrindSize;
+      onGrindSizeChange([...grindSizes, grindSize]);
+    },
+    [grindSizes, onGrindSizeChange]
+  );
+
+  // 挽き目削除ハンドラー
+  const handleGrindSizeDelete = useCallback(
+    (item: MultiComboboxItem) => {
+      const grindSize = item.value as GrindSize;
+      onGrindSizeChange(grindSizes.filter((size) => size !== grindSize));
     },
     [grindSizes, onGrindSizeChange]
   );
 
   return (
     <div className={`space-y-6 ${className}`}>
-      <div>
-        <Label className="mb-3 block text-sm font-medium text-gray-700">抽出条件</Label>
+      <div className="space-y-6">
+        <Label className="block text-sm font-medium text-gray-700">抽出条件</Label>
 
         {/* 焙煎度 */}
         <div className="space-y-3">
           <Label className="text-xs text-gray-500">焙煎度</Label>
-          <Select onValueChange={handleRoastLevelSelect}>
-            <SelectTrigger className="w-full">
-              <SelectValue
-                placeholder={
-                  roastLevels.length > 0 ? `${roastLevels.length}個選択中` : '焙煎度を選択'
-                }
-              />
-            </SelectTrigger>
-            <SelectContent>
-              {ROAST_LEVELS.map((level) => (
-                <SelectItem key={level.value} value={level.value}>
-                  <div className="flex w-full items-center justify-between">
-                    <span>{level.label}</span>
-                    {roastLevels.includes(level.value as RoastLevel) && (
-                      <span className="ml-2 text-blue-600">✓</span>
-                    )}
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {roastLevels.length > 0 && <div className="flex flex-wrap gap-1">{roastLevelTags}</div>}
+          <MultiCombobox
+            items={roastLevelItems}
+            selectedItems={selectedRoastLevels}
+            onSelect={handleRoastLevelSelect}
+            onDelete={handleRoastLevelDelete}
+            placeholder="焙煎度を選択"
+            dropdownHelpMessage="焙煎度を選択してください"
+          />
         </div>
 
         {/* 挽き目 */}
         <div className="space-y-3">
           <Label className="text-xs text-gray-500">挽き目</Label>
-          <Select onValueChange={handleGrindSizeSelect}>
-            <SelectTrigger className="w-full">
-              <SelectValue
-                placeholder={
-                  grindSizes.length > 0 ? `${grindSizes.length}個選択中` : '挽き目を選択'
-                }
-              />
-            </SelectTrigger>
-            <SelectContent>
-              {GRIND_SIZES.map((size) => (
-                <SelectItem key={size.value} value={size.value}>
-                  <div className="flex w-full items-center justify-between">
-                    <span>{size.label}</span>
-                    {grindSizes.includes(size.value as GrindSize) && (
-                      <span className="ml-2 text-blue-600">✓</span>
-                    )}
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {grindSizes.length > 0 && <div className="flex flex-wrap gap-1">{grindSizeTags}</div>}
+          <MultiCombobox
+            items={grindSizeItems}
+            selectedItems={selectedGrindSizes}
+            onSelect={handleGrindSizeSelect}
+            onDelete={handleGrindSizeDelete}
+            placeholder="挽き目を選択"
+            dropdownHelpMessage="挽き目を選択してください"
+          />
         </div>
       </div>
 

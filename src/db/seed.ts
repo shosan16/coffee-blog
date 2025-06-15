@@ -109,13 +109,6 @@ const FILTER_EQUIPMENT = [
   'クナ ステンレスフィルター',
 ];
 
-// 器具タイプごとの機器マップ
-const EQUIPMENT_MAP: Record<string, string[]> = {
-  '1': DRIPPER_EQUIPMENT,
-  '2': GRINDER_EQUIPMENT,
-  '3': FILTER_EQUIPMENT,
-};
-
 // ブランド名のマップ
 const BRAND_MAP: Record<string, string> = {
   'HARIO V60': 'HARIO',
@@ -245,8 +238,6 @@ async function main(): Promise<void> {
       description: '豆やお湯の重さを量るための器具',
     },
   });
-
-  const equipmentTypes = [dripperType, grinderType, filterType, kettleType, scaleType];
 
   console.log(
     `Created equipment types: ${dripperType.name}, ${grinderType.name}, ${filterType.name}, ${kettleType.name}, ${scaleType.name}`
@@ -560,20 +551,6 @@ async function main(): Promise<void> {
             description: '家庭用電動グラインダーの定番',
             affiliateLink: `${IMAGE_BASE_URL}/baratza-encore`,
           },
-          {
-            typeId: kettleType.id,
-            name: 'フェロー スタッグ ケトル',
-            brand: 'Fellow',
-            description: '温度調整機能付きの高性能ケトル',
-            affiliateLink: `${IMAGE_BASE_URL}/fellow-stagg`,
-          },
-          {
-            typeId: scaleType.id,
-            name: 'アカイア パール',
-            brand: 'ACAIA',
-            description: 'バリスタ御用達の高精度スケール',
-            affiliateLink: `${IMAGE_BASE_URL}/acaia-pearl`,
-          },
         ],
       },
       tags: {
@@ -808,6 +785,66 @@ async function main(): Promise<void> {
       `${faker.helpers.arrayElement(['朝食', '午後のブレイク', 'デザートと一緒に'])}におすすめです。`,
     ]);
 
+    // 各タイプの器具を0個または1個で生成
+    const equipmentToCreate = [];
+
+    // ドリッパー（ID: 1）
+    if (faker.datatype.boolean({ probability: 0.7 })) {
+      // 70%の確率で含む
+      const equipmentName = faker.helpers.arrayElement(DRIPPER_EQUIPMENT);
+      const brandName = BRAND_MAP[equipmentName] ?? equipmentName.split(' ')[0];
+      const description = faker.helpers.arrayElement(EQUIPMENT_DESCRIPTIONS['1']);
+
+      equipmentToCreate.push({
+        typeId: dripperType.id,
+        name: equipmentName,
+        brand: brandName,
+        description,
+        affiliateLink: faker.helpers.maybe(
+          () => `${IMAGE_BASE_URL}/${faker.helpers.slugify(equipmentName)}`,
+          { probability: 0.7 }
+        ),
+      });
+    }
+
+    // コーヒーミル（ID: 2）
+    if (faker.datatype.boolean({ probability: 0.8 })) {
+      // 80%の確率で含む
+      const equipmentName = faker.helpers.arrayElement(GRINDER_EQUIPMENT);
+      const brandName = BRAND_MAP[equipmentName] ?? equipmentName.split(' ')[0];
+      const description = faker.helpers.arrayElement(EQUIPMENT_DESCRIPTIONS['2']);
+
+      equipmentToCreate.push({
+        typeId: grinderType.id,
+        name: equipmentName,
+        brand: brandName,
+        description,
+        affiliateLink: faker.helpers.maybe(
+          () => `${IMAGE_BASE_URL}/${faker.helpers.slugify(equipmentName)}`,
+          { probability: 0.7 }
+        ),
+      });
+    }
+
+    // フィルター（ID: 3）
+    if (faker.datatype.boolean({ probability: 0.6 })) {
+      // 60%の確率で含む
+      const equipmentName = faker.helpers.arrayElement(FILTER_EQUIPMENT);
+      const brandName = BRAND_MAP[equipmentName] ?? equipmentName.split(' ')[0];
+      const description = faker.helpers.arrayElement(EQUIPMENT_DESCRIPTIONS['3']);
+
+      equipmentToCreate.push({
+        typeId: filterType.id,
+        name: equipmentName,
+        brand: brandName,
+        description,
+        affiliateLink: faker.helpers.maybe(
+          () => `${IMAGE_BASE_URL}/${faker.helpers.slugify(equipmentName)}`,
+          { probability: 0.7 }
+        ),
+      });
+    }
+
     // 投稿を作成
     const newPost = await prisma.post.create({
       data: {
@@ -833,38 +870,7 @@ async function main(): Promise<void> {
           })),
         },
         equipment: {
-          create: Array.from({ length: faker.number.int({ min: 2, max: 4 }) }).map(() => {
-            // ドリッパー、ミル、フィルターのみを選択するため、最初の3つのタイプに限定
-            const limitedTypes = equipmentTypes.slice(0, 3);
-            const randomType = faker.helpers.arrayElement(limitedTypes);
-
-            // BigInt型のIDを文字列に変換してマップから取得
-            const typeIdStr = randomType.id.toString();
-
-            // 機器タイプに基づいて適切なリストから選択
-            const equipmentList = EQUIPMENT_MAP[typeIdStr] ?? [];
-            const equipmentName = faker.helpers.arrayElement(equipmentList);
-
-            // ブランド名をマッピングから取得
-            const brandName = BRAND_MAP[equipmentName] ?? equipmentName.split(' ')[0];
-
-            // 器具の説明文
-            const typeDescriptions = EQUIPMENT_DESCRIPTIONS[typeIdStr] ?? [];
-            const description = faker.helpers.arrayElement(
-              typeDescriptions.length > 0 ? typeDescriptions : ['高品質な器具です']
-            );
-
-            return {
-              typeId: randomType.id,
-              name: equipmentName,
-              brand: brandName,
-              description,
-              affiliateLink: faker.helpers.maybe(
-                () => `${IMAGE_BASE_URL}/${faker.helpers.slugify(equipmentName)}`,
-                { probability: 0.7 }
-              ),
-            };
-          }),
+          create: equipmentToCreate,
         },
         tags: {
           create: selectedTags.map((tag) => ({

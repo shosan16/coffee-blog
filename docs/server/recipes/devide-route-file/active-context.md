@@ -111,6 +111,7 @@ import { prisma } from '@/server/shared/database/prisma';
 **実装後**: 4つの専門ファイルに分離
 
 - **単一責任原則（S）**: 各ファイルが明確な責任を持つ
+
   - types.ts: 型定義のみ
   - schema.ts: バリデーションのみ
   - service.ts: ビジネスロジックのみ
@@ -161,7 +162,7 @@ type SearchRecipesParams = {
 ```typescript
 // Prismaの実際の型との不整合
 type PostWithRelations = {
-  id: bigint;  // Prismaの実際の型に合わせる
+  id: bigint; // Prismaの実際の型に合わせる
   // ...
 };
 
@@ -260,7 +261,7 @@ import { local } from './local-file';
 ```typescript
 // 明示的な型定義による型安全性確保
 type PostWithRelations = {
-  id: bigint;  // Prismaの実際の型
+  id: bigint; // Prismaの実際の型
   // ...
 };
 
@@ -321,7 +322,9 @@ Phase 2の検索機能分離により、理論的なアーキテクチャ原則�
 **Before（エラーが発生）**:
 
 ```typescript
-const mockPrisma = { /* ... */ };
+const mockPrisma = {
+  /* ... */
+};
 
 vi.mock('@/server/shared/database/prisma', () => ({
   prisma: mockPrisma, // エラー: トップレベル変数参照不可

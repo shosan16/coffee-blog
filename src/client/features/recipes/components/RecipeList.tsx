@@ -22,7 +22,7 @@ export default function RecipeList({ initialData }: RecipeListProps) {
   return (
     <div className="space-y-8">
       {/* レシピグリッド */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-3">
         {!isLoading && recipes.length === 0 && (
           <div className="col-span-full py-16 text-center">
             <div className="flex flex-col items-center gap-4">
