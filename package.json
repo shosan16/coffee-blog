@@ -15,13 +15,10 @@
     "test:run": "npx vitest run --reporter=basic",
     "test:coverage": "npx vitest run --coverage",
     "test:quick": "npx vitest run --reporter=basic --silent",
-    "docker:setup": "docker-compose build --no-cache",
-    "docker:dev": "docker-compose up app-dev",
     "docker:generate": "npx prisma generate",
     "docker:migrate": "npx prisma migrate deploy",
     "docker:seed": "npm run seed",
-    "docker:db-setup": "npm run docker:generate && npm run docker:migrate && npm run docker:seed",
-    "docker:clean": "docker-compose down -v && docker system prune -f"
+    "docker:db-setup": "npm run docker:generate && npm run docker:migrate && npm run docker:seed"
   },
   "dependencies": {
     "@prisma/client": "^6.6.0",
