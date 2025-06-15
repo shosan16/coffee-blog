@@ -7,27 +7,9 @@ import Label from '@/client/shared/shadcn/label';
 import MultiCombobox, {
   type MultiComboboxItem,
 } from '@/client/shared/components/multi-combobox/MultiCombobox';
+import { ROAST_LEVELS, GRIND_SIZES, type OptionItem } from '@/client/shared/constants/filters';
 
 import RangeSlider from './RangeSlider';
-
-const ROAST_LEVELS: MultiComboboxItem[] = [
-  { id: 'LIGHT', label: 'ライト', value: 'LIGHT' },
-  { id: 'LIGHT_MEDIUM', label: 'ライトミディアム', value: 'LIGHT_MEDIUM' },
-  { id: 'MEDIUM', label: 'ミディアム', value: 'MEDIUM' },
-  { id: 'MEDIUM_DARK', label: 'ミディアムダーク', value: 'MEDIUM_DARK' },
-  { id: 'DARK', label: 'ダーク', value: 'DARK' },
-  { id: 'FRENCH', label: 'フレンチ', value: 'FRENCH' },
-];
-
-const GRIND_SIZES: MultiComboboxItem[] = [
-  { id: 'EXTRA_FINE', label: 'エクストラファイン', value: 'EXTRA_FINE' },
-  { id: 'FINE', label: 'ファイン', value: 'FINE' },
-  { id: 'MEDIUM_FINE', label: 'ミディアムファイン', value: 'MEDIUM_FINE' },
-  { id: 'MEDIUM', label: 'ミディアム', value: 'MEDIUM' },
-  { id: 'MEDIUM_COARSE', label: 'ミディアムコース', value: 'MEDIUM_COARSE' },
-  { id: 'COARSE', label: 'コース', value: 'COARSE' },
-  { id: 'EXTRA_COARSE', label: 'エクストラコース', value: 'EXTRA_COARSE' },
-];
 
 type ConditionFilterProps = {
   roastLevels: RoastLevel[];
@@ -56,19 +38,33 @@ const ConditionFilter = React.memo(function ConditionFilter({
   onWaterAmountChange,
   className = '',
 }: ConditionFilterProps) {
+  // OptionItemをMultiComboboxItem形式に変換するヘルパー関数
+  const convertToMultiComboboxItems = (items: OptionItem[]): MultiComboboxItem[] => {
+    return items.map((item) => ({
+      id: item.id,
+      label: item.label,
+      value: item.value,
+      disabled: item.disabled,
+    }));
+  };
+
+  // MultiCombobox用の定数を生成
+  const roastLevelItems = useMemo(() => convertToMultiComboboxItems(ROAST_LEVELS), []);
+  const grindSizeItems = useMemo(() => convertToMultiComboboxItems(GRIND_SIZES), []);
+
   // 選択されている焙煎度をMultiComboboxItem形式に変換
   const selectedRoastLevels = useMemo(() => {
     return roastLevels
-      .map((level) => ROAST_LEVELS.find((item) => item.value === level))
+      .map((level) => roastLevelItems.find((item) => item.value === level))
       .filter((item): item is MultiComboboxItem => item !== undefined);
-  }, [roastLevels]);
+  }, [roastLevels, roastLevelItems]);
 
   // 選択されている挽き目をMultiComboboxItem形式に変換
   const selectedGrindSizes = useMemo(() => {
     return grindSizes
-      .map((size) => GRIND_SIZES.find((item) => item.value === size))
+      .map((size) => grindSizeItems.find((item) => item.value === size))
       .filter((item): item is MultiComboboxItem => item !== undefined);
-  }, [grindSizes]);
+  }, [grindSizes, grindSizeItems]);
 
   // 焙煎度選択ハンドラー
   const handleRoastLevelSelect = useCallback(
@@ -115,7 +111,7 @@ const ConditionFilter = React.memo(function ConditionFilter({
         <div className="space-y-3">
           <Label className="text-xs text-gray-500">焙煎度</Label>
           <MultiCombobox
-            items={ROAST_LEVELS}
+            items={roastLevelItems}
             selectedItems={selectedRoastLevels}
             onSelect={handleRoastLevelSelect}
             onDelete={handleRoastLevelDelete}
@@ -128,7 +124,7 @@ const ConditionFilter = React.memo(function ConditionFilter({
         <div className="space-y-3">
           <Label className="text-xs text-gray-500">挽き目</Label>
           <MultiCombobox
-            items={GRIND_SIZES}
+            items={grindSizeItems}
             selectedItems={selectedGrindSizes}
             onSelect={handleGrindSizeSelect}
             onDelete={handleGrindSizeDelete}

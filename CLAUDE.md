@@ -34,10 +34,6 @@
 
 ## 🛠️ 開発環境
 
-### 動作確認
-
-**重要**: `npm run dev` は実行しないでください。Dockerコンテナはすでに起動しているため、<http://localhost:3000> にアクセスして動作を確認してください。
-
 ### 技術スタック
 
 - **フロントエンド**: Next.js 15（App Router）、React 18、TypeScript

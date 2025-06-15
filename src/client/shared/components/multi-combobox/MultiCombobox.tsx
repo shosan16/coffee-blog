@@ -104,6 +104,7 @@ export default function MultiCombobox({
   const [open, setOpen] = React.useState(false);
   const [inputValue, setInputValue] = React.useState('');
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const listboxId = React.useId();
 
   // 選択済みアイテムのIDセットを作成（パフォーマンス最適化）
   const selectedItemIds = React.useMemo(
@@ -179,6 +180,43 @@ export default function MultiCombobox({
   }, [canCreateNewItem, inputValue, onAdd]);
 
   /**
+   * 入力フィールド専用クリックハンドラー
+   * イベント伝播を停止し、直接ドロップダウンを開く
+   */
+  const handleInputClick = React.useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation(); // 親要素のクリックイベントを停止
+      if (!disabled) {
+        setOpen(true);
+      }
+    },
+    [disabled]
+  );
+
+  /**
+   * フォーカスハンドラー（簡素化）
+   * キーボードフォーカス時のみドロップダウンを開く
+   */
+  const handleInputFocus = React.useCallback(() => {
+    if (disabled) return;
+    // クリック以外（キーボードフォーカスなど）の場合のみ処理
+    if (!open) {
+      setOpen(true);
+    }
+  }, [disabled, open]);
+
+  /**
+   * トリガークリックハンドラー（調整済み）
+   * ChevronDownや外側クリック時の動作
+   */
+  const handleTriggerClick = React.useCallback(() => {
+    if (disabled) return;
+
+    inputRef.current?.focus();
+    setOpen((prev) => !prev);
+  }, [disabled]);
+
+  /**
    * キーボードショートカットハンドラー
    * Enter: 新しいアイテム追加またはフィルタされた最初のアイテム選択
    * Backspace: 最後の選択アイテム削除（入力が空の場合）
@@ -225,6 +263,10 @@ export default function MultiCombobox({
       <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger asChild>
           <div
+            role="combobox"
+            aria-expanded={open}
+            aria-haspopup="listbox"
+            aria-controls={listboxId}
             className={cn(
               'border-input min-h-9 w-full cursor-text rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow]',
               'focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]',
@@ -233,12 +275,7 @@ export default function MultiCombobox({
               keepMinHeight && selectedItems.length === 0 && 'min-h-9',
               className
             )}
-            onClick={() => {
-              if (!disabled) {
-                inputRef.current?.focus();
-                setOpen(true);
-              }
-            }}
+            onClick={handleTriggerClick}
           >
             <div className="flex flex-wrap gap-1">
               {selectedItems.map((item) => (
@@ -265,7 +302,8 @@ export default function MultiCombobox({
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  onFocus={() => setOpen(true)}
+                  onFocus={handleInputFocus}
+                  onClick={handleInputClick}
                   placeholder={selectedItems.length === 0 ? placeholder : ''}
                   disabled={disabled || isMaxItemsReached}
                   className={cn(
@@ -281,6 +319,8 @@ export default function MultiCombobox({
 
         <Popover.Portal>
           <Popover.Content
+            id={listboxId}
+            role="listbox"
             className={cn(
               'bg-popover text-popover-foreground animate-in fade-in-0 zoom-in-95 z-50 max-h-72 w-[--radix-popover-trigger-width] overflow-hidden rounded-md border p-0 shadow-md',
               dropdownClassName
@@ -311,6 +351,8 @@ export default function MultiCombobox({
                 <button
                   key={item.id}
                   type="button"
+                  role="option"
+                  aria-selected="false"
                   className={cn(
                     'relative flex w-full cursor-pointer items-center rounded-sm px-3 py-2 text-sm',
                     'hover:bg-accent hover:text-accent-foreground',

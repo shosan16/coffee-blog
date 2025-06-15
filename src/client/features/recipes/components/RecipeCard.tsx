@@ -2,6 +2,7 @@ import { Bean, Droplet, Settings, Coffee } from 'lucide-react';
 
 import { Recipe } from '@/client/features/recipes/types/recipe';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
+import { getRoastLevelLabel, getGrindSizeLabel } from '@/client/shared/constants/filters';
 
 type RecipeCardProps = {
   recipe: Recipe;
@@ -45,7 +46,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
                   豆・挽き目
                 </div>
                 <div className="truncate font-medium text-amber-950">
-                  {`${recipe.roastLevel} • ${recipe.grindSize} • ${recipe.beanWeight}g`}
+                  {`${getRoastLevelLabel(recipe.roastLevel)} • ${getGrindSizeLabel(recipe.grindSize)} • ${recipe.beanWeight}g`}
                 </div>
               </div>
             </div>
@@ -82,9 +83,9 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
                 <div className="flex flex-1 flex-col justify-center">
                   <div className="flex flex-col gap-1">
                     {recipe.equipment.length > 0 ? (
-                      recipe.equipment.map((item, index) => (
+                      recipe.equipment.map((item) => (
                         <span
-                          key={index}
+                          key={item}
                           className="inline-block w-fit rounded-full bg-white/70 px-2 py-0.5 text-xs font-medium text-amber-900 shadow-sm"
                         >
                           {item}
