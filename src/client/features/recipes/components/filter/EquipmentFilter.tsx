@@ -154,12 +154,6 @@ const EquipmentFilter = React.memo(function EquipmentFilter({
           </div>
         );
       })}
-
-      {selectedEquipment.length > 0 && (
-        <div className="rounded bg-gray-50 p-2 text-xs text-gray-500">
-          {selectedEquipment.length}個の器具が選択されています
-        </div>
-      )}
     </div>
   );
 });

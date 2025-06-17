@@ -1,4 +1,4 @@
-import { Bean, Droplet, Settings, Coffee } from 'lucide-react';
+import { Bean, Droplet, Settings } from 'lucide-react';
 
 import { Recipe } from '@/client/features/recipes/types/recipe';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
@@ -23,11 +23,6 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
               {recipe.title}
             </CardTitle>
             <p className="mt-2 line-clamp-2 text-sm text-gray-600">{recipe.summary}</p>
-          </div>
-          <div className="ml-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-md">
-              <Coffee className="h-6 w-6" />
-            </div>
           </div>
         </div>
       </CardHeader>

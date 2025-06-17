@@ -27,8 +27,8 @@ export async function GET(): Promise<NextResponse<EquipmentResponse | { error: s
     // 器具タイプとその器具を取得
     const equipmentTypes = await prisma.equipmentType.findMany({
       where: {
-        name: {
-          in: ['コーヒーミル', 'ドリッパー', 'ペーパーフィルター'],
+        id: {
+          in: [1n, 2n, 3n], // 1:ドリッパー, 2:コーヒーミル, 3:ペーパーフィルター
         },
       },
       include: {
@@ -58,21 +58,21 @@ export async function GET(): Promise<NextResponse<EquipmentResponse | { error: s
         type: type.name,
       }));
 
-      switch (type.name) {
-        case 'コーヒーミル':
-          equipment.grinder = equipmentItems;
-          break;
-        case 'ドリッパー':
+      switch (type.id) {
+        case 1n: // ドリッパー
           equipment.dripper = equipmentItems;
           break;
-        case 'ペーパーフィルター':
+        case 2n: // コーヒーミル
+          equipment.grinder = equipmentItems;
+          break;
+        case 3n: // ペーパーフィルター
           equipment.filter = equipmentItems;
           break;
       }
     });
 
     return NextResponse.json({ equipment });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: '器具データの取得に失敗しました' }, { status: 500 });
   }
 }

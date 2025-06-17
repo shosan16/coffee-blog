@@ -26,7 +26,9 @@ describe('MultiCombobox', () => {
       const trigger = container.querySelector('[role="combobox"]');
 
       // 1回目のクリック
-      fireEvent.click(trigger!);
+      if (trigger) {
+        fireEvent.click(trigger);
+      }
 
       // 選択肢が表示されることを確認
       await waitFor(() => {
@@ -43,7 +45,9 @@ describe('MultiCombobox', () => {
       const input = container.querySelector('input[type="text"]');
 
       // 1回目のクリック
-      fireEvent.click(input!);
+      if (input) {
+        fireEvent.click(input);
+      }
 
       // 選択肢が表示されることを確認
       await waitFor(() => {
@@ -60,7 +64,9 @@ describe('MultiCombobox', () => {
       const input = container.querySelector('input[type="text"]');
 
       // 1回目のクリック
-      fireEvent.click(input!);
+      if (input) {
+        fireEvent.click(input);
+      }
 
       // 少し待ってから選択肢がまだ表示されていることを確認
       await waitFor(() => {
@@ -79,7 +85,9 @@ describe('MultiCombobox', () => {
       const input = container.querySelector('input[type="text"]');
 
       // 入力フィールドにフォーカス（タブキーなどのキーボード操作をシミュレート）
-      fireEvent.focus(input!);
+      if (input) {
+        fireEvent.focus(input);
+      }
 
       // 選択肢が表示されることを確認
       await waitFor(() => {
@@ -96,7 +104,9 @@ describe('MultiCombobox', () => {
 
       const trigger = container.querySelector('[role="combobox"]');
 
-      fireEvent.click(trigger!);
+      if (trigger) {
+        fireEvent.click(trigger);
+      }
 
       // トリガークリック後の基本動作を確認
       // （ドロップダウンが開かれるか、何らかの応答があること）
@@ -120,7 +130,9 @@ describe('MultiCombobox', () => {
       const input = container.querySelector('input[type="text"]');
 
       // ドロップダウンを開く
-      fireEvent.click(trigger!);
+      if (trigger) {
+        fireEvent.click(trigger);
+      }
 
       await waitFor(() => {
         expect(screen.getByText('ライト')).toBeInTheDocument();
@@ -146,11 +158,11 @@ describe('MultiCombobox', () => {
         </div>
       );
 
-      const trigger = container.querySelector('[role="combobox"]');
-
       // ドロップダウンを開く（入力フィールドクリックを使用）
       const input = container.querySelector('input[type="text"]');
-      fireEvent.click(input!);
+      if (input) {
+        fireEvent.click(input);
+      }
 
       // ドロップダウンが開かれることを確認（listboxまたはoptionで判定）
       await waitFor(
@@ -182,14 +194,18 @@ describe('MultiCombobox', () => {
       const input = container.querySelector('input[type="text"]');
 
       // ドロップダウンを開く
-      fireEvent.focus(input!);
+      if (input) {
+        fireEvent.focus(input);
+      }
 
       await waitFor(() => {
         expect(screen.getByText('ライト')).toBeInTheDocument();
       });
 
       // Escapeキーを押す
-      fireEvent.keyDown(input!, { key: 'Escape' });
+      if (input) {
+        fireEvent.keyDown(input, { key: 'Escape' });
+      }
 
       // 選択肢が閉じることを確認
       await waitFor(() => {
@@ -218,7 +234,9 @@ describe('MultiCombobox', () => {
       );
 
       const deleteButton = container.querySelector('button[aria-label="ライトを削除"]');
-      fireEvent.click(deleteButton!);
+      if (deleteButton) {
+        fireEvent.click(deleteButton);
+      }
 
       expect(onDelete).toHaveBeenCalledWith(mockItems[0]);
     });
@@ -229,7 +247,9 @@ describe('MultiCombobox', () => {
       const { container } = render(<MultiCombobox {...defaultProps} disabled />);
 
       const trigger = container.querySelector('[role="combobox"]');
-      fireEvent.click(trigger!);
+      if (trigger) {
+        fireEvent.click(trigger);
+      }
 
       // 少し待ってから選択肢が表示されていないことを確認（role="option"でチェック）
       await new Promise((resolve) => setTimeout(resolve, 100));

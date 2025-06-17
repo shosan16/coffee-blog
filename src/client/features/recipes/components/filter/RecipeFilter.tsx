@@ -8,6 +8,7 @@ import { useRecipeFilter } from '@/client/features/recipes/hooks/useRecipeFilter
 import { Button } from '@/client/shared/shadcn/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
 
+import ActiveFilters from './ActiveFilters';
 import ConditionFilter from './ConditionFilter';
 import EquipmentFilter from './EquipmentFilter';
 
@@ -85,11 +86,6 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
     [updateFilter]
   );
 
-  const handleResetFilters = useCallback((): void => {
-    resetFilters();
-    setIsOpen(false);
-  }, [resetFilters]);
-
   return (
     <div className={className}>
       {/* フィルター開閉ボタン（モバイル用） */}
@@ -116,15 +112,8 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
       {/* フィルターコンテンツ */}
       <div className={`${isOpen ? 'block' : 'hidden'} lg:block`}>
         <Card>
-          <CardHeader className="pb-4">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg font-semibold">フィルター条件</CardTitle>
-              {activeFilterCount > 0 && (
-                <span className="text-sm text-gray-500">
-                  {activeFilterCount}個のフィルター適用中
-                </span>
-              )}
-            </div>
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold">フィルター条件</CardTitle>
           </CardHeader>
 
           <CardContent className="space-y-6">
@@ -134,6 +123,9 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
                 <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-blue-600"></div>
               </div>
             )}
+
+            {/* アクティブフィルター表示 */}
+            <ActiveFilters />
 
             {/* 器具フィルター */}
             <EquipmentFilter

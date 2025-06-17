@@ -1,8 +1,10 @@
-import { Coffee, Search } from 'lucide-react';
+import { Coffee } from 'lucide-react';
 import { type ReadonlyURLSearchParams } from 'next/navigation';
 
 import LazyRecipeFilter from '@/client/features/recipes/components/filter/LazyRecipeFilter';
 import RecipeList from '@/client/features/recipes/components/RecipeList';
+import HeroSearchSection from '@/client/features/recipes/components/search/HeroSearchSection';
+import SearchResultsHeader from '@/client/features/recipes/components/search/SearchResultsHeader';
 import { parseFiltersFromSearchParams } from '@/client/features/recipes/utils/filter';
 import { fetchRecipes } from '@/client/features/recipes/utils/recipeApi';
 
@@ -32,33 +34,11 @@ export default async function Home({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-amber-900 via-orange-800 to-red-900 py-16 text-white">
-        <div className="absolute inset-0 bg-black/20" />
-        <div className="relative container mx-auto px-4">
-          <div className="flex flex-col items-center text-center">
-            <Coffee className="mb-6 h-16 w-16 text-amber-200" />
-            <h1 className="mb-4 text-5xl font-bold tracking-tight">Coffee Recipe Collection</h1>
-            <p className="mb-8 max-w-2xl text-xl text-amber-100">
-              プロのバリスタが考案した最高のコーヒーレシピで
-              <br />
-              おうちカフェを極上の体験に
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* Hero Search Section */}
+      <HeroSearchSection initialResultCount={initialData.pagination.totalItems} />
 
-      {/* Search & Filter Section */}
-      <div className="sticky top-0 z-10 border-b bg-white/70 py-6 backdrop-blur-sm">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center gap-2">
-            <Search className="h-5 w-5 text-gray-600" />
-            <span className="text-sm font-medium text-gray-700">
-              {initialData.pagination.totalItems}件のレシピが見つかりました
-            </span>
-          </div>
-        </div>
-      </div>
+      {/* Search Results Header */}
+      <SearchResultsHeader resultCount={initialData.pagination.totalItems} />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
