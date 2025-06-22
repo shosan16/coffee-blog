@@ -22,7 +22,7 @@ export default function RecipeList({ initialData }: RecipeListProps) {
   return (
     <div className="space-y-8">
       {/* レシピグリッド */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-5">
         {!isLoading && recipes.length === 0 && (
           <div className="col-span-full py-16 text-center">
             <div className="flex flex-col items-center gap-4">
@@ -55,7 +55,7 @@ export default function RecipeList({ initialData }: RecipeListProps) {
 
       {/* ローディング状態 */}
       {isLoading && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-4">
           {Array.from({ length: 8 }, () => ({ id: crypto.randomUUID() })).map((item) => (
             <div key={item.id} className="animate-pulse">
               <div className="space-y-4 rounded-xl border border-gray-200 bg-white/60 p-6">

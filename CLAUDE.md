@@ -57,17 +57,17 @@ describe('calculateTaxForSimplifiedInvoice', () => {
     it('端数を切り捨てること', () => {
       // Arrange - 準備：適格簡易請求書を作成し、品目を追加
       const inv = createSimplifiedInvoice();
-      inv.add(new Item('技評茶', 130, 飲料), 2);   // 軽減税率（8%）
-      inv.add(new Item('技評酒', 150, 酒類), 3);   // 標準税率（10%）
+      inv.add(new Item('技評茶', 130, 飲料), 2); // 軽減税率（8%）
+      inv.add(new Item('技評酒', 150, 酒類), 3); // 標準税率（10%）
 
       // Act - 実行：合計金額（含む税額）を計算
       const total = inv.total();
 
       // Assert - 確認：税率ごとの税額、および合計税額を検証
       expect(total.tax).toEqual({
-        reduced: 19,   // (130*2)*(8/108) = 19.25 → 切り捨てて 19
-        standard: 40,  // (150*3)*(10/110) = 40.90 → 切り捨てて 40
-        total: 59      // 19 + 40
+        reduced: 19, // (130*2)*(8/108) = 19.25 → 切り捨てて 19
+        standard: 40, // (150*3)*(10/110) = 40.90 → 切り捨てて 40
+        total: 59, // 19 + 40
       });
     });
   });
