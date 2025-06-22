@@ -29,44 +29,58 @@ paths:
           in: query
           description: 豆の重量最小値（グラム）
           schema:
-            type: number
+            type: integer
             minimum: 1
             maximum: 100
         - name: beanWeightMax
           in: query
           description: 豆の重量最大値（グラム）
           schema:
-            type: number
+            type: integer
             minimum: 1
             maximum: 100
         - name: waterTempMin
           in: query
           description: 湯温最小値（摂氏）
           schema:
-            type: number
+            type: integer
             minimum: 60
             maximum: 100
         - name: waterTempMax
           in: query
           description: 湯温最大値（摂氏）
           schema:
-            type: number
+            type: integer
             minimum: 60
             maximum: 100
         - name: waterAmountMin
           in: query
           description: 湯量最小値（グラム）
           schema:
-            type: number
+            type: integer
             minimum: 50
             maximum: 1000
         - name: waterAmountMax
           in: query
           description: 湯量最大値（グラム）
           schema:
-            type: number
+            type: integer
             minimum: 50
             maximum: 1000
+        - name: brewingTimeMin
+          in: query
+          description: 抽出時間最小値（秒）
+          schema:
+            type: integer
+            minimum: 30
+            maximum: 600
+        - name: brewingTimeMax
+          in: query
+          description: 抽出時間最大値（秒）
+          schema:
+            type: integer
+            minimum: 30
+            maximum: 600
         - $ref: '#/components/parameters/SortParam'
         - $ref: '#/components/parameters/OrderParam'
       responses:
@@ -100,6 +114,10 @@ paths:
                         beanWeight: 20
                         waterTemp: 92
                         waterAmount: 300
+                        brewingTime: 180
+                        remarks: '特に蒸らし時間に注意。豆の膨らみを見て判断する。'
+                        createdAt: '2025-06-20T10:30:00Z'
+                        updatedAt: '2025-06-20T10:30:00Z'
                     pagination:
                       currentPage: 1
                       totalPages: 5
@@ -155,6 +173,8 @@ paths:
               schema:
                 type: string
                 example: 'req_abc123xyz789'
+                example: 'req_abc123xyz789'
+                example: 'req_abc123xyz789'
           content:
             application/json:
               schema:
@@ -198,10 +218,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Recipe'
-        '201':
-          $ref: '#/components/responses/Created'
-        '204':
-          $ref: '#/components/responses/NoContent'
         '400':
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -304,13 +320,13 @@ components:
       schema:
         type: integer
         minimum: 1
-        maximum: 100
+        maximum: 50
         default: 20
 
     SearchParam:
       name: search
       in: query
-      description: レシピのタイトルや概要での検索キーワード
+      description: レシピのタイトルや概要での部分一致検索キーワード
       required: false
       schema:
         type: string
@@ -375,7 +391,7 @@ components:
       required: false
       schema:
         type: string
-        enum: [title, beanWeight, waterTemp, waterAmount, createdAt]
+        enum: [title, beanWeight, waterTemp, waterAmount, brewingTime, roastLevel, grindSize, createdAt, updatedAt]
         default: createdAt
 
     OrderParam:
@@ -430,6 +446,36 @@ components:
                 message: 'パラメータが不正です'
                 request_id: 'req_abc123xyz789'
                 timestamp: '2025-06-22T10:30:00Z'
+            validation_error:
+              summary: バリデーションエラー
+              value:
+                error: 'VALIDATION_ERROR'
+                message: '入力データにエラーがあります'
+                request_id: 'req_abc123xyz789'
+                timestamp: '2025-06-22T10:30:00Z'
+                details:
+                  fields:
+                    - field: 'title'
+                      message: 'タイトルは必須です'
+                    - field: 'roastLevel'
+                      message: '焙煎度は必須です'
+                    - field: 'beanWeight'
+                      message: '豆の重量は1以上100以下で入力してください'
+                    - field: 'waterTemp'
+                      message: '湯温は60以上100以下で入力してください'
+                    - field: 'brewingTime'
+                      message: '抽出時間は30以上600以下で入力してください'
+            missing_field:
+              summary: 必須フィールド不足
+              value:
+                error: 'MISSING_REQUIRED_FIELD'
+                message: '必須フィールドが不足しています'
+                request_id: 'req_abc123xyz789'
+                timestamp: '2025-06-22T10:30:00Z'
+                details:
+                  fields:
+                    - field: 'title'
+                      message: 'タイトルは必須です'
 
     NotFound:
       description: リソースが見つかりません
@@ -465,12 +511,9 @@ components:
       required:
         - id
         - title
-        - summary
-        - equipment
         - roastLevel
-        - beanWeight
-        - waterTemp
-        - waterAmount
+        - createdAt
+        - updatedAt
       properties:
         id:
           type: string
@@ -488,6 +531,7 @@ components:
           minLength: 1
           maxLength: 500
           example: 'フルーティーで華やかな酸味が特徴的なエチオピア産コーヒー'
+          nullable: true
         equipment:
           type: array
           description: 使用する器具のリスト
@@ -498,6 +542,7 @@ components:
           minItems: 1
           maxItems: 10
           example: ['V60', 'コーヒーミル', 'ペーパーフィルター']
+          nullable: true
         roastLevel:
           $ref: '#/components/schemas/RoastLevel'
         grindSize:
@@ -506,35 +551,70 @@ components:
           nullable: true
           description: 豆の挽き目（nullの場合あり）
         beanWeight:
-          type: number
+          type: integer
           description: 豆の重量（グラム）
           minimum: 1
           maximum: 100
           example: 20
+          nullable: true
         waterTemp:
-          type: number
+          type: integer
           description: 湯温（摂氏）
           minimum: 60
           maximum: 100
           example: 92
+          nullable: true
         waterAmount:
-          type: number
+          type: integer
           description: 湯量（グラム）
           minimum: 50
           maximum: 1000
           example: 300
+          nullable: true
+        brewingTime:
+          type: integer
+          description: 抽出時間（秒）
+          minimum: 30
+          maximum: 600
+          example: 180
+          nullable: true
+        remarks:
+          type: string
+          description: 備考・コメント
+          maxLength: 1000
+          example: '特に蒸らし時間に注意。豆の膨らみを見て判断する。'
+          nullable: true
+        brewingTime:
+          type: integer
+          description: 抽出時間（秒）
+          minimum: 30
+          maximum: 600
+          example: 180
+          nullable: true
+        remarks:
+          type: string
+          description: 備考・コメント
+          maxLength: 1000
+          example: '特に蒸らし時間に注意。豆の膨らみを見て判断する。'
+          nullable: true
+        # タイムスタンプフィールドを追加
+        createdAt:
+          type: string
+          format: date-time
+          description: 作成日時（ISO 8601形式）
+          example: '2025-06-20T10:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: 最終更新日時（ISO 8601形式）
+          example: '2025-06-22T10:30:00Z'
 
     RecipeInput:
       type: object
       description: レシピ作成・更新用の入力データ
       required:
         - title
-        - summary
-        - equipment
         - roastLevel
-        - beanWeight
-        - waterTemp
-        - waterAmount
       properties:
         title:
           type: string
@@ -548,6 +628,7 @@ components:
           minLength: 1
           maxLength: 500
           example: 'フルーティーで華やかな酸味が特徴的なエチオピア産コーヒー'
+          nullable: true
         equipment:
           type: array
           description: 使用する器具のリスト
@@ -558,6 +639,7 @@ components:
           minItems: 1
           maxItems: 10
           example: ['V60', 'コーヒーミル', 'ペーパーフィルター']
+          nullable: true
         roastLevel:
           $ref: '#/components/schemas/RoastLevel'
         grindSize:
@@ -566,23 +648,26 @@ components:
           nullable: true
           description: 豆の挽き目（nullの場合あり）
         beanWeight:
-          type: number
+          type: integer
           description: 豆の重量（グラム）
           minimum: 1
           maximum: 100
           example: 20
+          nullable: true
         waterTemp:
-          type: number
+          type: integer
           description: 湯温（摂氏）
           minimum: 60
           maximum: 100
           example: 92
+          nullable: true
         waterAmount:
-          type: number
+          type: integer
           description: 湯量（グラム）
           minimum: 50
           maximum: 1000
           example: 300
+          nullable: true
 
     RecipeListResponse:
       type: object
@@ -718,7 +803,7 @@ components:
         timestamp:
           type: string
           format: date-time
-          description: エラー発生時刻
+          description: エラー発生時刻（ISO 8601形式）
         details:
           type: object
           nullable: true
