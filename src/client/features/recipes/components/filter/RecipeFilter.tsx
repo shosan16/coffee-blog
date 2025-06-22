@@ -100,7 +100,7 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
             <Filter className="h-4 w-4" />
             <span>フィルター</span>
             {activeFilterCount > 0 && (
-              <span className="rounded-full bg-blue-600 px-2 py-1 text-xs text-white">
+              <span className="rounded-full bg-black px-2 py-1 text-xs text-white">
                 {activeFilterCount}
               </span>
             )}
@@ -120,7 +120,7 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
             {/* 読み込み中のオーバーレイ */}
             {isLoading && (
               <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/50 backdrop-blur-sm">
-                <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-blue-600"></div>
+                <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-black"></div>
               </div>
             )}
 
@@ -173,8 +173,8 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
                   variant={hasChanges ? 'default' : 'secondary'}
                   className={`flex-1 transition-all duration-200 ${
                     hasChanges
-                      ? 'transform bg-blue-600 text-white shadow-md hover:scale-[1.02] hover:bg-blue-700'
-                      : 'cursor-not-allowed bg-gray-100 text-gray-500'
+                      ? 'transform bg-black text-white shadow-md hover:scale-[1.02] hover:bg-black'
+                      : 'cursor-not-allowed border border-black bg-white text-black'
                   } ${isLoading ? 'animate-pulse' : ''}`}
                 >
                   <Filter
@@ -195,9 +195,9 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
                 </Button>
               </div>
               {hasChanges && (
-                <div className="mt-3 flex items-center gap-2 rounded-md border border-blue-200 bg-blue-50 p-3">
-                  <div className="h-2 w-2 animate-pulse rounded-full bg-blue-500"></div>
-                  <p className="text-sm font-medium text-blue-700">
+                <div className="mt-3 flex items-center gap-2 rounded-md border border-black bg-white p-3">
+                  <div className="h-2 w-2 animate-pulse rounded-full bg-black"></div>
+                  <p className="text-sm font-medium text-black">
                     変更があります。
                     <br />
                     絞り込むボタンを押して適用してください。
