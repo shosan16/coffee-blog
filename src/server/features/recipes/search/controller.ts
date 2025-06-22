@@ -6,8 +6,9 @@ import { RecipeListResponse } from '@/client/features/recipes/types/api';
 import { SearchRecipesService } from '@/server/features/recipes/search/service';
 import type { SearchRecipesParams } from '@/server/features/recipes/search/types';
 import { searchRecipesQuerySchema } from '@/server/features/recipes/search/validation';
-import type { ErrorResponse } from '@/server/shared/api-error';
+import { ApiError, type ErrorResponse } from '@/server/shared/api-error';
 import { createRequestLogger, measurePerformance } from '@/server/shared/logger';
+import { RequestId } from '@/server/shared/request-id';
 
 export class SearchRecipesController {
   private readonly searchRecipesService: SearchRecipesService;
@@ -45,21 +46,22 @@ export class SearchRecipesController {
     request: Request
   ): Promise<NextResponse<RecipeListResponse | ErrorResponse>> {
     const { searchParams } = new URL(request.url);
+    const requestId = RequestId.fromRequest(request);
     const logger = createRequestLogger(request.method, request.url);
     const timer = measurePerformance('searchRecipes');
 
-    try {
-      logger.info('Starting recipe search request processing');
+    logger.info({ requestId }, 'Starting recipe search request processing');
 
+    try {
       const rawParams = Object.fromEntries(searchParams.entries());
-      logger.debug({ rawParams }, 'Raw URL search parameters parsed');
+      logger.debug({ rawParams, requestId }, 'Raw URL search parameters parsed');
 
       const parsedParams = this.parseSearchParams(searchParams);
-      logger.debug({ parsedParams }, 'Parameters parsed and transformed');
+      logger.debug({ parsedParams, requestId }, 'Parameters parsed and transformed');
 
       // パラメータのバリデーション
       const validatedParams = searchRecipesQuerySchema.parse(parsedParams);
-      logger.debug({ validatedParams }, 'Parameters validated successfully');
+      logger.debug({ validatedParams, requestId }, 'Parameters validated successfully');
 
       // 検索パラメータの型変換
       const searchParamsTyped: SearchRecipesParams = {
@@ -76,10 +78,10 @@ export class SearchRecipesController {
         sort: validatedParams.sort,
         order: validatedParams.order,
       };
-      logger.debug({ searchParamsTyped }, 'Final search parameters prepared');
+      logger.debug({ searchParamsTyped, requestId }, 'Final search parameters prepared');
 
       // 検索実行
-      logger.info('Executing recipe search');
+      logger.info({ requestId }, 'Executing recipe search');
       const result = await this.searchRecipesService.searchRecipes(searchParamsTyped);
 
       logger.info(
@@ -88,69 +90,111 @@ export class SearchRecipesController {
           totalItems: result.pagination.totalItems,
           currentPage: result.pagination.currentPage,
           totalPages: result.pagination.totalPages,
+          requestId,
         },
         'Recipe search completed successfully'
       );
 
       timer.end();
 
-      // レスポンス作成
-      return NextResponse.json({
-        recipes: result.recipes,
-        pagination: result.pagination,
-      });
+      // レスポンス作成（リクエストIDヘッダーを追加）
+      return NextResponse.json(
+        {
+          recipes: result.recipes,
+          pagination: result.pagination,
+        },
+        {
+          status: 200,
+          headers: RequestId.addToHeaders(
+            {
+              'X-Total-Count': result.pagination.totalItems.toString(),
+            },
+            requestId
+          ),
+        }
+      );
     } catch (error) {
       logger.error(
         {
           err: error,
           searchParams: Object.fromEntries(searchParams.entries()),
+          requestId,
         },
         'Error occurred during recipe search'
       );
       timer.end();
-      return this.handleError(error);
+      return this.handleError(error, requestId);
     }
   }
 
   /**
-   * エラーハンドリング
+   * エラーハンドリング（OpenAPI仕様準拠）
    */
-  private handleError(error: unknown): NextResponse<ErrorResponse> {
+  private handleError(error: unknown, requestId: string): NextResponse<ErrorResponse> {
     const logger = createRequestLogger('UNKNOWN', '/api/recipes');
 
     if (error instanceof z.ZodError) {
       logger.warn(
         {
           validationErrors: error.errors,
+          requestId,
         },
         'Request validation failed'
       );
 
-      return NextResponse.json(
-        {
-          code: 'INVALID_PARAMETERS',
-          message: 'パラメータが不正です',
-          details: Object.fromEntries(
-            error.errors.map((err) => [err.path.join('.'), [err.message]])
-          ),
-        },
-        { status: 400 }
+      // Zodエラーをフィールドエラー形式に変換
+      const fieldErrors = error.errors.map((err) => ({
+        field: err.path.join('.'),
+        message: err.message,
+      }));
+
+      const errorResponse = ApiError.validation(
+        'パラメータのバリデーションに失敗しました',
+        requestId,
+        fieldErrors
       );
+
+      return NextResponse.json(errorResponse, {
+        status: 400,
+        headers: RequestId.addToHeaders({}, requestId),
+      });
     }
 
+    // JSON解析エラーのハンドリング
+    if (error instanceof SyntaxError) {
+      logger.warn(
+        {
+          err: error,
+          requestId,
+        },
+        'JSON parsing error in request parameters'
+      );
+
+      const errorResponse = ApiError.invalidParameter(
+        'パラメータの形式が不正です。JSON形式で入力してください。',
+        requestId
+      );
+
+      return NextResponse.json(errorResponse, {
+        status: 400,
+        headers: RequestId.addToHeaders({}, requestId),
+      });
+    }
+
+    // その他のエラー
     logger.error(
       {
         err: error,
+        requestId,
       },
       'Unexpected error occurred in recipe search'
     );
 
-    return NextResponse.json(
-      {
-        code: 'INTERNAL_SERVER_ERROR',
-        message: '予期せぬエラーが発生しました',
-      },
-      { status: 500 }
-    );
+    const errorResponse = ApiError.internal('サーバー内部でエラーが発生しました', requestId);
+
+    return NextResponse.json(errorResponse, {
+      status: 500,
+      headers: RequestId.addToHeaders({}, requestId),
+    });
   }
 }
