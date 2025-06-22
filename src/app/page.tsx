@@ -33,7 +33,7 @@ export default async function Home({
   const initialData = await fetchRecipes(filters);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-background min-h-screen">
       {/* Hero Search Section */}
       <HeroSearchSection initialResultCount={initialData.pagination.totalItems} />
 
@@ -62,13 +62,15 @@ export default async function Home({
       </main>
 
       {/* Footer */}
-      <footer className="mt-16 border-t bg-white py-8">
+      <footer className="border-border bg-background mt-16 border-t py-8">
         <div className="container mx-auto px-4 text-center">
           <div className="mb-4 flex items-center justify-center gap-2">
-            <Coffee className="h-5 w-5 text-black" />
-            <span className="font-semibold text-black">Coffee Recipe Collection</span>
+            <Coffee className="text-foreground h-5 w-5" />
+            <span className="text-foreground font-semibold">Coffee Recipe Collection</span>
           </div>
-          <p className="text-sm text-black">美味しいコーヒーと共に、素敵な時間をお過ごしください</p>
+          <p className="text-muted-foreground text-sm">
+            美味しいコーヒーと共に、素敵な時間をお過ごしください
+          </p>
         </div>
       </footer>
     </div>

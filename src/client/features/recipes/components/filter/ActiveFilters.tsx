@@ -191,15 +191,15 @@ const ActiveFilters = React.memo<ActiveFiltersProps>(({ className }) => {
       {/* ヘッダー */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Filter className="h-4 w-4 text-gray-600" />
-          <span className="text-sm font-medium text-gray-700">
+          <Filter className="text-muted-foreground h-4 w-4" />
+          <span className="text-foreground text-sm font-medium">
             適用中のフィルター ({activeCount}件)
           </span>
         </div>
         <button
           type="button"
           onClick={resetSearch}
-          className="text-sm text-gray-500 underline transition-colors hover:text-gray-700"
+          className="text-muted-foreground hover:text-foreground text-sm underline transition-colors"
         >
           すべてクリア
         </button>
@@ -210,14 +210,14 @@ const ActiveFilters = React.memo<ActiveFiltersProps>(({ className }) => {
         {activeFilterBadges.map(({ key, label, value, onRemove }) => (
           <div
             key={key}
-            className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-sm"
+            className="bg-secondary border-border inline-flex items-center gap-1 rounded-full border px-3 py-1 text-sm"
           >
-            <span className="font-medium text-blue-800">{label}:</span>
-            <span className="text-blue-700">{value}</span>
+            <span className="text-secondary-foreground font-medium">{label}:</span>
+            <span className="text-muted-foreground">{value}</span>
             <button
               type="button"
               onClick={onRemove}
-              className="ml-1 text-blue-600 transition-colors hover:text-blue-800"
+              className="text-muted-foreground hover:text-foreground ml-1 transition-colors"
               aria-label={`${label}フィルターを削除`}
             >
               <X className="h-3 w-3" />

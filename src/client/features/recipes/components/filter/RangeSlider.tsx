@@ -68,7 +68,7 @@ const RangeSlider = React.memo(function RangeSlider({
 
   return (
     <div className={`space-y-4 ${className}`}>
-      <Label className="text-sm font-medium text-gray-700">{label}</Label>
+      <Label className="text-foreground text-sm font-medium">{label}</Label>
 
       <div className="space-y-4">
         <Slider
@@ -82,7 +82,7 @@ const RangeSlider = React.memo(function RangeSlider({
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <Label className="text-xs text-gray-500">最小値</Label>
+            <Label className="text-muted-foreground text-xs">最小値</Label>
             <Input
               type="number"
               placeholder={`${min}${unit}`}
@@ -95,7 +95,7 @@ const RangeSlider = React.memo(function RangeSlider({
             />
           </div>
           <div>
-            <Label className="text-xs text-gray-500">最大値</Label>
+            <Label className="text-muted-foreground text-xs">最大値</Label>
             <Input
               type="number"
               placeholder={`${max}${unit}`}

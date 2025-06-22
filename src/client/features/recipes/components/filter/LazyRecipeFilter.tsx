@@ -21,12 +21,12 @@ function RecipeFilterSkeleton() {
       <CardContent className="space-y-6">
         {/* 器具フィルタースケルトン */}
         <div className="space-y-4">
-          <div className="h-4 w-16 animate-pulse rounded bg-gray-200" />
+          <div className="bg-muted h-4 w-16 animate-pulse rounded" />
           <div className="space-y-3">
             {Array.from({ length: 5 }, () => crypto.randomUUID()).map((id) => (
               <div key={id} className="flex items-center space-x-2">
-                <div className="h-4 w-4 animate-pulse rounded bg-gray-200" />
-                <div className="h-4 w-24 animate-pulse rounded bg-gray-200" />
+                <div className="bg-muted h-4 w-4 animate-pulse rounded" />
+                <div className="bg-muted h-4 w-24 animate-pulse rounded" />
               </div>
             ))}
           </div>
@@ -34,12 +34,12 @@ function RecipeFilterSkeleton() {
 
         {/* 抽出条件フィルタースケルトン */}
         <div className="space-y-6">
-          <div className="h-4 w-20 animate-pulse rounded bg-gray-200" />
+          <div className="bg-muted h-4 w-20 animate-pulse rounded" />
           <div className="space-y-4">
             {Array.from({ length: 5 }, () => crypto.randomUUID()).map((id) => (
               <div key={id} className="space-y-3">
-                <div className="h-3 w-12 animate-pulse rounded bg-gray-200" />
-                <div className="h-10 w-full animate-pulse rounded bg-gray-200" />
+                <div className="bg-muted h-3 w-12 animate-pulse rounded" />
+                <div className="bg-muted h-10 w-full animate-pulse rounded" />
               </div>
             ))}
           </div>

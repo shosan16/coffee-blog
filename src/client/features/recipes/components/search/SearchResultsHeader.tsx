@@ -43,7 +43,7 @@ const SearchResultsHeader = React.memo<SearchResultsHeaderProps>(({ resultCount,
 
   return (
     <div
-      className={`sticky top-0 z-10 h-18 border-b bg-white/70 backdrop-blur-sm ${className ?? ''}`}
+      className={`border-border bg-background/70 sticky top-0 z-10 h-18 border-b backdrop-blur-sm ${className ?? ''}`}
     >
       <div className="container mx-auto h-full px-4">
         <div className="flex h-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -51,8 +51,8 @@ const SearchResultsHeader = React.memo<SearchResultsHeaderProps>(({ resultCount,
           <div className="flex items-center gap-2">
             {resultCount > 0 && (
               <>
-                <Search className="h-5 w-5 flex-shrink-0 text-gray-600" />
-                <span className="text-sm font-medium text-gray-700">{resultText}</span>
+                <Search className="text-muted-foreground h-5 w-5 flex-shrink-0" />
+                <span className="text-foreground text-sm font-medium">{resultText}</span>
               </>
             )}
           </div>
