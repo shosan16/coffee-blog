@@ -24,7 +24,6 @@ paths:
         - $ref: '#/components/parameters/GrindSizeParam'
         - $ref: '#/components/parameters/EquipmentParam'
         - $ref: '#/components/parameters/EquipmentTypeParam'
-        # 改善：範囲パラメータを個別に分離
         - name: beanWeightMin
           in: query
           description: 豆の重量最小値（グラム）
@@ -172,8 +171,6 @@ paths:
               description: リクエスト追跡ID
               schema:
                 type: string
-                example: 'req_abc123xyz789'
-                example: 'req_abc123xyz789'
                 example: 'req_abc123xyz789'
           content:
             application/json:
@@ -391,7 +388,18 @@ components:
       required: false
       schema:
         type: string
-        enum: [title, beanWeight, waterTemp, waterAmount, brewingTime, roastLevel, grindSize, createdAt, updatedAt]
+        enum:
+          [
+            title,
+            beanWeight,
+            waterTemp,
+            waterAmount,
+            brewingTime,
+            roastLevel,
+            grindSize,
+            createdAt,
+            updatedAt,
+          ]
         default: createdAt
 
     OrderParam:
@@ -584,20 +592,6 @@ components:
           maxLength: 1000
           example: '特に蒸らし時間に注意。豆の膨らみを見て判断する。'
           nullable: true
-        brewingTime:
-          type: integer
-          description: 抽出時間（秒）
-          minimum: 30
-          maximum: 600
-          example: 180
-          nullable: true
-        remarks:
-          type: string
-          description: 備考・コメント
-          maxLength: 1000
-          example: '特に蒸らし時間に注意。豆の膨らみを見て判断する。'
-          nullable: true
-        # タイムスタンプフィールドを追加
         createdAt:
           type: string
           format: date-time
@@ -667,6 +661,19 @@ components:
           minimum: 50
           maximum: 1000
           example: 300
+          nullable: true
+        brewingTime:
+          type: integer
+          description: 抽出時間（秒）
+          minimum: 30
+          maximum: 600
+          example: 180
+          nullable: true
+        remarks:
+          type: string
+          description: 備考・コメント
+          maxLength: 1000
+          example: '特に蒸らし時間に注意。豆の膨らみを見て判断する。'
           nullable: true
 
     RecipeListResponse:
