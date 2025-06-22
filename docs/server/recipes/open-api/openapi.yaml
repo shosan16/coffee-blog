@@ -1,0 +1,756 @@
+openapi: 3.0.3
+info:
+  title: Coffee Recipe API
+  description: コーヒーレシピ管理システムのAPI仕様書
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000
+    description: 開発環境
+
+paths:
+  /api/recipes:
+    get:
+      summary: レシピ検索
+      description: 様々な条件でコーヒーレシピを検索・フィルタリングします
+      operationId: searchRecipes
+      tags:
+        - Recipes
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/SearchParam'
+        - $ref: '#/components/parameters/RoastLevelParam'
+        - $ref: '#/components/parameters/GrindSizeParam'
+        - $ref: '#/components/parameters/EquipmentParam'
+        - $ref: '#/components/parameters/EquipmentTypeParam'
+        # 改善：範囲パラメータを個別に分離
+        - name: beanWeightMin
+          in: query
+          description: 豆の重量最小値（グラム）
+          schema:
+            type: number
+            minimum: 1
+            maximum: 100
+        - name: beanWeightMax
+          in: query
+          description: 豆の重量最大値（グラム）
+          schema:
+            type: number
+            minimum: 1
+            maximum: 100
+        - name: waterTempMin
+          in: query
+          description: 湯温最小値（摂氏）
+          schema:
+            type: number
+            minimum: 60
+            maximum: 100
+        - name: waterTempMax
+          in: query
+          description: 湯温最大値（摂氏）
+          schema:
+            type: number
+            minimum: 60
+            maximum: 100
+        - name: waterAmountMin
+          in: query
+          description: 湯量最小値（グラム）
+          schema:
+            type: number
+            minimum: 50
+            maximum: 1000
+        - name: waterAmountMax
+          in: query
+          description: 湯量最大値（グラム）
+          schema:
+            type: number
+            minimum: 50
+            maximum: 1000
+        - $ref: '#/components/parameters/SortParam'
+        - $ref: '#/components/parameters/OrderParam'
+      responses:
+        '200':
+          description: レシピリストの取得に成功
+          headers:
+            X-Total-Count:
+              description: 総件数
+              schema:
+                type: integer
+            X-Request-ID:
+              description: リクエスト追跡ID
+              schema:
+                type: string
+                example: 'req_abc123xyz789'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeListResponse'
+              examples:
+                success:
+                  summary: 成功例
+                  value:
+                    recipes:
+                      - id: '1'
+                        title: 'エチオピア イルガチェフェ V60'
+                        summary: 'フルーティーで華やかな酸味が特徴的なエチオピア産コーヒー'
+                        equipment: ['V60', 'コーヒーミル', 'ペーパーフィルター']
+                        roastLevel: 'LIGHT_MEDIUM'
+                        grindSize: 'MEDIUM_FINE'
+                        beanWeight: 20
+                        waterTemp: 92
+                        waterAmount: 300
+                    pagination:
+                      currentPage: 1
+                      totalPages: 5
+                      totalItems: 98
+                      itemsPerPage: 20
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      summary: レシピ作成
+      description: 新しいコーヒーレシピを作成します
+      operationId: createRecipe
+      tags:
+        - Recipes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipeInput'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/recipes/{id}:
+    get:
+      summary: レシピ詳細取得
+      description: 指定されたIDのレシピ詳細を取得します
+      operationId: getRecipe
+      tags:
+        - Recipes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: レシピID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: レシピの取得に成功
+          headers:
+            X-Request-ID:
+              description: リクエスト追跡ID
+              schema:
+                type: string
+                example: 'req_abc123xyz789'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      summary: レシピ更新
+      description: 指定されたIDのレシピを更新します
+      operationId: updateRecipe
+      tags:
+        - Recipes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: レシピID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipeInput'
+      responses:
+        '200':
+          description: レシピの更新に成功
+          headers:
+            X-Request-ID:
+              description: リクエスト追跡ID
+              schema:
+                type: string
+                example: 'req_abc123xyz789'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+        '201':
+          $ref: '#/components/responses/Created'
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      summary: レシピ削除
+      description: 指定されたIDのレシピを削除します
+      operationId: deleteRecipe
+      tags:
+        - Recipes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: レシピID
+          schema:
+            type: string
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/equipment:
+    get:
+      summary: 器具一覧取得
+      description: コーヒー器具をタイプ別に取得します
+      operationId: getEquipment
+      tags:
+        - Equipment
+      responses:
+        '200':
+          description: 器具一覧の取得に成功
+          headers:
+            X-Request-ID:
+              description: リクエスト追跡ID
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EquipmentResponse'
+              examples:
+                success:
+                  summary: 成功例
+                  value:
+                    equipment:
+                      grinder:
+                        - id: '1'
+                          name: 'バラッツァ エンコア'
+                          brand: 'Baratza'
+                          type: 'コーヒーミル'
+                        - id: '2'
+                          name: 'ハリオ コーヒーミル・セラミックスリム'
+                          brand: 'HARIO'
+                          type: 'コーヒーミル'
+                      dripper:
+                        - id: '3'
+                          name: 'V60'
+                          brand: 'HARIO'
+                          type: 'ドリッパー'
+                        - id: '4'
+                          name: 'カリタ ウェーブドリッパー'
+                          brand: 'Kalita'
+                          type: 'ドリッパー'
+                      filter:
+                        - id: '5'
+                          name: 'V60ペーパーフィルター'
+                          brand: 'HARIO'
+                          type: 'ペーパーフィルター'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      description: ページ番号（1から開始）
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+
+    LimitParam:
+      name: limit
+      in: query
+      description: 1ページあたりのアイテム数
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+
+    SearchParam:
+      name: search
+      in: query
+      description: レシピのタイトルや概要での検索キーワード
+      required: false
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 100
+
+    RoastLevelParam:
+      name: roastLevel
+      in: query
+      description: 焙煎度のフィルタ（カンマ区切りで複数指定可能）
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/RoastLevel'
+
+    GrindSizeParam:
+      name: grindSize
+      in: query
+      description: 挽き目のフィルタ（カンマ区切りで複数指定可能）
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/GrindSize'
+
+    EquipmentParam:
+      name: equipment
+      in: query
+      description: 器具名のフィルタ（カンマ区切りで複数指定可能）
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          minLength: 1
+          maxLength: 50
+
+    EquipmentTypeParam:
+      name: equipmentType
+      in: query
+      description: 器具タイプのフィルタ（カンマ区切りで複数指定可能）
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          enum: [grinder, dripper, filter]
+
+    SortParam:
+      name: sort
+      in: query
+      description: ソートフィールド
+      required: false
+      schema:
+        type: string
+        enum: [title, beanWeight, waterTemp, waterAmount, createdAt]
+        default: createdAt
+
+    OrderParam:
+      name: order
+      in: query
+      description: ソート順序
+      required: false
+      schema:
+        type: string
+        enum: [asc, desc]
+        default: desc
+
+  responses:
+    Created:
+      description: リソースの作成に成功
+      headers:
+        Location:
+          description: 作成されたリソースのURL
+          schema:
+            type: string
+            example: '/api/recipes/123'
+        X-Request-ID:
+          description: リクエスト追跡ID
+          schema:
+            type: string
+            example: 'req_abc123xyz789'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Recipe'
+
+    NoContent:
+      description: 正常に処理されました（レスポンスボディなし）
+      headers:
+        X-Request-ID:
+          description: リクエスト追跡ID
+          schema:
+            type: string
+            example: 'req_abc123xyz789'
+
+    BadRequest:
+      description: リクエストパラメータが不正
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            invalid_parameter:
+              summary: 無効なパラメータ
+              value:
+                error: 'INVALID_PARAMETER'
+                message: 'パラメータが不正です'
+                request_id: 'req_abc123xyz789'
+                timestamp: '2025-06-22T10:30:00Z'
+
+    NotFound:
+      description: リソースが見つかりません
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            resource_not_found:
+              summary: リソース未発見
+              value:
+                error: 'RESOURCE_NOT_FOUND'
+                message: '指定されたリソースが見つかりません'
+                request_id: 'req_abc123xyz789'
+                timestamp: '2025-06-22T10:30:00Z'
+
+    InternalServerError:
+      description: サーバー内部エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: 'INTERNAL_SERVER_ERROR'
+            message: 'サーバー内部でエラーが発生しました'
+            request_id: 'req_abc123xyz789'
+            timestamp: '2025-06-22T10:30:00Z'
+
+  schemas:
+    Recipe:
+      type: object
+      description: コーヒーレシピ情報
+      required:
+        - id
+        - title
+        - summary
+        - equipment
+        - roastLevel
+        - beanWeight
+        - waterTemp
+        - waterAmount
+      properties:
+        id:
+          type: string
+          description: レシピの一意識別子
+          example: '1'
+        title:
+          type: string
+          description: レシピのタイトル
+          minLength: 1
+          maxLength: 100
+          example: 'エチオピア イルガチェフェ V60'
+        summary:
+          type: string
+          description: レシピの概要説明
+          minLength: 1
+          maxLength: 500
+          example: 'フルーティーで華やかな酸味が特徴的なエチオピア産コーヒー'
+        equipment:
+          type: array
+          description: 使用する器具のリスト
+          items:
+            type: string
+            minLength: 1
+            maxLength: 50
+          minItems: 1
+          maxItems: 10
+          example: ['V60', 'コーヒーミル', 'ペーパーフィルター']
+        roastLevel:
+          $ref: '#/components/schemas/RoastLevel'
+        grindSize:
+          allOf:
+            - $ref: '#/components/schemas/GrindSize'
+          nullable: true
+          description: 豆の挽き目（nullの場合あり）
+        beanWeight:
+          type: number
+          description: 豆の重量（グラム）
+          minimum: 1
+          maximum: 100
+          example: 20
+        waterTemp:
+          type: number
+          description: 湯温（摂氏）
+          minimum: 60
+          maximum: 100
+          example: 92
+        waterAmount:
+          type: number
+          description: 湯量（グラム）
+          minimum: 50
+          maximum: 1000
+          example: 300
+
+    RecipeInput:
+      type: object
+      description: レシピ作成・更新用の入力データ
+      required:
+        - title
+        - summary
+        - equipment
+        - roastLevel
+        - beanWeight
+        - waterTemp
+        - waterAmount
+      properties:
+        title:
+          type: string
+          description: レシピのタイトル
+          minLength: 1
+          maxLength: 100
+          example: 'エチオピア イルガチェフェ V60'
+        summary:
+          type: string
+          description: レシピの概要説明
+          minLength: 1
+          maxLength: 500
+          example: 'フルーティーで華やかな酸味が特徴的なエチオピア産コーヒー'
+        equipment:
+          type: array
+          description: 使用する器具のリスト
+          items:
+            type: string
+            minLength: 1
+            maxLength: 50
+          minItems: 1
+          maxItems: 10
+          example: ['V60', 'コーヒーミル', 'ペーパーフィルター']
+        roastLevel:
+          $ref: '#/components/schemas/RoastLevel'
+        grindSize:
+          allOf:
+            - $ref: '#/components/schemas/GrindSize'
+          nullable: true
+          description: 豆の挽き目（nullの場合あり）
+        beanWeight:
+          type: number
+          description: 豆の重量（グラム）
+          minimum: 1
+          maximum: 100
+          example: 20
+        waterTemp:
+          type: number
+          description: 湯温（摂氏）
+          minimum: 60
+          maximum: 100
+          example: 92
+        waterAmount:
+          type: number
+          description: 湯量（グラム）
+          minimum: 50
+          maximum: 1000
+          example: 300
+
+    RecipeListResponse:
+      type: object
+      description: レシピリストのレスポンス
+      required:
+        - recipes
+        - pagination
+      properties:
+        recipes:
+          type: array
+          description: レシピのリスト
+          items:
+            $ref: '#/components/schemas/Recipe'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    Pagination:
+      type: object
+      description: ページネーション情報
+      required:
+        - currentPage
+        - totalPages
+        - totalItems
+        - itemsPerPage
+      properties:
+        currentPage:
+          type: integer
+          description: 現在のページ番号
+          minimum: 1
+          example: 1
+        totalPages:
+          type: integer
+          description: 総ページ数
+          minimum: 0
+          example: 5
+        totalItems:
+          type: integer
+          description: 総アイテム数
+          minimum: 0
+          example: 98
+        itemsPerPage:
+          type: integer
+          description: 1ページあたりのアイテム数
+          minimum: 1
+          example: 20
+
+    EquipmentResponse:
+      type: object
+      description: 器具データのレスポンス
+      required:
+        - equipment
+      properties:
+        equipment:
+          $ref: '#/components/schemas/EquipmentByType'
+
+    EquipmentByType:
+      type: object
+      description: タイプ別器具データ
+      required:
+        - grinder
+        - dripper
+        - filter
+      properties:
+        grinder:
+          type: array
+          description: コーヒーミルのリスト
+          items:
+            $ref: '#/components/schemas/EquipmentItem'
+        dripper:
+          type: array
+          description: ドリッパーのリスト
+          items:
+            $ref: '#/components/schemas/EquipmentItem'
+        filter:
+          type: array
+          description: ペーパーフィルターのリスト
+          items:
+            $ref: '#/components/schemas/EquipmentItem'
+
+    EquipmentItem:
+      type: object
+      description: 器具アイテム
+      required:
+        - id
+        - name
+        - type
+      properties:
+        id:
+          type: string
+          description: 器具の一意識別子
+          example: '1'
+        name:
+          type: string
+          description: 器具名
+          minLength: 1
+          maxLength: 50
+          example: 'V60'
+        brand:
+          type: string
+          nullable: true
+          description: ブランド名
+          minLength: 1
+          maxLength: 50
+          example: 'HARIO'
+        type:
+          type: string
+          description: 器具のタイプ
+          minLength: 1
+          maxLength: 50
+          example: 'ドリッパー'
+
+    ErrorResponse:
+      type: object
+      description: 統一エラーレスポンス
+      required:
+        - error
+        - message
+        - request_id
+        - timestamp
+      properties:
+        error:
+          type: string
+          description: エラータイプ（機械読み取り用）
+          example: 'VALIDATION_ERROR'
+        message:
+          type: string
+          description: エラーメッセージ（人間読み取り用）
+          example: '入力データにエラーがあります'
+        request_id:
+          type: string
+          description: リクエスト追跡ID
+          example: 'req_abc123xyz789'
+        timestamp:
+          type: string
+          format: date-time
+          description: エラー発生時刻
+        details:
+          type: object
+          nullable: true
+          description: エラーの詳細情報
+
+    RoastLevel:
+      type: string
+      description: コーヒー豆の焙煎度
+      enum:
+        - LIGHT
+        - LIGHT_MEDIUM
+        - MEDIUM
+        - MEDIUM_DARK
+        - DARK
+        - FRENCH
+      example: LIGHT_MEDIUM
+
+    GrindSize:
+      type: string
+      description: コーヒー豆の挽き目
+      enum:
+        - EXTRA_FINE
+        - FINE
+        - MEDIUM_FINE
+        - MEDIUM
+        - MEDIUM_COARSE
+        - COARSE
+        - EXTRA_COARSE
+      example: MEDIUM_FINE
+
+tags:
+  - name: Recipes
+    description: コーヒーレシピ関連のAPI
+  - name: Equipment
+    description: コーヒー器具関連のAPI
