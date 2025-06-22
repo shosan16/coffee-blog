@@ -9,16 +9,16 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "prepare": "husky",
-    "seed": "npx tsx src/db/seed.ts",
     "test": "vitest",
     "test:ui": "npx vitest --ui",
     "test:run": "npx vitest run --reporter=basic",
     "test:coverage": "npx vitest run --coverage",
     "test:quick": "npx vitest run --reporter=basic --silent",
-    "docker:generate": "npx prisma generate",
-    "docker:migrate": "npx prisma migrate deploy",
-    "docker:seed": "npm run seed",
-    "docker:db-setup": "npm run docker:generate && npm run docker:migrate && npm run docker:seed"
+    "db:generate": "npx prisma generate",
+    "db:migrate": "npx prisma migrate deploy",
+    "db:seed": "npx tsx src/db/seed.ts",
+    "db:setup": "npm run db:generate && npm run db:migrate && npm run db:seed",
+    "db:studio": "npx prisma studio"
   },
   "dependencies": {
     "@prisma/client": "^6.6.0",
