@@ -215,7 +215,6 @@ describe('ActiveFilters', () => {
         removeFilter: mockRemoveFilter,
         pendingSearchValue: 'カフェラテ',
         pendingFilters: {},
-        applySearch: vi.fn(),
         isLoading: false,
         hasChanges: false,
         resultCount: undefined,
@@ -251,7 +250,6 @@ describe('ActiveFilters', () => {
       expect(mockResetSearch).toHaveBeenCalledOnce();
     });
   });
-
   describe('機器フィルターの状態', () => {
     beforeEach(() => {
       mockedUseRecipeSearch.mockReturnValue({
@@ -308,6 +306,7 @@ describe('ActiveFilters', () => {
         },
         searchValue: '',
         updateFilter: mockUpdateFilter,
+        updateSearchValue: vi.fn(),
         clearSearch: mockClearSearch,
         resetSearch: mockResetSearch,
         applySearch: mockApplySearch,
@@ -333,9 +332,10 @@ describe('ActiveFilters', () => {
   describe('CSS クラス', () => {
     beforeEach(() => {
       mockedUseRecipeSearch.mockReturnValue({
-        filters: { roastLevel: ['浅煎り'] },
+        filters: { roastLevel: ['LIGHT'] },
         searchValue: '',
         updateFilter: mockUpdateFilter,
+        updateSearchValue: vi.fn(),
         clearSearch: mockClearSearch,
         resetSearch: mockResetSearch,
         applySearch: mockApplySearch,

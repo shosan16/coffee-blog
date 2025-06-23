@@ -34,7 +34,7 @@ export function useMultiCombobox({
 >): UseMultiComboboxReturn {
   const [open, setOpen] = React.useState(false);
   const [inputValue, setInputValue] = React.useState('');
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
   const listboxId = React.useId();
 
   // 選択済みアイテムのIDセットを作成（パフォーマンス最適化）

@@ -12,8 +12,6 @@ const mockRecipe: Recipe = {
   waterTemp: 85,
   waterAmount: 352,
   equipment: ['フェロー オデ'],
-  createdAt: new Date('2024-01-01'),
-  updatedAt: new Date('2024-01-01'),
 };
 
 const meta: Meta<typeof RecipeCard> = {

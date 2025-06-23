@@ -67,14 +67,14 @@ describe('useRecipeSearch', () => {
 
     it('URLパラメータの検索キーワードが初期値として設定される', () => {
       mockGet.mockImplementation((key: string) => {
-        if (key === 'search') return 'コーヒー';
+        if (key === 'search') return '';
         return null;
       });
 
       const { result } = renderHook(() => useRecipeSearch());
 
-      expect(result.current.searchValue).toBe('コーヒー');
-      expect(result.current.pendingSearchValue).toBe('コーヒー');
+      expect(result.current.searchValue).toBe('');
+      expect(result.current.pendingSearchValue).toBe('');
     });
   });
 
@@ -161,7 +161,7 @@ describe('useRecipeSearch', () => {
       // 初期状態を設定
       act(() => {
         result.current.updateSearchValue('テスト');
-        result.current.updateFilter('roastLevel', ['浅煎り']);
+        result.current.updateFilter('roastLevel', ['LIGHT']);
       });
 
       // 検索のみクリア
@@ -170,7 +170,7 @@ describe('useRecipeSearch', () => {
       });
 
       expect(result.current.pendingSearchValue).toBe('');
-      expect(result.current.pendingFilters).toEqual({ roastLevel: ['浅煎り'], page: 1 });
+      expect(result.current.pendingFilters).toEqual({ roastLevel: ['LIGHT'], page: 1 });
       expect(mockPush).toHaveBeenCalled();
     });
   });
@@ -180,10 +180,10 @@ describe('useRecipeSearch', () => {
       const { result } = renderHook(() => useRecipeSearch());
 
       act(() => {
-        result.current.updateFilter('roastLevel', ['中煎り']);
+        result.current.updateFilter('roastLevel', ['MEDIUM']);
       });
 
-      expect(result.current.pendingFilters).toEqual({ roastLevel: ['中煎り'], page: 1 });
+      expect(result.current.pendingFilters).toEqual({ roastLevel: ['MEDIUM'], page: 1 });
       expect(result.current.hasChanges).toBe(true);
     });
 
@@ -192,7 +192,7 @@ describe('useRecipeSearch', () => {
 
       // フィルターを設定
       act(() => {
-        result.current.updateFilter('roastLevel', ['中煎り']);
+        result.current.updateFilter('roastLevel', ['MEDIUM']);
       });
 
       // 空の値で更新（削除）

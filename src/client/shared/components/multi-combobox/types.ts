@@ -59,7 +59,7 @@ export type UseMultiComboboxReturn = {
   /** 入力値 */
   inputValue: string;
   /** 入力要素のref */
-  inputRef: React.RefObject<HTMLInputElement>;
+  inputRef: React.RefObject<HTMLInputElement | null>;
   /** リストボックスのID */
   listboxId: string;
   /** フィルタリングされたアイテム */
