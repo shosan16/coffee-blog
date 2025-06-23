@@ -160,24 +160,33 @@ paths:
         - name: id
           in: path
           required: true
-          description: レシピID
+          description: レシピID（正の整数）
           schema:
             type: string
+            pattern: '^[1-9][0-9]*$'
+            example: '123'
       responses:
         '200':
-          description: レシピの取得に成功
+          description: レシピ詳細の取得に成功
           headers:
             X-Request-ID:
               description: リクエスト追跡ID
               schema:
                 type: string
                 example: 'req_abc123xyz789'
+            X-View-Count:
+              description: 更新後のビュー数
+              schema:
+                type: integer
+                example: 151
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Recipe'
+                $ref: '#/components/schemas/RecipeDetail'
         '400':
           $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
@@ -484,6 +493,21 @@ components:
                   fields:
                     - field: 'title'
                       message: 'タイトルは必須です'
+
+    Forbidden:
+      description: 非公開レシピへのアクセス拒否
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            unpublished_recipe:
+              summary: 非公開レシピ
+              value:
+                error: 'RECIPE_NOT_PUBLISHED'
+                message: 'このレシピは非公開です'
+                request_id: 'req_abc123xyz789'
+                timestamp: '2025-06-22T10:30:00Z'
 
     NotFound:
       description: リソースが見つかりません
@@ -840,6 +864,298 @@ components:
         - COARSE
         - EXTRA_COARSE
       example: MEDIUM_FINE
+
+    RecipeDetail:
+      type: object
+      description: レシピ詳細情報（バリスタ、手順、器具、タグを含む）
+      required:
+        - id
+        - title
+        - roastLevel
+        - viewCount
+        - isPublished
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          description: レシピの一意識別子
+          example: '1'
+        title:
+          type: string
+          description: レシピのタイトル
+          minLength: 1
+          maxLength: 100
+          example: 'エチオピア イルガチェフェ V60'
+        summary:
+          type: string
+          description: レシピの概要説明
+          minLength: 1
+          maxLength: 500
+          example: 'フルーティーで華やかな酸味が特徴的なエチオピア産コーヒー'
+          nullable: true
+        remarks:
+          type: string
+          description: 備考・コメント
+          maxLength: 1000
+          example: '特に蒸らし時間に注意。豆の膨らみを見て判断する。'
+          nullable: true
+        roastLevel:
+          $ref: '#/components/schemas/RoastLevel'
+        grindSize:
+          allOf:
+            - $ref: '#/components/schemas/GrindSize'
+          nullable: true
+          description: 豆の挽き目（nullの場合あり）
+        beanWeight:
+          type: integer
+          description: 豆の重量（グラム）
+          minimum: 1
+          maximum: 100
+          example: 20
+          nullable: true
+        waterTemp:
+          type: integer
+          description: 湯温（摂氏）
+          minimum: 60
+          maximum: 100
+          example: 92
+          nullable: true
+        waterAmount:
+          type: integer
+          description: 湯量（グラム）
+          minimum: 50
+          maximum: 1000
+          example: 300
+          nullable: true
+        brewingTime:
+          type: integer
+          description: 抽出時間（秒）
+          minimum: 30
+          maximum: 600
+          example: 180
+          nullable: true
+        viewCount:
+          type: integer
+          description: ビュー数
+          minimum: 0
+          example: 150
+        isPublished:
+          type: boolean
+          description: 公開状態
+          example: true
+        publishedAt:
+          type: string
+          format: date-time
+          description: 公開日時（ISO 8601形式）
+          example: '2025-06-20T10:30:00Z'
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+          description: 作成日時（ISO 8601形式）
+          example: '2025-06-20T10:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: 最終更新日時（ISO 8601形式）
+          example: '2025-06-22T10:30:00Z'
+        barista:
+          $ref: '#/components/schemas/Barista'
+          nullable: true
+          description: レシピを考案したバリスタ情報
+        steps:
+          type: array
+          description: レシピの手順リスト
+          items:
+            $ref: '#/components/schemas/RecipeStep'
+          example: []
+        equipment:
+          type: array
+          description: 使用する器具の詳細リスト
+          items:
+            $ref: '#/components/schemas/DetailedEquipment'
+          example: []
+        tags:
+          type: array
+          description: レシピに関連するタグ
+          items:
+            $ref: '#/components/schemas/RecipeTag'
+          example: []
+
+    Barista:
+      type: object
+      description: バリスタ情報
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          description: バリスタの一意識別子
+          example: '1'
+        name:
+          type: string
+          description: バリスタ名
+          minLength: 1
+          maxLength: 100
+          example: '佐藤花子'
+        affiliation:
+          type: string
+          description: 所属店舗・組織
+          maxLength: 200
+          example: 'Specialty Coffee Shop ARIA'
+          nullable: true
+        socialLinks:
+          type: array
+          description: SNSリンク
+          items:
+            $ref: '#/components/schemas/SocialLink'
+          example: []
+
+    SocialLink:
+      type: object
+      description: SNSリンク情報
+      required:
+        - id
+        - platform
+        - url
+      properties:
+        id:
+          type: string
+          description: SNSリンクの一意識別子
+          example: '1'
+        platform:
+          type: string
+          description: SNSプラットフォーム名
+          minLength: 1
+          maxLength: 50
+          example: 'Instagram'
+        url:
+          type: string
+          format: uri
+          description: SNSのURL
+          example: 'https://instagram.com/hanako_barista'
+
+    RecipeStep:
+      type: object
+      description: レシピの手順
+      required:
+        - id
+        - stepOrder
+        - description
+      properties:
+        id:
+          type: string
+          description: 手順の一意識別子
+          example: '1'
+        stepOrder:
+          type: integer
+          description: 手順の順序（1から開始）
+          minimum: 1
+          example: 1
+        timeSeconds:
+          type: integer
+          description: 開始からの累積時間（秒）
+          minimum: 0
+          maximum: 3600
+          example: 30
+          nullable: true
+        description:
+          type: string
+          description: 手順の詳細説明
+          minLength: 1
+          maxLength: 500
+          example: 'お湯を沸かし、92℃まで冷ます。ドリッパーとサーバーを温めておく。'
+
+    DetailedEquipment:
+      type: object
+      description: 詳細な器具情報
+      required:
+        - id
+        - name
+        - equipmentType
+      properties:
+        id:
+          type: string
+          description: 器具の一意識別子
+          example: '1'
+        name:
+          type: string
+          description: 器具名
+          minLength: 1
+          maxLength: 100
+          example: 'V60ドリッパー'
+        brand:
+          type: string
+          description: ブランド名
+          maxLength: 100
+          example: 'HARIO'
+          nullable: true
+        description:
+          type: string
+          description: 器具の説明
+          maxLength: 500
+          example: '円錐形で一つ穴のドリッパー。抽出のコントロールがしやすく、クリアな味わいが特徴。'
+          nullable: true
+        affiliateLink:
+          type: string
+          format: uri
+          description: アフィリエイトリンク
+          example: 'https://example.com/affiliate/hario-v60'
+          nullable: true
+        equipmentType:
+          $ref: '#/components/schemas/EquipmentType'
+
+    EquipmentType:
+      type: object
+      description: 器具タイプ情報
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          description: 器具タイプの一意識別子
+          example: '1'
+        name:
+          type: string
+          description: 器具タイプ名
+          minLength: 1
+          maxLength: 50
+          example: 'ドリッパー'
+        description:
+          type: string
+          description: 器具タイプの説明
+          maxLength: 200
+          example: 'コーヒーを抽出するための器具'
+          nullable: true
+
+    RecipeTag:
+      type: object
+      description: レシピタグ情報
+      required:
+        - id
+        - name
+        - slug
+      properties:
+        id:
+          type: string
+          description: タグの一意識別子
+          example: '1'
+        name:
+          type: string
+          description: タグ名
+          minLength: 1
+          maxLength: 50
+          example: 'エチオピア'
+        slug:
+          type: string
+          description: URL用のスラッグ
+          pattern: '^[a-z0-9-]+$'
+          minLength: 1
+          maxLength: 50
+          example: 'ethiopia'
 
 tags:
   - name: Recipes
