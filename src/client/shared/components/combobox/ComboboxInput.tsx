@@ -72,11 +72,12 @@ const ComboboxInput = React.memo<ComboboxInputProps>(
     const containerClassName = React.useMemo(
       () =>
         cn(
-          'relative flex items-center border rounded-md bg-transparent transition-colors',
-          'border-input shadow-xs',
-          'focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]',
+          'relative flex items-center border-2 rounded-md bg-card transition-colors',
+          'border-primary/30 shadow-sm',
+          'hover:border-primary/50',
+          'focus-within:border-primary focus-within:ring-ring/20 focus-within:ring-2',
           error && 'border-destructive ring-destructive/20',
-          disabled && 'opacity-50 cursor-not-allowed',
+          disabled && 'opacity-50 cursor-not-allowed border-border',
           !disabled && 'cursor-text'
         ),
       [error, disabled]

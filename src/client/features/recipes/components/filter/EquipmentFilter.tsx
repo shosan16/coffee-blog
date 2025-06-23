@@ -98,8 +98,8 @@ const EquipmentFilter = React.memo(function EquipmentFilter({
   if (equipmentLoading) {
     return (
       <div className={`space-y-6 ${className}`}>
-        <Label className="text-sm font-medium text-gray-700">抽出器具</Label>
-        <div className="text-sm text-gray-500">器具データを読み込み中...</div>
+        <Label className="text-foreground text-sm font-medium">抽出器具</Label>
+        <div className="text-muted-foreground text-sm">器具データを読み込み中...</div>
       </div>
     );
   }
@@ -108,8 +108,8 @@ const EquipmentFilter = React.memo(function EquipmentFilter({
   if (equipmentError) {
     return (
       <div className={`space-y-6 ${className}`}>
-        <Label className="text-sm font-medium text-gray-700">抽出器具</Label>
-        <div className="text-sm text-red-500">
+        <Label className="text-foreground text-sm font-medium">抽出器具</Label>
+        <div className="text-destructive text-sm">
           器具データの読み込みに失敗しました: {equipmentError}
         </div>
       </div>
@@ -120,15 +120,15 @@ const EquipmentFilter = React.memo(function EquipmentFilter({
   if (!equipmentData) {
     return (
       <div className={`space-y-6 ${className}`}>
-        <Label className="text-sm font-medium text-gray-700">抽出器具</Label>
-        <div className="text-sm text-gray-500">器具データが利用できません</div>
+        <Label className="text-foreground text-sm font-medium">抽出器具</Label>
+        <div className="text-muted-foreground text-sm">器具データが利用できません</div>
       </div>
     );
   }
 
   return (
     <div className={`space-y-6 ${className}`}>
-      <Label className="text-sm font-medium text-gray-700">抽出器具</Label>
+      <Label className="text-foreground text-sm font-medium">抽出器具</Label>
 
       {EQUIPMENT_TYPES.map((equipmentType) => {
         const selectedValue = equipmentSelection[equipmentType.id as keyof EquipmentSelection];
@@ -136,7 +136,7 @@ const EquipmentFilter = React.memo(function EquipmentFilter({
 
         return (
           <div key={equipmentType.id} className="space-y-2">
-            <Label className="text-xs text-gray-500">{equipmentType.label}</Label>
+            <Label className="text-muted-foreground text-xs">{equipmentType.label}</Label>
 
             <Combobox
               options={options}
@@ -154,12 +154,6 @@ const EquipmentFilter = React.memo(function EquipmentFilter({
           </div>
         );
       })}
-
-      {selectedEquipment.length > 0 && (
-        <div className="rounded bg-gray-50 p-2 text-xs text-gray-500">
-          {selectedEquipment.length}個の器具が選択されています
-        </div>
-      )}
     </div>
   );
 });

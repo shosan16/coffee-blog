@@ -7,7 +7,9 @@ import { parseFiltersFromSearchParams as parseFilters } from '@/client/shared/ut
 /**
  * URLのsearchParamsからレシピのフィルター条件を解析する関数
  */
-export function parseFiltersFromSearchParams(searchParams: ReadonlyURLSearchParams): RecipeFilters {
+export function parseFiltersFromSearchParams(
+  searchParams: ReadonlyURLSearchParams | null
+): RecipeFilters {
   return parseFilters<RecipeFilters>(searchParams, {
     // 数値パラメータ
     numberParams: ['page', 'limit'],

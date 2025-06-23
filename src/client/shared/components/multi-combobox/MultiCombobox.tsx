@@ -93,10 +93,11 @@ export default function MultiCombobox({
             aria-haspopup="listbox"
             aria-controls={listboxId}
             className={cn(
-              'border-input min-h-9 w-full cursor-text rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow]',
-              'focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]',
+              'border-primary/30 bg-card min-h-9 w-full cursor-text rounded-md border-2 px-3 py-2 text-sm shadow-sm transition-[color,box-shadow]',
+              'hover:border-primary/50',
+              'focus-within:border-primary focus-within:ring-ring/20 focus-within:ring-2',
               'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
-              disabled && 'cursor-not-allowed opacity-50',
+              disabled && 'border-border cursor-not-allowed opacity-50',
               keepMinHeight && selectedItems.length === 0 && 'min-h-9',
               className
             )}

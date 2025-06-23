@@ -6,7 +6,7 @@ import { ReadonlyURLSearchParams } from 'next/navigation';
  * @returns 解析されたフィルターオブジェクト
  */
 export function parseFiltersFromSearchParams<T extends Record<string, unknown>>(
-  searchParams: ReadonlyURLSearchParams,
+  searchParams: ReadonlyURLSearchParams | null,
   config: {
     stringParams?: string[];
     numberParams?: string[];
@@ -17,6 +17,11 @@ export function parseFiltersFromSearchParams<T extends Record<string, unknown>>(
   }
 ): Partial<T> {
   const filters = {} as Partial<T>;
+
+  // searchParamsがnullの場合は空のフィルターを返す
+  if (!searchParams) {
+    return filters;
+  }
 
   // 文字列パラメータの処理
   config.stringParams?.forEach((param) => {
@@ -61,7 +66,7 @@ export function parseFiltersFromSearchParams<T extends Record<string, unknown>>(
     if (value) {
       try {
         (filters as Record<string, unknown>)[param] = JSON.parse(value);
-      } catch (e) {
+      } catch {
         // JSON解析エラーの場合は無視
       }
     }

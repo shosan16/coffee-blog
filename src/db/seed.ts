@@ -216,7 +216,7 @@ async function main(): Promise<void> {
     where: { id: 3n },
     update: {},
     create: {
-      name: 'フィルター',
+      name: 'ペーパーフィルター',
       description: 'コーヒー粉を濾過するための消耗品',
     },
   });

@@ -222,6 +222,8 @@ module.exports = {
         '**/pages/**/*.{tsx}',
         // その他コンポーネントファイル
         '**/*.tsx',
+        // Storybookのストーリーファイル
+        '**/*.stories.{ts,tsx}',
       ],
       rules: {
         'import/no-default-export': 'off', // デフォルトエクスポートの禁止を解除

@@ -4,9 +4,8 @@ import { RoastLevel, GrindSize } from '@prisma/client';
 import React, { useMemo, useCallback } from 'react';
 
 import Label from '@/client/shared/shadcn/label';
-import MultiCombobox, {
-  type MultiComboboxItem,
-} from '@/client/shared/components/multi-combobox/MultiCombobox';
+import MultiCombobox from '@/client/shared/components/multi-combobox/MultiCombobox';
+import { type MultiComboboxItem } from '@/client/shared/components/multi-combobox/types';
 import { ROAST_LEVELS, GRIND_SIZES, type OptionItem } from '@/client/shared/constants/filters';
 
 import RangeSlider from './RangeSlider';
@@ -105,11 +104,11 @@ const ConditionFilter = React.memo(function ConditionFilter({
   return (
     <div className={`space-y-6 ${className}`}>
       <div className="space-y-6">
-        <Label className="block text-sm font-medium text-gray-700">抽出条件</Label>
+        <Label className="text-foreground block text-sm font-medium">抽出条件</Label>
 
         {/* 焙煎度 */}
         <div className="space-y-3">
-          <Label className="text-xs text-gray-500">焙煎度</Label>
+          <Label className="text-muted-foreground text-xs">焙煎度</Label>
           <MultiCombobox
             items={roastLevelItems}
             selectedItems={selectedRoastLevels}
@@ -122,7 +121,7 @@ const ConditionFilter = React.memo(function ConditionFilter({
 
         {/* 挽き目 */}
         <div className="space-y-3">
-          <Label className="text-xs text-gray-500">挽き目</Label>
+          <Label className="text-muted-foreground text-xs">挽き目</Label>
           <MultiCombobox
             items={grindSizeItems}
             selectedItems={selectedGrindSizes}

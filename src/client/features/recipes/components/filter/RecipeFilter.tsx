@@ -8,6 +8,7 @@ import { useRecipeFilter } from '@/client/features/recipes/hooks/useRecipeFilter
 import { Button } from '@/client/shared/shadcn/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
 
+import ActiveFilters from './ActiveFilters';
 import ConditionFilter from './ConditionFilter';
 import EquipmentFilter from './EquipmentFilter';
 
@@ -85,11 +86,6 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
     [updateFilter]
   );
 
-  const handleResetFilters = useCallback((): void => {
-    resetFilters();
-    setIsOpen(false);
-  }, [resetFilters]);
-
   return (
     <div className={className}>
       {/* フィルター開閉ボタン（モバイル用） */}
@@ -104,7 +100,7 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
             <Filter className="h-4 w-4" />
             <span>フィルター</span>
             {activeFilterCount > 0 && (
-              <span className="rounded-full bg-blue-600 px-2 py-1 text-xs text-white">
+              <span className="bg-primary text-primary-foreground rounded-full px-2 py-1 text-xs">
                 {activeFilterCount}
               </span>
             )}
@@ -116,24 +112,20 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
       {/* フィルターコンテンツ */}
       <div className={`${isOpen ? 'block' : 'hidden'} lg:block`}>
         <Card>
-          <CardHeader className="pb-4">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg font-semibold">フィルター条件</CardTitle>
-              {activeFilterCount > 0 && (
-                <span className="text-sm text-gray-500">
-                  {activeFilterCount}個のフィルター適用中
-                </span>
-              )}
-            </div>
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold">フィルター条件</CardTitle>
           </CardHeader>
 
           <CardContent className="space-y-6">
             {/* 読み込み中のオーバーレイ */}
             {isLoading && (
-              <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/50 backdrop-blur-sm">
-                <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-blue-600"></div>
+              <div className="bg-card/50 absolute inset-0 z-10 flex items-center justify-center backdrop-blur-sm">
+                <div className="border-primary h-6 w-6 animate-spin rounded-full border-b-2"></div>
               </div>
             )}
+
+            {/* アクティブフィルター表示 */}
+            <ActiveFilters />
 
             {/* 器具フィルター */}
             <EquipmentFilter
@@ -164,8 +156,8 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
                   disabled={isLoading || (activeFilterCount === 0 && pendingFilterCount === 0)}
                   className={`px-6 transition-all duration-200 ${
                     activeFilterCount > 0 || pendingFilterCount > 0
-                      ? 'border-red-200 text-red-600 hover:border-red-300 hover:bg-red-50'
-                      : 'border-gray-200 text-gray-400'
+                      ? 'border-secondary text-muted-foreground hover:border-border hover:bg-secondary'
+                      : 'border-border text-muted-foreground'
                   }`}
                 >
                   <RotateCcw
@@ -181,8 +173,8 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
                   variant={hasChanges ? 'default' : 'secondary'}
                   className={`flex-1 transition-all duration-200 ${
                     hasChanges
-                      ? 'transform bg-blue-600 text-white shadow-md hover:scale-[1.02] hover:bg-blue-700'
-                      : 'cursor-not-allowed bg-gray-100 text-gray-500'
+                      ? 'bg-primary text-primary-foreground hover:bg-primary/90 transform shadow-md hover:scale-[1.02]'
+                      : 'border-border bg-secondary text-secondary-foreground cursor-not-allowed border'
                   } ${isLoading ? 'animate-pulse' : ''}`}
                 >
                   <Filter
@@ -193,8 +185,8 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
                     <span
                       className={`ml-2 rounded-full px-2 py-0.5 text-xs transition-all duration-200 ${
                         hasChanges
-                          ? 'animate-bounce bg-white/20 text-white'
-                          : 'bg-gray-300 text-gray-600'
+                          ? 'bg-primary-foreground/20 text-primary-foreground animate-bounce'
+                          : 'bg-muted text-muted-foreground'
                       }`}
                     >
                       {pendingFilterCount}
@@ -203,9 +195,9 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
                 </Button>
               </div>
               {hasChanges && (
-                <div className="mt-3 flex items-center gap-2 rounded-md border border-blue-200 bg-blue-50 p-3">
-                  <div className="h-2 w-2 animate-pulse rounded-full bg-blue-500"></div>
-                  <p className="text-sm font-medium text-blue-700">
+                <div className="border-border bg-card mt-3 flex items-center gap-2 rounded-md border p-3">
+                  <div className="bg-primary h-2 w-2 animate-pulse rounded-full"></div>
+                  <p className="text-card-foreground text-sm font-medium">
                     変更があります。
                     <br />
                     絞り込むボタンを押して適用してください。

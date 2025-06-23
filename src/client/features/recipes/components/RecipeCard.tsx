@@ -1,4 +1,4 @@
-import { Bean, Droplet, Settings, Coffee } from 'lucide-react';
+import { Bean, Droplet, Settings } from 'lucide-react';
 
 import { Recipe } from '@/client/features/recipes/types/recipe';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
@@ -10,93 +10,107 @@ type RecipeCardProps = {
 
 export default function RecipeCard({ recipe }: RecipeCardProps) {
   return (
-    <Card className="group flex h-full w-full flex-col overflow-hidden border-2 border-amber-200 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-amber-300 hover:shadow-xl">
+    <Card className="group border-border bg-card hover:border-primary flex h-full w-full flex-col overflow-hidden border-2 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       {/* コーヒーの染みのような装飾 */}
-      <div className="absolute -top-6 -right-6 h-32 w-32 rounded-full bg-gradient-to-br from-amber-300/30 to-orange-300/20 blur-3xl" />
-      <div className="absolute bottom-10 -left-10 h-40 w-40 rounded-full bg-gradient-to-tr from-orange-300/25 to-amber-300/15 blur-3xl" />
+      <div className="bg-muted/20 absolute -top-6 -right-6 h-32 w-32 rounded-full blur-3xl" />
+      <div className="bg-muted/20 absolute bottom-10 -left-10 h-40 w-40 rounded-full blur-3xl" />
 
       {/* ヘッダー部分 */}
       <CardHeader className="relative">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <CardTitle className="line-clamp-2 text-lg font-bold text-gray-900 transition-colors group-hover:text-amber-800">
+            <CardTitle className="text-card-foreground group-hover:text-primary line-clamp-2 text-lg font-bold transition-colors">
               {recipe.title}
             </CardTitle>
-            <p className="mt-2 line-clamp-2 text-sm text-gray-600">{recipe.summary}</p>
-          </div>
-          <div className="ml-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-md">
-              <Coffee className="h-6 w-6" />
-            </div>
+            <p className="text-muted-foreground mt-2 line-clamp-2 text-sm">{recipe.summary}</p>
           </div>
         </div>
       </CardHeader>
 
-      <CardContent className="flex flex-1 flex-col space-y-3 pt-4">
+      <CardContent className="flex flex-1 flex-col">
         {/* レシピ情報 - 固定レイアウト */}
         <div className="flex-1 space-y-3">
-          {/* 豆・挽き目 */}
-          <div className="group/item relative overflow-hidden rounded-xl bg-gradient-to-r from-amber-100 to-orange-100 p-3 shadow-sm transition-all hover:shadow-md">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-white/60 shadow-sm">
-                <Bean className="h-5 w-5 text-amber-800" />
+          {/* 豆・挽き目  */}
+          <div className="border-border bg-muted rounded-lg border p-4 shadow-sm">
+            <div className="flex items-start gap-3">
+              <div className="border-border bg-card flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border">
+                <Bean className="text-primary h-4 w-4" />
               </div>
               <div className="min-w-0 flex-1">
-                <div className="mb-0.5 text-xs font-bold tracking-wider text-amber-800/80 uppercase">
-                  豆・挽き目
-                </div>
-                <div className="truncate font-medium text-amber-950">
-                  {`${getRoastLevelLabel(recipe.roastLevel)} • ${getGrindSizeLabel(recipe.grindSize)} • ${recipe.beanWeight}g`}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 湯温・湯量 */}
-          <div className="group/item relative overflow-hidden rounded-xl bg-gradient-to-r from-orange-100 to-amber-100 p-3 shadow-sm transition-all hover:shadow-md">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-white/60 shadow-sm">
-                <Droplet className="h-5 w-5 text-orange-800" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="mb-0.5 text-xs font-bold tracking-wider text-orange-800/80 uppercase">
-                  湯温・湯量
-                </div>
-                <div className="font-medium text-amber-950">
-                  {`${recipe.waterTemp}℃ • ${recipe.waterAmount}g`}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 器具 - 3行分の高さを確保 */}
-          <div className="group/item relative h-[120px] overflow-hidden rounded-xl bg-gradient-to-r from-yellow-100 to-amber-100 p-3 shadow-sm transition-all hover:shadow-md">
-            <div className="flex h-full gap-3">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-white/60 shadow-sm">
-                <Settings className="h-5 w-5 text-yellow-800" />
-              </div>
-              <div className="flex min-w-0 flex-1 flex-col">
-                <div className="mb-1.5 text-xs font-bold tracking-wider text-yellow-800/80 uppercase">
-                  器具
-                </div>
-                {/* 器具を縦に並べて表示 - 上下中央配置 */}
-                <div className="flex flex-1 flex-col justify-center">
-                  <div className="flex flex-col gap-1">
-                    {recipe.equipment.length > 0 ? (
-                      recipe.equipment.map((item) => (
-                        <span
-                          key={item}
-                          className="inline-block w-fit rounded-full bg-white/70 px-2 py-0.5 text-xs font-medium text-amber-900 shadow-sm"
-                        >
-                          {item}
-                        </span>
-                      ))
-                    ) : (
-                      <span className="text-xs text-amber-700/60">なし</span>
-                    )}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground text-sm">焙煎度</span>
+                    <span className="text-card-foreground text-sm font-medium">
+                      {getRoastLevelLabel(recipe.roastLevel)}
+                    </span>
                   </div>
-                  {/* 3個の器具がある場合の下部パディング */}
-                  {recipe.equipment.length === 3 && <div className="h-1" />}
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground text-sm">挽き目</span>
+                    <span className="text-card-foreground text-sm font-medium">
+                      {getGrindSizeLabel(recipe.grindSize)}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground text-sm">豆の量</span>
+                    <span className="text-card-foreground text-sm font-medium">
+                      {recipe.beanWeight}g
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 湯温・湯量  */}
+          <div className="border-border bg-muted rounded-lg border p-4 shadow-sm">
+            <div className="flex items-start gap-3">
+              <div className="border-border bg-card flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border">
+                <Droplet className="text-primary h-4 w-4" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground text-sm">湯温</span>
+                    <span className="text-card-foreground text-sm font-medium">
+                      {recipe.waterTemp}°C
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground text-sm">湯量</span>
+                    <span className="text-card-foreground text-sm font-medium">
+                      {recipe.waterAmount}g
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 器具  */}
+          <div className="border-border bg-muted rounded-lg border p-4 shadow-sm">
+            <div className="flex items-start gap-3">
+              <div className="border-border bg-card flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border">
+                <Settings className="text-primary h-4 w-4" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="space-y-2">
+                  {recipe.equipment.length > 0 ? (
+                    <>
+                      <div className="text-muted-foreground text-xs">器具</div>
+                      <div className="space-y-1">
+                        {recipe.equipment.slice(0, 3).map((item) => (
+                          <div key={item} className="text-card-foreground text-sm font-medium">
+                            {item}
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-muted-foreground text-xs">器具</div>
+                      <div className="text-card-foreground text-sm font-medium">なし</div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -105,7 +119,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
       </CardContent>
 
       {/* ホバー時のオーバーレイ効果 */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-amber-900/10 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      <div className="bg-primary/5 pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
     </Card>
   );
 }

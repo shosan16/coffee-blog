@@ -10,7 +10,7 @@ export async function fetchRecipes(filters: RecipeFilters = {}): Promise<RecipeL
       params: filters,
       cache: 'no-store',
     });
-  } catch (error) {
+  } catch {
     // APIがない場合やエラーの場合はモックデータを返す
     return {
       recipes: [],
