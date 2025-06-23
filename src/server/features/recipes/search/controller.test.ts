@@ -67,10 +67,19 @@ describe('SearchRecipesController', () => {
           limit: 10,
         })
       );
-      expect(mockNextResponse.json).toHaveBeenCalledWith({
-        recipes: mockResult.recipes,
-        pagination: mockResult.pagination,
-      });
+      expect(mockNextResponse.json).toHaveBeenCalledWith(
+        {
+          recipes: mockResult.recipes,
+          pagination: mockResult.pagination,
+        },
+        {
+          status: 200,
+          headers: expect.objectContaining({
+            'X-Request-ID': expect.any(String),
+            'X-Total-Count': '50',
+          }),
+        }
+      );
     });
 
     it('パラメータなしのリクエストでもデフォルト値で検索できる', async () => {
@@ -84,10 +93,19 @@ describe('SearchRecipesController', () => {
 
       // Assert - 確認：サービスが呼び出され、レスポンスが返される
       expect(mockService.searchRecipes).toHaveBeenCalledTimes(1);
-      expect(mockNextResponse.json).toHaveBeenCalledWith({
-        recipes: mockResult.recipes,
-        pagination: mockResult.pagination,
-      });
+      expect(mockNextResponse.json).toHaveBeenCalledWith(
+        {
+          recipes: mockResult.recipes,
+          pagination: mockResult.pagination,
+        },
+        {
+          status: 200,
+          headers: expect.objectContaining({
+            'X-Request-ID': expect.any(String),
+            'X-Total-Count': '1',
+          }),
+        }
+      );
     });
   });
 
@@ -188,10 +206,25 @@ describe('SearchRecipesController', () => {
       // Assert - 確認：バリデーションエラーレスポンスが返され、サービスは呼び出されない
       expect(mockNextResponse.json).toHaveBeenCalledWith(
         expect.objectContaining({
-          code: 'INVALID_PARAMETERS',
-          message: 'パラメータが不正です',
+          error: 'VALIDATION_ERROR',
+          message: 'パラメータのバリデーションに失敗しました',
+          request_id: expect.any(String),
+          timestamp: expect.any(String),
+          details: expect.objectContaining({
+            fields: expect.arrayContaining([
+              expect.objectContaining({
+                field: 'page',
+                message: expect.any(String),
+              }),
+            ]),
+          }),
         }),
-        { status: 400 }
+        {
+          status: 400,
+          headers: expect.objectContaining({
+            'X-Request-ID': expect.any(String),
+          }),
+        }
       );
       expect(mockService.searchRecipes).not.toHaveBeenCalled();
     });
@@ -206,11 +239,25 @@ describe('SearchRecipesController', () => {
       // Assert - 確認：バリデーションエラーレスポンスが返され、サービスは呼び出されない
       expect(mockNextResponse.json).toHaveBeenCalledWith(
         expect.objectContaining({
-          code: 'INVALID_PARAMETERS',
-          message: 'パラメータが不正です',
-          details: expect.any(Object),
+          error: 'VALIDATION_ERROR',
+          message: 'パラメータのバリデーションに失敗しました',
+          request_id: expect.any(String),
+          timestamp: expect.any(String),
+          details: expect.objectContaining({
+            fields: expect.arrayContaining([
+              expect.objectContaining({
+                field: 'limit',
+                message: expect.any(String),
+              }),
+            ]),
+          }),
         }),
-        { status: 400 }
+        {
+          status: 400,
+          headers: expect.objectContaining({
+            'X-Request-ID': expect.any(String),
+          }),
+        }
       );
       expect(mockService.searchRecipes).not.toHaveBeenCalled();
     });
@@ -228,11 +275,18 @@ describe('SearchRecipesController', () => {
 
       // Assert - 確認：内部サーバーエラーレスポンスが返され、エラーがログ出力される
       expect(mockNextResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          error: 'INTERNAL_SERVER_ERROR',
+          message: 'サーバー内部でエラーが発生しました',
+          request_id: expect.any(String),
+          timestamp: expect.any(String),
+        }),
         {
-          code: 'INTERNAL_SERVER_ERROR',
-          message: '予期せぬエラーが発生しました',
-        },
-        { status: 500 }
+          status: 500,
+          headers: expect.objectContaining({
+            'X-Request-ID': expect.any(String),
+          }),
+        }
       );
     });
 
@@ -309,10 +363,19 @@ describe('SearchRecipesController', () => {
           order: 'asc',
         })
       );
-      expect(mockNextResponse.json).toHaveBeenCalledWith({
-        recipes: mockResult.recipes,
-        pagination: mockResult.pagination,
-      });
+      expect(mockNextResponse.json).toHaveBeenCalledWith(
+        {
+          recipes: mockResult.recipes,
+          pagination: mockResult.pagination,
+        },
+        {
+          status: 200,
+          headers: expect.objectContaining({
+            'X-Request-ID': expect.any(String),
+            'X-Total-Count': '15',
+          }),
+        }
+      );
     });
 
     it('異なる検索パターンでも一貫した処理が行われる', async () => {
