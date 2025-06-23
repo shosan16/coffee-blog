@@ -47,7 +47,7 @@ describe('GET /api/recipes/[id]', () => {
       vi.mocked(handleGetRecipeDetail).mockResolvedValue(mockResponse);
 
       // Act - 実行：API Routeを呼び出し
-      const response = await GET(mockRequest, { params: mockParams });
+      const response = await GET(mockRequest, { params: Promise.resolve(mockParams) });
 
       // Assert - 確認：コントローラーが正しく呼ばれ、レスポンスが返されることを検証
       expect(handleGetRecipeDetail).toHaveBeenCalledWith(mockRequest, mockParams);
@@ -80,7 +80,7 @@ describe('GET /api/recipes/[id]', () => {
       vi.mocked(handleGetRecipeDetail).mockResolvedValue(mockErrorResponse);
 
       // Act - 実行：API Routeを呼び出し
-      const response = await GET(mockRequest, { params: mockParams });
+      const response = await GET(mockRequest, { params: Promise.resolve(mockParams) });
 
       // Assert - 確認：エラーレスポンスがそのまま返されることを検証
       expect(handleGetRecipeDetail).toHaveBeenCalledWith(mockRequest, mockParams);
@@ -97,7 +97,7 @@ describe('GET /api/recipes/[id]', () => {
       vi.mocked(handleGetRecipeDetail).mockRejectedValue(unexpectedError);
 
       // Act - 実行：API Routeを呼び出し
-      const response = await GET(mockRequest, { params: mockParams });
+      const response = await GET(mockRequest, { params: Promise.resolve(mockParams) });
 
       // Assert - 確認：500エラーレスポンスが返されることを検証
       expect(response.status).toBe(500);
