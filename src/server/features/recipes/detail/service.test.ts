@@ -27,6 +27,8 @@ describe('getRecipeDetail', () => {
       // Arrange - 準備：公開されたレシピのモックデータを設定
       const mockRecipe = {
         id: 1n,
+        authorId: 1n,
+        baristaId: 1n,
         title: 'エチオピア イルガチェフェ V60',
         summary: 'フルーティーで華やかな酸味が特徴',
         remarks: '特に蒸らし時間に注意',

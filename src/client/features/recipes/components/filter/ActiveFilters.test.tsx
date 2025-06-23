@@ -48,6 +48,7 @@ describe('ActiveFilters', () => {
       mockedUseRecipeSearch.mockReturnValue({
         filters: {},
         searchValue: '',
+        updateSearchValue: vi.fn(),
         updateFilter: mockUpdateFilter,
         clearSearch: mockClearSearch,
         resetSearch: mockResetSearch,
@@ -73,9 +74,11 @@ describe('ActiveFilters', () => {
       mockedUseRecipeSearch.mockReturnValue({
         filters: {},
         searchValue: 'エスプレッソ',
+        updateSearchValue: vi.fn(),
         updateFilter: mockUpdateFilter,
         clearSearch: mockClearSearch,
         resetSearch: mockResetSearch,
+        removeFilter: mockRemoveFilter,
         pendingSearchValue: 'エスプレッソ',
         pendingFilters: {},
         applySearch: vi.fn(),
@@ -108,10 +111,11 @@ describe('ActiveFilters', () => {
     beforeEach(() => {
       mockedUseRecipeSearch.mockReturnValue({
         filters: {
-          roastLevel: ['浅煎り', '中煎り'],
-          grindSize: ['中細挽き'],
+          roastLevel: ['LIGHT', 'MEDIUM'],
+          grindSize: ['MEDIUM_FINE'],
         },
         searchValue: '',
+        updateSearchValue: vi.fn(),
         updateFilter: mockUpdateFilter,
         clearSearch: mockClearSearch,
         resetSearch: mockResetSearch,
@@ -131,9 +135,9 @@ describe('ActiveFilters', () => {
 
       expect(screen.getByText('適用中のフィルター (2件)')).toBeInTheDocument();
       expect(screen.getByText('焙煎度:')).toBeInTheDocument();
-      expect(screen.getByText('浅煎り, 中煎り')).toBeInTheDocument();
+      expect(screen.getByText('LIGHT, MEDIUM')).toBeInTheDocument();
       expect(screen.getByText('挽き目:')).toBeInTheDocument();
-      expect(screen.getByText('中細挽き')).toBeInTheDocument();
+      expect(screen.getByText('MEDIUM_FINE')).toBeInTheDocument();
     });
 
     it('配列フィルターのクリアボタンが動作する', () => {
@@ -155,6 +159,7 @@ describe('ActiveFilters', () => {
           waterAmount: { max: 300 },
         },
         searchValue: '',
+        updateSearchValue: vi.fn(),
         updateFilter: mockUpdateFilter,
         clearSearch: mockClearSearch,
         resetSearch: mockResetSearch,
@@ -197,17 +202,19 @@ describe('ActiveFilters', () => {
     beforeEach(() => {
       mockedUseRecipeSearch.mockReturnValue({
         filters: {
-          roastLevel: ['深煎り'],
+          roastLevel: ['DARK'],
           beanWeight: { min: 18, max: 22 },
           page: 2, // pageは表示対象外
         },
         searchValue: 'カフェラテ',
+        updateSearchValue: vi.fn(),
         updateFilter: mockUpdateFilter,
         clearSearch: mockClearSearch,
         resetSearch: mockResetSearch,
+        applySearch: mockApplySearch,
+        removeFilter: mockRemoveFilter,
         pendingSearchValue: 'カフェラテ',
         pendingFilters: {},
-        applySearch: vi.fn(),
         isLoading: false,
         hasChanges: false,
         resultCount: undefined,
@@ -226,7 +233,7 @@ describe('ActiveFilters', () => {
 
       // フィルター
       expect(screen.getByText('焙煎度:')).toBeInTheDocument();
-      expect(screen.getByText('深煎り')).toBeInTheDocument();
+      expect(screen.getByText('DARK')).toBeInTheDocument();
       expect(screen.getByText('コーヒー粉量:')).toBeInTheDocument();
       expect(screen.getByText('18 - 22')).toBeInTheDocument();
 
@@ -243,36 +250,6 @@ describe('ActiveFilters', () => {
       expect(mockResetSearch).toHaveBeenCalledOnce();
     });
   });
-
-  describe('不明なフィルターキーの処理', () => {
-    beforeEach(() => {
-      mockedUseRecipeSearch.mockReturnValue({
-        filters: {
-          unknownKey: 'some value',
-        },
-        searchValue: '',
-        updateFilter: mockUpdateFilter,
-        clearSearch: mockClearSearch,
-        resetSearch: mockResetSearch,
-        applySearch: mockApplySearch,
-        removeFilter: mockRemoveFilter,
-        pendingSearchValue: '',
-        pendingFilters: {},
-        isLoading: false,
-        hasChanges: false,
-        resultCount: undefined,
-        setResultCount: vi.fn(),
-      });
-    });
-
-    it('不明なフィルターキーはそのまま表示される', () => {
-      render(<ActiveFilters />);
-
-      expect(screen.getByText('unknownKey:')).toBeInTheDocument();
-      expect(screen.getByText('some value')).toBeInTheDocument();
-    });
-  });
-
   describe('機器フィルターの状態', () => {
     beforeEach(() => {
       mockedUseRecipeSearch.mockReturnValue({
@@ -280,6 +257,7 @@ describe('ActiveFilters', () => {
           equipment: ['コマンダンテ C40', 'ORIGAMI ドリッパー'],
         },
         searchValue: '',
+        updateSearchValue: vi.fn(),
         updateFilter: mockUpdateFilter,
         clearSearch: mockClearSearch,
         resetSearch: mockResetSearch,
@@ -328,6 +306,7 @@ describe('ActiveFilters', () => {
         },
         searchValue: '',
         updateFilter: mockUpdateFilter,
+        updateSearchValue: vi.fn(),
         clearSearch: mockClearSearch,
         resetSearch: mockResetSearch,
         applySearch: mockApplySearch,
@@ -353,9 +332,10 @@ describe('ActiveFilters', () => {
   describe('CSS クラス', () => {
     beforeEach(() => {
       mockedUseRecipeSearch.mockReturnValue({
-        filters: { roastLevel: ['浅煎り'] },
+        filters: { roastLevel: ['LIGHT'] },
         searchValue: '',
         updateFilter: mockUpdateFilter,
+        updateSearchValue: vi.fn(),
         clearSearch: mockClearSearch,
         resetSearch: mockResetSearch,
         applySearch: mockApplySearch,

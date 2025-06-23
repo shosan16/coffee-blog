@@ -13,11 +13,14 @@ export const dynamic = 'force-dynamic';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse<RecipeDetail | ErrorResponse>> {
   try {
+    // パラメータを解決
+    const resolvedParams = await params;
+
     // コントローラーに処理を委譲
-    return await handleGetRecipeDetail(request, params);
+    return await handleGetRecipeDetail(request, resolvedParams);
   } catch {
     // コントローラーで予期しないエラーが発生した場合の最終的なエラーハンドリング
     const requestId = RequestId.fromRequest(request);
