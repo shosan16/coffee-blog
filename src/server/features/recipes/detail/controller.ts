@@ -49,8 +49,12 @@ export async function handleGetRecipeDetail(
     );
 
     // レスポンスヘッダーを設定
-    const headers = RequestId.addToHeaders({}, requestId);
-    headers['X-View-Count'] = result.newViewCount.toString();
+    const headers = RequestId.addToHeaders(
+      {
+        'X-View-Count': result.newViewCount.toString(),
+      },
+      requestId
+    );
 
     return NextResponse.json(result.recipe, {
       status: 200,

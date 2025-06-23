@@ -39,7 +39,10 @@ describe('handleGetRecipeDetail', () => {
     vi.clearAllMocks();
 
     vi.mocked(RequestId.fromRequest).mockReturnValue('req_abc123xyz789');
-    vi.mocked(RequestId.addToHeaders).mockReturnValue({ 'X-Request-ID': 'req_abc123xyz789' });
+    vi.mocked(RequestId.addToHeaders).mockImplementation((headers) => ({
+      'X-Request-ID': 'req_abc123xyz789',
+      ...headers,
+    }));
     vi.mocked(createRequestLogger).mockReturnValue(mockLogger);
   });
 

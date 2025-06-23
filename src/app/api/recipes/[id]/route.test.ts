@@ -25,7 +25,7 @@ describe('GET /api/recipes/[id]', () => {
         {
           id: '1',
           title: 'エチオピア イルガチェフェ V60',
-          roastLevel: 'LIGHT_MEDIUM',
+          roastLevel: 'LIGHT_MEDIUM' as const,
           viewCount: 151,
           isPublished: true,
           createdAt: '2025-06-20T10:30:00.000Z',
