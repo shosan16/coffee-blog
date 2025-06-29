@@ -77,6 +77,12 @@ describe('RecipeList', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     (useSearchParams as ReturnType<typeof vi.fn>).mockReturnValue(mockSearchParams);
+    // デフォルトのuseRecipesレスポンスをリセット
+    (useRecipes as ReturnType<typeof vi.fn>).mockReturnValue({
+      recipes: mockInitialData.recipes,
+      pagination: mockInitialData.pagination,
+      isLoading: false,
+    });
   });
 
   afterEach(() => {
@@ -146,6 +152,9 @@ describe('RecipeList', () => {
   });
 
   it('ページネーションが1ページのみの場合は表示されない', () => {
+    // 完全にクリーンな状態から開始
+    cleanup();
+
     const singlePageData = {
       ...mockInitialData,
       pagination: {
@@ -156,15 +165,18 @@ describe('RecipeList', () => {
       },
     };
 
-    // 単一ページのデータを返すように設定
-    (useRecipes as ReturnType<typeof vi.fn>).mockReturnValueOnce({
+    // モックをクリアして単一ページのデータを返すように設定
+    vi.clearAllMocks();
+    (useSearchParams as ReturnType<typeof vi.fn>).mockReturnValue(mockSearchParams);
+    (useRecipes as ReturnType<typeof vi.fn>).mockReturnValue({
       recipes: singlePageData.recipes,
       pagination: singlePageData.pagination,
       isLoading: false,
     });
 
-    render(<RecipeList initialData={singlePageData} />);
+    const { container } = render(<RecipeList initialData={singlePageData} />);
 
-    expect(screen.queryByTestId('pagination')).not.toBeInTheDocument();
+    // コンテナ内での検索に限定
+    expect(container.querySelector('[data-testid="pagination"]')).not.toBeInTheDocument();
   });
 });
