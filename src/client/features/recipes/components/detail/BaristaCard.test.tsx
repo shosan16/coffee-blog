@@ -1,15 +1,10 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { render, screen, cleanup } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
 
 import BaristaCard from './BaristaCard';
 import type { BaristaInfo } from '../../types/recipe-detail';
 
 describe('BaristaCard', () => {
-  beforeEach(() => {
-    // 各テスト前にDOMを完全クリア
-    cleanup();
-    document.body.innerHTML = '';
-  });
   describe('基本表示', () => {
     it('完全なバリスタ情報を正しく表示できること', () => {
       // Arrange - 準備：完全なバリスタ情報を設定
