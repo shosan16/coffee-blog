@@ -42,7 +42,7 @@ export default function BaristaCard({ barista }: BaristaCardProps) {
 
         {/* SNSリンク */}
         {barista.socialLinks.length > 0 && (
-          <div className="space-y-3">
+          <div className="space-y-3" data-testid="sns-section">
             <div className="text-muted-foreground text-sm font-medium">SNS</div>
             <div className="space-y-2">
               {barista.socialLinks.map((link) => (

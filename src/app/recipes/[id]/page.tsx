@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { getRecipeDetailAction } from './actions';
-import RecipeDetailView from '@/client/features/recipes/components/detail/RecipeDetailView';
+import LazyRecipeDetailView from '@/client/features/recipes/components/detail/LazyRecipeDetailView';
 import ServerRecipeDetailError from '@/client/features/recipes/components/detail/ServerRecipeDetailError';
 
 type RecipeDetailPageProps = {
@@ -93,7 +93,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
     // Server Actionでレシピ詳細を取得
     const recipe = await getRecipeDetailAction(recipeId);
 
-    return <RecipeDetailView recipe={recipe} />;
+    return <LazyRecipeDetailView recipe={recipe} />;
   } catch {
     // Server ActionでnotFound()が呼ばれなかった場合のエラーハンドリング
     return (

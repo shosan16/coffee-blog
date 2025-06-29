@@ -9,6 +9,22 @@ type RecipeStepsProps = {
 };
 
 /**
+ * 秒数を分かりやすい時間表記に変換
+ */
+function formatTime(seconds: number): string {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
+  if (minutes === 0) {
+    return `${seconds}秒`;
+  } else if (remainingSeconds === 0) {
+    return `${minutes}分`;
+  } else {
+    return `${minutes}分${remainingSeconds}秒`;
+  }
+}
+
+/**
  * レシピ手順表示コンポーネント
  *
  * タイムライン形式でレシピの手順を表示する。
@@ -21,7 +37,7 @@ export default function RecipeSteps({ steps }: RecipeStepsProps) {
         <CardHeader>
           <CardTitle className="text-card-foreground flex items-center gap-3">
             <CheckCircle className="text-primary h-6 w-6" />
-            手順
+            抽出手順
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -39,7 +55,7 @@ export default function RecipeSteps({ steps }: RecipeStepsProps) {
       <CardHeader className="relative">
         <CardTitle className="text-card-foreground flex items-center gap-3">
           <CheckCircle className="text-primary h-6 w-6" />
-          手順
+          抽出手順
         </CardTitle>
       </CardHeader>
 
@@ -53,17 +69,17 @@ export default function RecipeSteps({ steps }: RecipeStepsProps) {
               <div key={step.id} className="relative flex gap-4">
                 {/* ステップ番号 */}
                 <div className="border-border bg-primary text-primary-foreground relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border font-semibold">
-                  {step.stepOrder}
+                  <span className="text-xs">Step {step.stepOrder}</span>
                 </div>
 
                 {/* ステップ内容 */}
                 <div className="min-w-0 flex-1 space-y-2">
                   {/* 時間表示 */}
-                  {step.timeSeconds !== undefined && (
+                  {step.timeSeconds !== undefined && step.timeSeconds > 0 && (
                     <div className="flex items-center gap-2">
                       <Clock className="text-muted-foreground h-4 w-4" />
                       <span className="text-muted-foreground text-sm font-medium">
-                        {Math.floor(step.timeSeconds / 60)}分{step.timeSeconds % 60}秒
+                        {formatTime(step.timeSeconds)}
                         {index === 0 && '（開始）'}
                         {index > 0 && '（累積）'}
                       </span>
