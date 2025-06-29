@@ -1,9 +1,8 @@
 import { Calendar, Coffee } from 'lucide-react';
-import { format } from 'date-fns';
-import { ja } from 'date-fns/locale';
 
 import type { RecipeDetailInfo } from '../../types/recipe-detail';
 import { Card, CardContent } from '@/client/shared/shadcn/card';
+import { useDateFormat } from '../../hooks/useDateFormat';
 
 type RecipeHeaderProps = {
   /** レシピ詳細情報 */
@@ -17,7 +16,7 @@ type RecipeHeaderProps = {
  * 詳細画面の最上部に配置される。
  */
 export default function RecipeHeader({ recipe }: RecipeHeaderProps) {
-  const publishedDate = recipe.publishedAt ? new Date(recipe.publishedAt) : null;
+  const { formatDate } = useDateFormat();
 
   return (
     <Card className="border-border bg-card shadow-sm transition-all duration-300 hover:shadow-xl">
@@ -46,11 +45,11 @@ export default function RecipeHeader({ recipe }: RecipeHeaderProps) {
           <div className="border-border bg-muted/50 rounded-lg border p-4">
             <div className="flex flex-wrap items-center gap-6">
               {/* 公開日 */}
-              {publishedDate && (
+              {recipe.publishedAt && (
                 <div className="flex items-center gap-2">
                   <Calendar className="text-muted-foreground h-4 w-4" />
                   <span className="text-muted-foreground text-sm">
-                    {format(publishedDate, 'yyyy年M月d日', { locale: ja })}
+                    {formatDate(recipe.publishedAt)}
                   </span>
                 </div>
               )}

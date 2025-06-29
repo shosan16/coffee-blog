@@ -2,27 +2,12 @@ import { Clock, CheckCircle } from 'lucide-react';
 
 import type { RecipeStepInfo } from '../../types/recipe-detail';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
+import { useTimeFormat } from '../../hooks/useTimeFormat';
 
 type RecipeStepsProps = {
   /** レシピ手順リスト */
   steps: RecipeStepInfo[];
 };
-
-/**
- * 秒数を分かりやすい時間表記に変換
- */
-function formatTime(seconds: number): string {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-
-  if (minutes === 0) {
-    return `${seconds}秒`;
-  } else if (remainingSeconds === 0) {
-    return `${minutes}分`;
-  } else {
-    return `${minutes}分${remainingSeconds}秒`;
-  }
-}
 
 /**
  * レシピ手順表示コンポーネント
@@ -31,6 +16,7 @@ function formatTime(seconds: number): string {
  * 累積時間も表示して、タイミングを分かりやすくする。
  */
 export default function RecipeSteps({ steps }: RecipeStepsProps) {
+  const { formatSeconds } = useTimeFormat();
   if (steps.length === 0) {
     return (
       <Card className="border-border bg-card shadow-sm">
@@ -79,7 +65,7 @@ export default function RecipeSteps({ steps }: RecipeStepsProps) {
                     <div className="flex items-center gap-2">
                       <Clock className="text-muted-foreground h-4 w-4" />
                       <span className="text-muted-foreground text-sm font-medium">
-                        {formatTime(step.timeSeconds)}
+                        {formatSeconds(step.timeSeconds)}
                         {index === 0 && '（開始）'}
                         {index > 0 && '（累積）'}
                       </span>

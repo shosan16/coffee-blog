@@ -3,6 +3,8 @@ import { Bean, Droplet, Clock, Eye } from 'lucide-react';
 import type { RecipeDetailInfo } from '../../types/recipe-detail';
 import { Card, CardContent } from '@/client/shared/shadcn/card';
 import { getRoastLevelLabel, getGrindSizeLabel } from '@/client/shared/constants/filters';
+import { useTimeFormat } from '../../hooks/useTimeFormat';
+import { useNumberFormat } from '../../hooks/useNumberFormat';
 
 type RecipeInfoCardsProps = {
   /** レシピ詳細情報 */
@@ -16,6 +18,8 @@ type RecipeInfoCardsProps = {
  * カード形式で表示する。
  */
 export default function RecipeInfoCards({ recipe }: RecipeInfoCardsProps) {
+  const { splitMinutesAndSeconds } = useTimeFormat();
+  const { formatWeight, formatTemperature, formatViewCount } = useNumberFormat();
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
       {/* 豆情報 */}
@@ -46,7 +50,7 @@ export default function RecipeInfoCards({ recipe }: RecipeInfoCardsProps) {
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground text-sm">豆の量</span>
                     <span className="text-card-foreground text-sm font-medium">
-                      {recipe.beanWeight}g
+                      {formatWeight(recipe.beanWeight)}
                     </span>
                   </div>
                 )}
@@ -70,7 +74,7 @@ export default function RecipeInfoCards({ recipe }: RecipeInfoCardsProps) {
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground text-sm">湯温</span>
                     <span className="text-card-foreground text-sm font-medium">
-                      {recipe.waterTemp}°C
+                      {formatTemperature(recipe.waterTemp)}
                     </span>
                   </div>
                 )}
@@ -78,7 +82,7 @@ export default function RecipeInfoCards({ recipe }: RecipeInfoCardsProps) {
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground text-sm">湯量</span>
                     <span className="text-card-foreground text-sm font-medium">
-                      {recipe.waterAmount}g
+                      {formatWeight(recipe.waterAmount)}
                     </span>
                   </div>
                 )}
@@ -101,7 +105,10 @@ export default function RecipeInfoCards({ recipe }: RecipeInfoCardsProps) {
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground text-sm">総時間</span>
                   <span className="text-card-foreground text-sm font-medium">
-                    {Math.floor(recipe.brewingTime / 60)}分{recipe.brewingTime % 60}秒
+                    {(() => {
+                      const { minutes, seconds } = splitMinutesAndSeconds(recipe.brewingTime);
+                      return `${minutes}分${seconds}秒`;
+                    })()}
                   </span>
                 </div>
               </div>
@@ -122,7 +129,7 @@ export default function RecipeInfoCards({ recipe }: RecipeInfoCardsProps) {
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground text-sm">閲覧回数</span>
                 <span className="text-card-foreground text-sm font-medium">
-                  {recipe.viewCount.toLocaleString()}回
+                  {formatViewCount(recipe.viewCount)}
                 </span>
               </div>
             </div>
