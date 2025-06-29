@@ -10,14 +10,14 @@ vi.mock('../../hooks/useRecipeSearch', () => ({
 }));
 
 // useEquipmentフックをモック
-vi.mock('../../hooks/useEquipment', () => ({
+vi.mock('@/client/shared/hooks/useEquipment', () => ({
   useEquipment: vi.fn(),
 }));
 
 const mockedUseRecipeSearch = vi.mocked(useRecipeSearch);
 
 // useEquipmentインポートとモック
-import { useEquipment } from '../../hooks/useEquipment';
+import { useEquipment } from '@/client/shared/hooks/useEquipment';
 const mockedUseEquipment = vi.mocked(useEquipment);
 
 describe('ActiveFilters', () => {

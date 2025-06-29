@@ -2,8 +2,8 @@
 
 import React, { useCallback, useMemo } from 'react';
 
-import { useEquipment } from '@/client/features/recipes/hooks/useEquipment';
-import { formatEquipmentName } from '@/client/features/recipes/utils/equipmentApi';
+import { useEquipment } from '@/client/shared/hooks/useEquipment';
+import { formatEquipmentName } from '@/client/shared/utils/equipmentApi';
 import Label from '@/client/shared/shadcn/label';
 
 import { Combobox, type ComboboxOption } from '@/client/shared/components/combobox';

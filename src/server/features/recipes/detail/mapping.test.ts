@@ -5,7 +5,7 @@ import type {
   RecipeStepInfo,
   RecipeTagInfo,
   DetailedEquipmentInfo,
-} from '@/client/features/recipes/types/recipe-detail';
+} from '@/client/features/recipe-detail/types/recipe-detail';
 
 // テスト対象のマッピング関数（service.ts内の関数を抽出してテスト）
 // service.tsから抽出したマッピング関数のテストファイル

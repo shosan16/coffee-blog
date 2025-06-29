@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { RecipeListResponse } from '@/client/features/recipes/types/api';
+import { RecipeListResponse } from '@/client/features/recipe-list/types/api';
 import { SearchRecipesController } from '@/server/features/recipes/search/controller';
 import type { ErrorResponse } from '@/server/shared/api-error';
 

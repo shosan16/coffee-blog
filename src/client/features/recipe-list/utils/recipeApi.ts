@@ -1,4 +1,4 @@
-import { RecipeFilters, RecipeListResponse } from '@/client/features/recipes/types/api';
+import { RecipeFilters, RecipeListResponse } from '@/client/features/recipe-list/types/api';
 import { apiRequest } from '@/client/shared/api/request';
 
 /**

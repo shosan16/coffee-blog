@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 
-import { Recipe } from '@/client/features/recipes/types/recipe';
+import { Recipe } from '@/client/features/recipe-list/types/recipe';
 
 import RecipeCard from './RecipeCard';
 

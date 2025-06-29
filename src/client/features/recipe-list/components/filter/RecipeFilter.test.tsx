@@ -23,7 +23,7 @@ vi.mock('@/client/features/recipes/hooks/useEquipment', () => ({
   })),
 }));
 
-vi.mock('@/client/features/recipes/utils/filter', () => ({
+vi.mock('@/client/features/recipe-list/utils/filter', () => ({
   parseFiltersFromSearchParams: vi.fn(() => ({})),
 }));
 

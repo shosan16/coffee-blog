@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import {
-  fetchEquipmentByType,
-  type EquipmentByType,
-} from '@/client/features/recipes/utils/equipmentApi';
+import { fetchEquipmentByType, type EquipmentByType } from '@/client/shared/utils/equipmentApi';
 
 export type UseEquipmentReturn = {
   equipment: EquipmentByType | null;

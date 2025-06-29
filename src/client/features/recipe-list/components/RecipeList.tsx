@@ -3,10 +3,10 @@
 import { Search } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 
-import RecipeCard from '@/client/features/recipes/components/RecipeCard';
-import { useRecipes } from '@/client/features/recipes/hooks/useRecipes';
-import { RecipeListResponse } from '@/client/features/recipes/types/api';
-import { parseFiltersFromSearchParams } from '@/client/features/recipes/utils/filter';
+import RecipeCard from '@/client/features/recipe-list/components/RecipeCard';
+import { useRecipes } from '@/client/features/recipe-list/hooks/useRecipes';
+import { RecipeListResponse } from '@/client/features/recipe-list/types/api';
+import { parseFiltersFromSearchParams } from '@/client/features/recipe-list/utils/filter';
 import RecipePagination from '@/components/Pagination';
 
 type RecipeListProps = {

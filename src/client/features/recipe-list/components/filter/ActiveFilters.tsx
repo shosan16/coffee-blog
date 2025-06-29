@@ -5,8 +5,8 @@ import { X, Filter } from 'lucide-react';
 
 import { RecipeFilters } from '../../types/api';
 import { useRecipeSearch } from '../../hooks/useRecipeSearch';
-import { useEquipment } from '../../hooks/useEquipment';
-import { formatEquipmentName } from '../../utils/equipmentApi';
+import { useEquipment } from '@/client/shared/hooks/useEquipment';
+import { formatEquipmentName } from '@/client/shared/utils/equipmentApi';
 
 type ActiveFiltersProps = {
   /** 追加のCSSクラス名 */

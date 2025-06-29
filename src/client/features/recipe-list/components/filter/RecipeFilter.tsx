@@ -4,7 +4,7 @@ import { RoastLevel, GrindSize } from '@prisma/client';
 import { X, Filter, RotateCcw } from 'lucide-react';
 import React, { useState, useMemo, useCallback } from 'react';
 
-import { useRecipeFilter } from '@/client/features/recipes/hooks/useRecipeFilter';
+import { useRecipeFilter } from '@/client/features/recipe-list/hooks/useRecipeFilter';
 import { Button } from '@/client/shared/shadcn/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
 

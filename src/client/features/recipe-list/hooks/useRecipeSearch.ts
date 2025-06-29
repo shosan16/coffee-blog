@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import { RecipeFilters } from '@/client/features/recipes/types/api';
-import { parseFiltersFromSearchParams } from '@/client/features/recipes/utils/filter';
+import { RecipeFilters } from '@/client/features/recipe-list/types/api';
+import { parseFiltersFromSearchParams } from '@/client/features/recipe-list/utils/filter';
 import { buildQueryParams } from '@/client/shared/api/request';
 
 export type UseRecipeSearchReturn = {

@@ -2,18 +2,18 @@ import { RoastLevel, GrindSize } from '@prisma/client';
 import { renderHook, waitFor } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
-import { useRecipes } from '@/client/features/recipes/hooks/useRecipes';
-import { RecipeFilters, RecipeListResponse } from '@/client/features/recipes/types/api';
-import { Recipe } from '@/client/features/recipes/types/recipe';
+import { useRecipes } from '@/client/features/recipe-list/hooks/useRecipes';
+import { RecipeFilters, RecipeListResponse } from '@/client/features/recipe-list/types/api';
+import { Recipe } from '@/client/features/recipe-list/types/recipe';
 
 // fetchRecipes関数をモック化（古典学派アプローチ：外部API依存のみモック）
-vi.mock('@/client/features/recipes/utils/recipeApi', () => ({
+vi.mock('@/client/features/recipe-list/utils/recipeApi', () => ({
   fetchRecipes: vi.fn(),
 }));
 
 // モック関数の型定義
 const mockFetchRecipes = vi.mocked(
-  (await import('@/client/features/recipes/utils/recipeApi')).fetchRecipes
+  (await import('@/client/features/recipe-list/utils/recipeApi')).fetchRecipes
 );
 
 // テストヘルパー関数

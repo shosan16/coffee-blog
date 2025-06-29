@@ -1,7 +1,7 @@
 import { Bean, Droplet, Settings } from 'lucide-react';
 import Link from 'next/link';
 
-import { Recipe } from '@/client/features/recipes/types/recipe';
+import { Recipe } from '@/client/features/recipe-list/types/recipe';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
 import { getRoastLevelLabel, getGrindSizeLabel } from '@/client/shared/constants/filters';
 

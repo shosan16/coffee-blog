@@ -1,7 +1,7 @@
 import { RoastLevel, GrindSize } from '@prisma/client';
 import { ReadonlyURLSearchParams } from 'next/navigation';
 
-import { RecipeFilters } from '@/client/features/recipes/types/api';
+import { RecipeFilters } from '@/client/features/recipe-list/types/api';
 import { parseFiltersFromSearchParams as parseFilters } from '@/client/shared/utils/queryParams';
 
 /**
