@@ -7,6 +7,7 @@ import RecipeCard from '@/client/features/recipe-list/components/RecipeCard';
 import { useRecipes } from '@/client/features/recipe-list/hooks/useRecipes';
 import { RecipeListResponse } from '@/client/features/recipe-list/types/api';
 import { parseFiltersFromSearchParams } from '@/client/features/recipe-list/utils/filter';
+import { RecipeListSkeleton } from '@/client/shared/components/skeleton';
 import RecipePagination from '@/components/Pagination';
 
 type RecipeListProps = {
@@ -52,34 +53,7 @@ export default function RecipeList({ initialData }: RecipeListProps) {
       </div>
 
       {/* ローディング状態 */}
-      {isLoading && (
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-4">
-          {Array.from({ length: 8 }, () => ({ id: crypto.randomUUID() })).map((item) => (
-            <div key={item.id} className="animate-pulse">
-              <div className="space-y-4 rounded-xl border border-black bg-white p-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1 space-y-2">
-                    <div className="h-4 w-3/4 rounded bg-black" />
-                    <div className="h-3 w-full rounded bg-black" />
-                    <div className="h-3 w-2/3 rounded bg-black" />
-                  </div>
-                  <div className="h-12 w-12 rounded-full bg-black" />
-                </div>
-                <div className="space-y-3">
-                  <div className="h-12 rounded-lg border border-black bg-white" />
-                  <div className="h-12 rounded-lg border border-black bg-white" />
-                  <div className="h-12 rounded-lg border border-black bg-white" />
-                </div>
-                <div className="flex gap-2">
-                  <div className="h-6 w-16 rounded bg-black" />
-                  <div className="h-6 w-12 rounded bg-black" />
-                </div>
-                <div className="h-8 rounded bg-black" />
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      {isLoading && <RecipeListSkeleton />}
 
       {/* ページネーション */}
       {pagination && pagination.totalPages > 1 && (

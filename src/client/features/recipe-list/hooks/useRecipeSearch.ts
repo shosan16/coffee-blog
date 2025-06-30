@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import isEqual from 'lodash.isequal';
 
 import { RecipeFilters } from '@/client/features/recipe-list/types/api';
 import { parseFiltersFromSearchParams } from '@/client/features/recipe-list/utils/filter';
@@ -82,9 +83,7 @@ export function useRecipeSearch(): UseRecipeSearchReturn {
   // 初期化時にpending状態を現在の状態と同期
   useEffect(() => {
     setPendingFilters((prev) => {
-      const currentStr = JSON.stringify(currentFilters);
-      const prevStr = JSON.stringify(prev);
-      return currentStr !== prevStr ? currentFilters : prev;
+      return !isEqual(currentFilters, prev) ? currentFilters : prev;
     });
 
     setPendingSearchValue((prev) => {
@@ -94,7 +93,7 @@ export function useRecipeSearch(): UseRecipeSearchReturn {
 
   // 変更があるかどうかをチェック
   const hasChanges = useMemo(() => {
-    const filtersChanged = JSON.stringify(currentFilters) !== JSON.stringify(pendingFilters);
+    const filtersChanged = !isEqual(currentFilters, pendingFilters);
     const searchChanged = currentSearchValue !== pendingSearchValue;
     return filtersChanged || searchChanged;
   }, [currentFilters, pendingFilters, currentSearchValue, pendingSearchValue]);

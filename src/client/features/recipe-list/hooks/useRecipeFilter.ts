@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState, useMemo } from 'react';
+import isEqual from 'lodash.isequal';
 
 import { RecipeFilters } from '@/client/features/recipe-list/types/api';
 import { parseFiltersFromSearchParams } from '@/client/features/recipe-list/utils/filter';
@@ -27,20 +28,16 @@ export function useRecipeFilter(): UseRecipeFilterReturn {
   const currentFilters = useMemo(() => parseFiltersFromSearchParams(searchParams), [searchParams]);
 
   // 初期化時に pendingFilters を currentFilters と同期
-  // JSON.stringifyを使って深い比較を行い、実際に変更があった場合のみ更新
+  // isEqualを使って深い比較を行い、実際に変更があった場合のみ更新
   useEffect(() => {
     setPendingFilters((prev) => {
-      const currentStr = JSON.stringify(currentFilters);
-      const prevStr = JSON.stringify(prev);
-      return currentStr !== prevStr ? currentFilters : prev;
+      return !isEqual(currentFilters, prev) ? currentFilters : prev;
     });
   }, [currentFilters]);
 
   // 変更があるかどうかをチェック
   const hasChanges = useMemo(() => {
-    const currentStr = JSON.stringify(currentFilters);
-    const pendingStr = JSON.stringify(pendingFilters);
-    return currentStr !== pendingStr;
+    return !isEqual(currentFilters, pendingFilters);
   }, [currentFilters, pendingFilters]);
 
   // フィルター更新関数（pending状態のみ更新）
