@@ -18,7 +18,8 @@
       "Bash(mkdir:*)",
       "Bash(cp:*)",
       "Bash(grep:*)",
-      "Bash(npm audit:*)"
+      "Bash(npm audit:*)",
+      "Bash(rm:*)"
     ],
     "deny": []
   }

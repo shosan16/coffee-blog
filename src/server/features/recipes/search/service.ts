@@ -5,8 +5,9 @@ import type {
   SearchRecipesResult,
   PrismaWhereClause,
   PrismaOrderByClause,
+  Recipe,
+  EquipmentCondition,
 } from '@/server/features/recipes/search/types';
-import type { Recipe } from '@/server/features/recipes/types/recipe';
 import { prisma } from '@/server/shared/database/prisma';
 import { createChildLogger, measurePerformance } from '@/server/shared/logger';
 
@@ -61,7 +62,7 @@ export class SearchRecipesService {
     }
 
     // 器具フィルター（器具名と器具タイプの組み合わせ）
-    const equipmentConditions = [];
+    const equipmentConditions: EquipmentCondition[] = [];
 
     if (params.equipment?.length) {
       equipmentConditions.push({
@@ -90,7 +91,6 @@ export class SearchRecipesService {
     }
 
     if (equipmentConditions.length > 0) {
-      // @ts-ignore - Prisma query型の複雑な組み合わせのため一時的に無視
       where.AND = equipmentConditions;
     }
 

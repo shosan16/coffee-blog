@@ -4,11 +4,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { GET } from './route';
 
 // Controller をモック
-vi.mock('@/server/features/recipes/detail/controller', () => ({
+vi.mock('@/server/features/recipe/detail/controller', () => ({
   handleGetRecipeDetail: vi.fn(),
 }));
 
-const { handleGetRecipeDetail } = await import('@/server/features/recipes/detail/controller');
+const { handleGetRecipeDetail } = await import('@/server/features/recipe/detail/controller');
 
 describe('GET /api/recipes/[id]', () => {
   beforeEach(() => {

@@ -33,7 +33,7 @@ module.exports = {
   rules: {
     // コード品質向上ルール
     'no-unused-vars': 'off', // 未使用変数の検出を無効（TypeScriptで上書きするため）
-    'no-console': 'warn', // console.log等の使用を警告（本番環境での不要な出力を防ぐ）
+    'no-console': 'error', // console.log等の使用を禁止（本番環境での不要な出力を防ぐ）
     'no-debugger': 'error', // debugger文の使用を禁止（本番環境での停止を防ぐ）
     'no-alert': 'error', // alert/confirm/promptの使用を禁止（UX改善のため）
     'prefer-const': 'error', // 再代入されない変数はconstを使用（意図の明確化）
@@ -204,7 +204,7 @@ module.exports = {
 
     // データベースシードファイル用の設定 - console.logを許可
     {
-      files: ['src/db/seed.ts', 'src/server/shared/database/prisma.ts'],
+      files: ['src/db/seed.ts'],
       rules: {
         'no-console': 'off', // シード処理では進行状況のログ出力を許可
       },
