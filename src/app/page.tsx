@@ -1,12 +1,12 @@
 import { Coffee } from 'lucide-react';
 import { type ReadonlyURLSearchParams } from 'next/navigation';
 
-import LazyRecipeFilter from '@/client/features/recipes/components/filter/LazyRecipeFilter';
-import RecipeList from '@/client/features/recipes/components/RecipeList';
-import HeroSearchSection from '@/client/features/recipes/components/search/HeroSearchSection';
-import SearchResultsHeader from '@/client/features/recipes/components/search/SearchResultsHeader';
-import { parseFiltersFromSearchParams } from '@/client/features/recipes/utils/filter';
-import { fetchRecipes } from '@/client/features/recipes/utils/recipeApi';
+import LazyRecipeFilter from '@/client/features/recipe-list/components/filter/LazyRecipeFilter';
+import RecipeList from '@/client/features/recipe-list/components/RecipeList';
+import HeroSearchSection from '@/client/features/recipe-list/components/search/HeroSearchSection';
+import SearchResultsHeader from '@/client/features/recipe-list/components/search/SearchResultsHeader';
+import { parseFiltersFromSearchParams } from '@/client/features/recipe-list/utils/filter';
+import { fetchRecipes } from '@/client/features/recipe-list/utils/recipeApi';
 
 export default async function Home({
   searchParams,

@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { getRecipeDetailAction } from './actions';
-import LazyRecipeDetailView from '@/client/features/recipes/components/detail/LazyRecipeDetailView';
-import ServerRecipeDetailError from '@/client/features/recipes/components/detail/ServerRecipeDetailError';
+import LazyRecipeDetailView from '@/client/features/recipe-detail/components/detail/LazyRecipeDetailView';
+import ServerRecipeDetailError from '@/client/features/recipe-detail/components/detail/ServerRecipeDetailError';
 
 type RecipeDetailPageProps = {
   params: Promise<{ id: string }>;

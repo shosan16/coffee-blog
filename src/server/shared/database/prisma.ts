@@ -1,12 +1,22 @@
 import { PrismaClient } from '@prisma/client';
 
+import { createChildLogger } from '@/server/shared/logger';
+
 // PrismaClientのグローバルインスタンスを宣言
 const globalForPrisma = global as unknown as { prisma: PrismaClient | undefined };
 
+// ロガーの初期化
+const logger = createChildLogger({ component: 'prisma' });
+
 // シングルトンパターンでPrismaClientを初期化
-console.log('[Prisma] Initializing PrismaClient...');
-console.log('[Prisma] DATABASE_URL exists:', !!process.env.DATABASE_URL);
-console.log('[Prisma] NODE_ENV:', process.env.NODE_ENV);
+logger.info('Initializing PrismaClient...');
+logger.debug(
+  {
+    databaseUrlExists: !!process.env.DATABASE_URL,
+    nodeEnv: process.env.NODE_ENV,
+  },
+  'PrismaClient initialization context'
+);
 
 export const prisma =
   globalForPrisma.prisma ??
@@ -14,10 +24,10 @@ export const prisma =
     log: ['query', 'info', 'warn', 'error'],
   });
 
-console.log('[Prisma] PrismaClient initialized successfully');
+logger.info('PrismaClient initialized successfully');
 
 // 開発環境では、ホットリロード時に複数のPrismaClientインスタンスが作成されるのを防ぐ
 if (process.env.NODE_ENV !== 'production') {
   globalForPrisma.prisma = prisma;
-  console.log('[Prisma] PrismaClient stored in global for development');
+  logger.debug('PrismaClient stored in global for development');
 }

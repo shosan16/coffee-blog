@@ -2,20 +2,20 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { notFound } from 'next/navigation';
 
 import { getRecipeDetailAction } from './actions';
-import { getRecipeDetail } from '@/server/features/recipes/detail/service';
-import { validateRecipeId } from '@/server/features/recipes/detail/validation';
-import { RecipeDetailError } from '@/server/features/recipes/detail/types';
+import { getRecipeDetail } from '@/server/features/recipe/detail/service';
+import { validateRecipeId } from '@/server/features/recipe/detail/validation';
+import { RecipeDetailError } from '@/server/features/recipe/detail/types';
 
 // モジュールをモック
 vi.mock('next/navigation', () => ({
   notFound: vi.fn(),
 }));
 
-vi.mock('@/server/features/recipes/detail/service', () => ({
+vi.mock('@/server/features/recipe/detail/service', () => ({
   getRecipeDetail: vi.fn(),
 }));
 
-vi.mock('@/server/features/recipes/detail/validation', () => ({
+vi.mock('@/server/features/recipe/detail/validation', () => ({
   validateRecipeId: vi.fn(),
 }));
 

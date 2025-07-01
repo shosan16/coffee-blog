@@ -123,6 +123,26 @@ src/
 - **レシピ詳細**: Server-Side Rendering (SEO最適化・初回表示高速化)
 - **キャッシュ**: ISR (Incremental Static Regeneration) による最適化
 
+### アーキテクチャ設計原則
+
+#### ドメイン駆動設計（DDD）
+
+- **単一操作ドメイン**: 個別リソースに対する操作（`recipe/detail/`）
+- **複数操作ドメイン**: 複数リソースに対する操作（`recipes/search/`）
+- **明確な責任分離**: 各ドメインが独立した責任を持つ
+
+#### 直接import方式
+
+- **シンプルな依存関係**: index.tsを使わず、必要なファイルを直接import
+- **Tree Shaking最適化**: 未使用コードの自動除去を促進
+- **明示的な依存関係**: どのファイルが何に依存するかが明確
+
+#### コロケーション戦略
+
+- **機能ごとの集約**: 関連するファイルを同じディレクトリに配置
+- **テストとの共存**: 実装ファイルとテストファイルを隣接配置
+- **型定義の局所化**: 機能固有の型は同じディレクトリ内で管理
+
 ### テスト戦略
 
 - **コロケーション**: テストファイルをコンポーネント・ロジックの隣に配置
@@ -195,6 +215,9 @@ npm run lint
 
 # 型チェック
 npx tsc --noEmit
+
+# 包括的品質チェック
+npm run format && npm run lint && npx tsc --noEmit && npm test
 ```
 
 ## 🧪 テスト
@@ -299,17 +322,22 @@ src/
 │       ├── shadcn/         # shadcn/ui コンポーネント
 │       └── utils/
 │
-├── server/                 # サーバーサイドコード（ドメインの責任範囲で分割）
+├── server/                 # サーバーサイドコード（ドメイン駆動設計）
 │   ├── features/
 │   │   ├── recipes/        # レシピ複数操作ドメイン
-│   │   │   ├── search/         # 検索機能
-│   │   │   │   ├── controller.ts # コントローラー
-│   │   │   │   ├── service.ts  # ビジネスロジック + データアクセス
-│   │   │   │   ├── validation.ts # リクエスト検証
-│   │   │   │   └── types.ts    # 型定義
+│   │   │   └── search/         # 検索機能
+│   │   │       ├── controller.ts # コントローラー
+│   │   │       ├── service.ts  # ビジネスロジック + データアクセス
+│   │   │       ├── validation.ts # リクエスト検証
+│   │   │       └── types.ts    # 型定義
 │   │   └── recipe/         # レシピ単一操作ドメイン
-│   │       └── detail/
+│   │       └── detail/         # 詳細取得機能
+│   │           ├── controller.ts # コントローラー
+│   │           ├── service.ts  # ビジネスロジック + データアクセス
+│   │           ├── validation.ts # リクエスト検証
+│   │           └── types.ts    # 型定義
 │   └── shared/             # 共有サーバーコード
+│       ├── types/          # 共通型定義
 │       ├── api-error.ts    # エラーハンドリング
 │       ├── database/
 │       │   └── prisma.ts   # データベース接続

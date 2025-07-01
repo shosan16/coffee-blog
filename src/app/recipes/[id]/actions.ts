@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation';
 
-import { getRecipeDetail } from '@/server/features/recipes/detail/service';
-import { validateRecipeId } from '@/server/features/recipes/detail/validation';
-import { RecipeDetailError } from '@/server/features/recipes/detail/types';
-import type { RecipeDetailInfo } from '@/client/features/recipes/types/recipe-detail';
+import { getRecipeDetail } from '@/server/features/recipe/detail/service';
+import { validateRecipeId } from '@/server/features/recipe/detail/validation';
+import { RecipeDetailError } from '@/server/features/recipe/detail/types';
+import type { RecipeDetailInfo } from '@/client/features/recipe-detail/types/recipe-detail';
 
 /**
  * レシピ詳細取得のServer Action
