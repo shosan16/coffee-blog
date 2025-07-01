@@ -32,6 +32,7 @@ export function useDateFormat(): UseDateFormatReturn {
        * formatDate(null) // null
        */
       formatDate: (
+        // eslint-disable-next-line sonarjs/use-type-alias
         date: Date | string | null | undefined,
         formatPattern: string = 'yyyy年M月d日'
       ): string | null => {

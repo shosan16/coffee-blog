@@ -3,10 +3,10 @@ import { Settings, ExternalLink, Package } from 'lucide-react';
 import type { DetailedEquipmentInfo } from '../../types/recipe-detail';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
 
-type RecipeEquipmentListProps = {
+type RecipeEquipmentListProps = Readonly<{
   /** 器具詳細リスト */
   equipment: DetailedEquipmentInfo[];
-};
+}>;
 
 /**
  * レシピ器具一覧表示コンポーネント

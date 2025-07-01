@@ -53,12 +53,12 @@ export default class RecipeDetailErrorBoundary extends Component<Props, State> {
   };
 
   render() {
-    if (this.state.hasError) {
-      const {
-        fallbackTitle = 'コンポーネントエラー',
-        fallbackMessage = 'レシピ詳細の表示中にエラーが発生しました。',
-      } = this.props;
+    const {
+      fallbackTitle = 'コンポーネントエラー',
+      fallbackMessage = 'レシピ詳細の表示中にエラーが発生しました。',
+    } = this.props;
 
+    if (this.state.hasError) {
       return (
         <div className="py-8">
           <Card className="border-red-200 bg-red-50">

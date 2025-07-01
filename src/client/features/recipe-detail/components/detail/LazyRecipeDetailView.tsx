@@ -10,10 +10,10 @@ import RecipeDetailErrorBoundary from './RecipeDetailErrorBoundary';
 // 動的インポートでRecipeDetailViewを遅延読み込み
 const RecipeDetailView = lazy(() => import('./RecipeDetailView'));
 
-type LazyRecipeDetailViewProps = {
+type LazyRecipeDetailViewProps = Readonly<{
   /** レシピ詳細情報 */
   recipe: RecipeDetailInfo;
-};
+}>;
 
 /**
  * レシピ詳細ビューの遅延読み込みコンポーネント
