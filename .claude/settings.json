@@ -1,0 +1,27 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npm run format && npm run lint && npx tsc --noEmit && npm test"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "filter": "git checkout -b*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat .claude/commands/tdd.md"
+          }
+        ]
+      }
+    ]
+  }
+}
