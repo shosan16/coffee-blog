@@ -77,6 +77,8 @@ export function useRecipeSearch(): UseRecipeSearchReturn {
 
   // URLから現在の検索キーワードを取得
   const currentSearchValue = useMemo(() => {
+    // searchParamsがnullの場合を考慮（テスト環境やSSR初期状態）
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     return searchParams?.get('search') ?? '';
   }, [searchParams]);
 

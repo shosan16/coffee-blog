@@ -403,7 +403,7 @@ async function main(): Promise<void> {
                 'TikTok',
                 'Blog',
               ]),
-              url: `https://${faker.helpers.arrayElement(['twitter', 'instagram', 'youtube', 'tiktok', 'blog'])}.com/${faker.internet.userName()}`,
+              url: `https://${faker.helpers.arrayElement(['twitter', 'instagram', 'youtube', 'tiktok', 'blog'])}.com/${faker.internet.username()}`,
             },
             {
               platform: faker.helpers.arrayElement([
@@ -413,7 +413,7 @@ async function main(): Promise<void> {
                 'TikTok',
                 'Blog',
               ]),
-              url: `https://${faker.helpers.arrayElement(['twitter', 'instagram', 'youtube', 'tiktok', 'blog'])}.com/${faker.internet.userName()}`,
+              url: `https://${faker.helpers.arrayElement(['twitter', 'instagram', 'youtube', 'tiktok', 'blog'])}.com/${faker.internet.username()}`,
             },
           ],
         },

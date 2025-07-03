@@ -1,6 +1,8 @@
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+import { useEquipment } from '@/client/shared/hooks/useEquipment';
+
 import { useRecipeSearch } from '../../hooks/useRecipeSearch';
 
 import ActiveFilters from './ActiveFilters';
@@ -19,9 +21,6 @@ vi.mock('@/client/shared/hooks/useEquipment', () => ({
 const TEST_EQUIPMENT_NAME = 'コマンダンテ C40';
 
 const mockedUseRecipeSearch = vi.mocked(useRecipeSearch);
-
-// useEquipmentインポートとモック
-import { useEquipment } from '@/client/shared/hooks/useEquipment';
 const mockedUseEquipment = vi.mocked(useEquipment);
 
 describe('ActiveFilters', () => {

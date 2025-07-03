@@ -22,7 +22,8 @@
       "Bash(rm:*)",
       "Bash(npm run lint:*)",
       "Bash(npm run quality:check:*)",
-      "WebFetch(domain:docs.anthropic.com)"
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(npm run validate:*)"
     ],
     "deny": []
   }
