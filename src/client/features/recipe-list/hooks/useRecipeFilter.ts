@@ -47,13 +47,11 @@ export function useRecipeFilter(): UseRecipeFilterReturn {
         const newFilters = { ...prev };
 
         if (
-          value === undefined ||
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          value === null ||
+          value == null ||
           (Array.isArray(value) && value.length === 0) ||
           (typeof value === 'object' &&
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-            value !== null &&
+            value != null &&
             'min' in value &&
             'max' in value &&
             (value as { min?: unknown; max?: unknown }).min === undefined &&

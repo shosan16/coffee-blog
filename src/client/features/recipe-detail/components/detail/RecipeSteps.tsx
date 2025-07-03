@@ -4,10 +4,10 @@ import type { RecipeStepInfo } from '../../types/recipe-detail';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
 import { useTimeFormat } from '../../hooks/useTimeFormat';
 
-type RecipeStepsProps = Readonly<{
+type RecipeStepsProps = {
   /** レシピ手順リスト */
   steps: RecipeStepInfo[];
-}>;
+};
 
 /**
  * レシピ手順表示コンポーネント

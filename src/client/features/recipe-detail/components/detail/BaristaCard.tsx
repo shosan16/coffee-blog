@@ -3,10 +3,10 @@ import { Users, ExternalLink } from 'lucide-react';
 import type { BaristaInfo } from '../../types/recipe-detail';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
 
-type BaristaCardProps = Readonly<{
+type BaristaCardProps = {
   /** バリスタ情報 */
   barista: BaristaInfo;
-}>;
+};
 
 /**
  * バリスタ情報表示カード

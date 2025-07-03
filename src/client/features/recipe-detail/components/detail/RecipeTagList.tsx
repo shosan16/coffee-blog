@@ -3,10 +3,10 @@ import { Tag } from 'lucide-react';
 import type { RecipeTagInfo } from '../../types/recipe-detail';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
 
-type RecipeTagListProps = Readonly<{
+type RecipeTagListProps = {
   /** タグリスト */
   tags: RecipeTagInfo[];
-}>;
+};
 
 /**
  * レシピタグ一覧表示コンポーネント

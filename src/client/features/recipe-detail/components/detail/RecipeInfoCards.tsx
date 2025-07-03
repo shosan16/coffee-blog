@@ -6,10 +6,10 @@ import { getRoastLevelLabel, getGrindSizeLabel } from '@/client/shared/constants
 import { useTimeFormat } from '../../hooks/useTimeFormat';
 import { useNumberFormat } from '../../hooks/useNumberFormat';
 
-type RecipeInfoCardsProps = Readonly<{
+type RecipeInfoCardsProps = {
   /** レシピ詳細情報 */
   recipe: RecipeDetailInfo;
-}>;
+};
 
 /**
  * レシピ基本情報カード群

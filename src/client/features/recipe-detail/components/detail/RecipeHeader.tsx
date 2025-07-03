@@ -4,10 +4,10 @@ import type { RecipeDetailInfo } from '../../types/recipe-detail';
 import { Card, CardContent } from '@/client/shared/shadcn/card';
 import { useDateFormat } from '../../hooks/useDateFormat';
 
-type RecipeHeaderProps = Readonly<{
+type RecipeHeaderProps = {
   /** レシピ詳細情報 */
   recipe: RecipeDetailInfo;
-}>;
+};
 
 /**
  * レシピヘッダーコンポーネント

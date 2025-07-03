@@ -33,9 +33,10 @@ vi.mock('@/components/Pagination', () => ({
 }));
 
 // crypto.randomUUID のモック（テスト環境用）
+let mockCounter = 0;
 Object.defineProperty(global, 'crypto', {
   value: {
-    randomUUID: vi.fn(() => `test-uuid-${Math.random().toString(36).substr(2, 9)}`),
+    randomUUID: vi.fn(() => `test-uuid-${++mockCounter}`),
   },
 });
 

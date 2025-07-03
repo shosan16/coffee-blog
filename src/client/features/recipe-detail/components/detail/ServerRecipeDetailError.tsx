@@ -3,12 +3,12 @@ import Link from 'next/link';
 
 import { Card, CardContent } from '@/client/shared/shadcn/card';
 
-type ServerRecipeDetailErrorProps = Readonly<{
+type ServerRecipeDetailErrorProps = {
   /** エラーメッセージ */
   message?: string;
   /** エラータイトル */
   title?: string;
-}>;
+};
 
 /**
  * Server Component用レシピ詳細エラー表示

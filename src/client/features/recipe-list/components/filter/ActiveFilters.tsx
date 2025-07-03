@@ -97,6 +97,30 @@ const ActiveFilters = React.memo<ActiveFiltersProps>(({ className }) => {
     [equipmentData]
   );
 
+  // 器具フィルターのバッジ生成
+  const createEquipmentBadges = React.useCallback(
+    (equipmentNames: string[]) => {
+      return equipmentNames.map((equipmentName) => {
+        const category = categorizeEquipment(equipmentName);
+        const categoryLabels = {
+          grinder: 'コーヒーミル',
+          dripper: 'ドリッパー',
+          filter: 'ペーパーフィルター',
+        };
+        const categoryLabel = categoryLabels[category] ?? 'equipment';
+        const displayName = getEquipmentDisplayName(equipmentName);
+
+        return {
+          key: `equipment_${equipmentName}`,
+          label: categoryLabel,
+          value: displayName,
+          onRemove: () => removeFilter('equipment', equipmentName),
+        };
+      });
+    },
+    [categorizeEquipment, getEquipmentDisplayName, removeFilter]
+  );
+
   // アクティブフィルターのバッジデータ生成
   const activeFilterBadges = React.useMemo(() => {
     const badges: Array<{
@@ -122,27 +146,7 @@ const ActiveFilters = React.memo<ActiveFiltersProps>(({ className }) => {
 
       // 器具フィルターの場合は個別に処理
       if (key === 'equipment' && Array.isArray(value)) {
-        value.forEach((equipmentName) => {
-          const category = categorizeEquipment(equipmentName);
-          let categoryLabel = 'equipment';
-          if (category === 'grinder') {
-            categoryLabel = 'コーヒーミル';
-          } else if (category === 'dripper') {
-            categoryLabel = 'ドリッパー';
-          } else if (category === 'filter') {
-            categoryLabel = 'ペーパーフィルター';
-          }
-          const displayName = getEquipmentDisplayName(equipmentName);
-
-          badges.push({
-            key: `equipment_${equipmentName}`,
-            label: categoryLabel,
-            value: displayName,
-            onRemove: () => {
-              removeFilter('equipment', equipmentName);
-            },
-          });
-        });
+        badges.push(...createEquipmentBadges(value));
       } else {
         // 器具以外のフィルター
         const label = filterLabels[key] || key;
@@ -174,8 +178,7 @@ const ActiveFilters = React.memo<ActiveFiltersProps>(({ className }) => {
     filterLabels,
     formatRangeValue,
     clearSearch,
-    categorizeEquipment,
-    getEquipmentDisplayName,
+    createEquipmentBadges,
     removeFilter,
   ]);
 

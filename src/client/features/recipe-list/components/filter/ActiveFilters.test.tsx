@@ -14,6 +14,9 @@ vi.mock('@/client/shared/hooks/useEquipment', () => ({
   useEquipment: vi.fn(),
 }));
 
+// テスト用定数
+const TEST_EQUIPMENT_NAME = 'コマンダンテ C40';
+
 const mockedUseRecipeSearch = vi.mocked(useRecipeSearch);
 
 // useEquipmentインポートとモック
@@ -34,7 +37,7 @@ describe('ActiveFilters', () => {
     // useEquipmentのデフォルトモック
     mockedUseEquipment.mockReturnValue({
       equipment: {
-        grinder: [{ id: '1', name: 'コマンダンテ C40', brand: 'コマンダンテ', type: 'grinder' }],
+        grinder: [{ id: '1', name: TEST_EQUIPMENT_NAME, brand: 'コマンダンテ', type: 'grinder' }],
         dripper: [{ id: '2', name: 'ORIGAMI ドリッパー', brand: 'ORIGAMI', type: 'dripper' }],
         filter: [{ id: '3', name: 'V60ペーパーフィルター', brand: 'Hario', type: 'filter' }],
       },
@@ -254,7 +257,7 @@ describe('ActiveFilters', () => {
     beforeEach(() => {
       mockedUseRecipeSearch.mockReturnValue({
         filters: {
-          equipment: ['コマンダンテ C40', 'ORIGAMI ドリッパー'],
+          equipment: [TEST_EQUIPMENT_NAME, 'ORIGAMI ドリッパー'],
         },
         searchValue: '',
         updateSearchValue: vi.fn(),
@@ -279,7 +282,7 @@ describe('ActiveFilters', () => {
 
       // コーヒーミル
       expect(screen.getByText('コーヒーミル:')).toBeInTheDocument();
-      expect(screen.getByText('コマンダンテ コマンダンテ C40')).toBeInTheDocument();
+      expect(screen.getByText(`コマンダンテ ${TEST_EQUIPMENT_NAME}`)).toBeInTheDocument();
 
       // ドリッパー
       expect(screen.getByText('ドリッパー:')).toBeInTheDocument();
@@ -295,14 +298,14 @@ describe('ActiveFilters', () => {
       fireEvent.click(deleteButton);
 
       // Assert - 確認：removeFilterが適切に呼ばれることを検証
-      expect(mockRemoveFilter).toHaveBeenCalledWith('equipment', 'コマンダンテ C40');
+      expect(mockRemoveFilter).toHaveBeenCalledWith('equipment', TEST_EQUIPMENT_NAME);
     });
 
     it('最後の機器を削除した場合にフィルター自体が削除されること', () => {
       // Arrange - 準備：単一機器フィルターでコンポーネントを準備
       mockedUseRecipeSearch.mockReturnValue({
         filters: {
-          equipment: ['コマンダンテ C40'],
+          equipment: [TEST_EQUIPMENT_NAME],
         },
         searchValue: '',
         updateFilter: mockUpdateFilter,
@@ -325,7 +328,7 @@ describe('ActiveFilters', () => {
       fireEvent.click(deleteButton);
 
       // Assert - 確認：removeFilterが適切に呼ばれることを検証
-      expect(mockRemoveFilter).toHaveBeenCalledWith('equipment', 'コマンダンテ C40');
+      expect(mockRemoveFilter).toHaveBeenCalledWith('equipment', TEST_EQUIPMENT_NAME);
     });
   });
 

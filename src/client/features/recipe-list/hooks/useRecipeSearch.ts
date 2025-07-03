@@ -77,7 +77,7 @@ export function useRecipeSearch(): UseRecipeSearchReturn {
 
   // URLから現在の検索キーワードを取得
   const currentSearchValue = useMemo(() => {
-    return searchParams.get('search') ?? '';
+    return searchParams?.get('search') ?? '';
   }, [searchParams]);
 
   // 初期化時にpending状態を現在の状態と同期
@@ -110,13 +110,11 @@ export function useRecipeSearch(): UseRecipeSearchReturn {
         const newFilters = { ...prev };
 
         if (
-          value === undefined ||
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          value === null ||
+          value == null ||
           (Array.isArray(value) && value.length === 0) ||
           (typeof value === 'object' &&
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-            value !== null &&
+            value != null &&
             'min' in value &&
             'max' in value &&
             (value as { min?: unknown; max?: unknown }).min === undefined &&
@@ -191,18 +189,13 @@ export function useRecipeSearch(): UseRecipeSearchReturn {
         newFilters.page = 1;
 
         // 更新された状態を即座にURLに反映
-        setTimeout(() => {
-          setIsLoading(true);
+        setIsLoading(true);
+        const queryParams = buildQueryParams(newFilters);
+        const newUrl = queryParams.toString() ? `?${queryParams.toString()}` : '/';
 
-          const queryParams = buildQueryParams(newFilters);
-          const newUrl = queryParams.toString() ? `?${queryParams.toString()}` : '/';
-
-          router.push(newUrl);
-
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 100);
-        }, 0);
+        // 非同期でURLを更新後にローディング状態を解除
+        router.push(newUrl);
+        setTimeout(() => setIsLoading(false), 100);
 
         return newFilters;
       });

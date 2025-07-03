@@ -6,10 +6,10 @@ import RecipeEquipmentList from './RecipeEquipmentList';
 import RecipeTagList from './RecipeTagList';
 import BaristaCard from './BaristaCard';
 
-type RecipeDetailViewProps = Readonly<{
+type RecipeDetailViewProps = {
   /** レシピ詳細情報 */
   recipe: RecipeDetailInfo;
-}>;
+};
 
 /**
  * レシピ詳細画面のメインビュー
