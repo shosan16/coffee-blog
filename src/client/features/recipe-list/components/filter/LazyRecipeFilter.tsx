@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { ComponentProps, Suspense } from 'react';
+import { type ComponentProps, Suspense } from 'react';
 
 import { RecipeFilterSkeleton } from '@/client/shared/components/skeleton';
 

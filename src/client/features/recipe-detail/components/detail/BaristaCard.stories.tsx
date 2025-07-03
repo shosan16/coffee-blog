@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import BaristaCard from './BaristaCard';
 import type { BaristaInfo } from '../../types/recipe-detail';
+
+import BaristaCard from './BaristaCard';
 
 const meta = {
   title: 'Features/Recipes/Detail/BaristaCard',

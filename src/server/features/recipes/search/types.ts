@@ -1,4 +1,4 @@
-import { RoastLevel, GrindSize } from '@prisma/client';
+import type { RoastLevel, GrindSize } from '@prisma/client';
 
 // Recipe型の定義（client側の型と一致させる）
 export type Recipe = {

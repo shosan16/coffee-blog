@@ -1,10 +1,10 @@
 'use client';
 
+import isEqual from 'lodash.isequal';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState, useMemo } from 'react';
-import isEqual from 'lodash.isequal';
 
-import { RecipeFilters } from '@/client/features/recipe-list/types/api';
+import type { RecipeFilters } from '@/client/features/recipe-list/types/api';
 import { parseFiltersFromSearchParams } from '@/client/features/recipe-list/utils/filter';
 import { buildQueryParams } from '@/client/shared/api/request';
 
@@ -47,13 +47,11 @@ export function useRecipeFilter(): UseRecipeFilterReturn {
         const newFilters = { ...prev };
 
         if (
-          value === undefined ||
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          value === null ||
+          value == null ||
           (Array.isArray(value) && value.length === 0) ||
           (typeof value === 'object' &&
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-            value !== null &&
+            value != null &&
             'min' in value &&
             'max' in value &&
             (value as { min?: unknown; max?: unknown }).min === undefined &&

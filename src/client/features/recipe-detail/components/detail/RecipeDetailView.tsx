@@ -1,10 +1,11 @@
 import type { RecipeDetailInfo } from '../../types/recipe-detail';
+
+import BaristaCard from './BaristaCard';
+import RecipeEquipmentList from './RecipeEquipmentList';
 import RecipeHeader from './RecipeHeader';
 import RecipeInfoCards from './RecipeInfoCards';
 import RecipeSteps from './RecipeSteps';
-import RecipeEquipmentList from './RecipeEquipmentList';
 import RecipeTagList from './RecipeTagList';
-import BaristaCard from './BaristaCard';
 
 type RecipeDetailViewProps = {
   /** レシピ詳細情報 */

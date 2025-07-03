@@ -2,11 +2,10 @@
 
 import React, { useCallback, useMemo } from 'react';
 
-import { useEquipment } from '@/client/shared/hooks/useEquipment';
-import { formatEquipmentName } from '@/client/shared/utils/equipmentApi';
-import Label from '@/client/shared/shadcn/label';
-
 import { Combobox, type ComboboxOption } from '@/client/shared/components/combobox';
+import { useEquipment } from '@/client/shared/hooks/useEquipment';
+import Label from '@/client/shared/shadcn/label';
+import { formatEquipmentName } from '@/client/shared/utils/equipmentApi';
 
 // 表示対象の3種類のみ
 const EQUIPMENT_TYPES = [

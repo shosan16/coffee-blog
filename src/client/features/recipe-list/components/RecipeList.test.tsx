@@ -3,7 +3,7 @@ import { useSearchParams } from 'next/navigation';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 import { useRecipes } from '@/client/features/recipe-list/hooks/useRecipes';
-import { RecipeListResponse } from '@/client/features/recipe-list/types/api';
+import type { RecipeListResponse } from '@/client/features/recipe-list/types/api';
 
 import RecipeList from './RecipeList';
 
@@ -33,9 +33,10 @@ vi.mock('@/components/Pagination', () => ({
 }));
 
 // crypto.randomUUID のモック（テスト環境用）
+let mockCounter = 0;
 Object.defineProperty(global, 'crypto', {
   value: {
-    randomUUID: vi.fn(() => `test-uuid-${Math.random().toString(36).substr(2, 9)}`),
+    randomUUID: vi.fn(() => `test-uuid-${++mockCounter}`),
   },
 });
 

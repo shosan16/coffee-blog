@@ -1,10 +1,10 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import isEqual from 'lodash.isequal';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { RecipeFilters } from '@/client/features/recipe-list/types/api';
+import type { RecipeFilters } from '@/client/features/recipe-list/types/api';
 import { parseFiltersFromSearchParams } from '@/client/features/recipe-list/utils/filter';
 import { buildQueryParams } from '@/client/shared/api/request';
 
@@ -77,7 +77,9 @@ export function useRecipeSearch(): UseRecipeSearchReturn {
 
   // URLから現在の検索キーワードを取得
   const currentSearchValue = useMemo(() => {
-    return searchParams.get('search') ?? '';
+    // searchParamsがnullの場合を考慮（テスト環境やSSR初期状態）
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    return searchParams?.get('search') ?? '';
   }, [searchParams]);
 
   // 初期化時にpending状態を現在の状態と同期
@@ -110,13 +112,11 @@ export function useRecipeSearch(): UseRecipeSearchReturn {
         const newFilters = { ...prev };
 
         if (
-          value === undefined ||
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          value === null ||
+          value == null ||
           (Array.isArray(value) && value.length === 0) ||
           (typeof value === 'object' &&
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-            value !== null &&
+            value != null &&
             'min' in value &&
             'max' in value &&
             (value as { min?: unknown; max?: unknown }).min === undefined &&
@@ -191,18 +191,13 @@ export function useRecipeSearch(): UseRecipeSearchReturn {
         newFilters.page = 1;
 
         // 更新された状態を即座にURLに反映
-        setTimeout(() => {
-          setIsLoading(true);
+        setIsLoading(true);
+        const queryParams = buildQueryParams(newFilters);
+        const newUrl = queryParams.toString() ? `?${queryParams.toString()}` : '/';
 
-          const queryParams = buildQueryParams(newFilters);
-          const newUrl = queryParams.toString() ? `?${queryParams.toString()}` : '/';
-
-          router.push(newUrl);
-
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 100);
-        }, 0);
+        // 非同期でURLを更新後にローディング状態を解除
+        router.push(newUrl);
+        setTimeout(() => setIsLoading(false), 100);
 
         return newFilters;
       });

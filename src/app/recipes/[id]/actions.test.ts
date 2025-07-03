@@ -1,10 +1,11 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { notFound } from 'next/navigation';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+import { getRecipeDetail } from '@/server/features/recipe/detail/service';
+import { RecipeDetailError } from '@/server/features/recipe/detail/types';
+import { validateRecipeId } from '@/server/features/recipe/detail/validation';
 
 import { getRecipeDetailAction } from './actions';
-import { getRecipeDetail } from '@/server/features/recipe/detail/service';
-import { validateRecipeId } from '@/server/features/recipe/detail/validation';
-import { RecipeDetailError } from '@/server/features/recipe/detail/types';
 
 // モジュールをモック
 vi.mock('next/navigation', () => ({

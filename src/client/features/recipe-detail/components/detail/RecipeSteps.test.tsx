@@ -1,8 +1,9 @@
-import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
+import { describe, it, expect, beforeEach } from 'vitest';
+
+import type { RecipeStepInfo } from '../../types/recipe-detail';
 
 import RecipeSteps from './RecipeSteps';
-import type { RecipeStepInfo } from '../../types/recipe-detail';
 
 describe('RecipeSteps', () => {
   beforeEach(() => {

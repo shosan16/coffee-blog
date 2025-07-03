@@ -6,6 +6,8 @@ import { useDateFormat } from './useDateFormat';
 describe('useDateFormat', () => {
   // 固定の日付を設定してテストの一貫性を保つ
   const fixedDate = new Date('2024-01-15T14:30:00Z');
+  // テスト用の日付文字列定数
+  const TEST_DATE_STRING = '2024-01-15';
 
   beforeEach(() => {
     // Date.now()をモック化
@@ -15,7 +17,7 @@ describe('useDateFormat', () => {
   describe('formatDate', () => {
     it('Dateオブジェクトを日本語形式でフォーマット', () => {
       // Arrange - 準備：日付とフック
-      const date = new Date('2024-01-15');
+      const date = new Date(TEST_DATE_STRING);
       const { result } = renderHook(() => useDateFormat());
 
       // Act - 実行：日付をフォーマット
@@ -27,7 +29,7 @@ describe('useDateFormat', () => {
 
     it('文字列の日付を日本語形式でフォーマット', () => {
       // Arrange - 準備：文字列日付とフック
-      const dateString = '2024-01-15';
+      const dateString = TEST_DATE_STRING;
       const { result } = renderHook(() => useDateFormat());
 
       // Act - 実行：文字列日付をフォーマット
@@ -39,7 +41,7 @@ describe('useDateFormat', () => {
 
     it('カスタムフォーマットパターンでフォーマット', () => {
       // Arrange - 準備：日付とカスタムパターン
-      const date = new Date('2024-01-15');
+      const date = new Date(TEST_DATE_STRING);
       const { result } = renderHook(() => useDateFormat());
 
       // Act - 実行：カスタムパターンでフォーマット
@@ -175,7 +177,7 @@ describe('useDateFormat', () => {
   describe('isValidDate', () => {
     it('有効なDateオブジェクトの場合はtrue', () => {
       // Arrange - 準備：有効な日付とフック
-      const validDate = new Date('2024-01-15');
+      const validDate = new Date(TEST_DATE_STRING);
       const { result } = renderHook(() => useDateFormat());
 
       // Act - 実行：日付の有効性をチェック
@@ -187,7 +189,7 @@ describe('useDateFormat', () => {
 
     it('有効な日付文字列の場合はtrue', () => {
       // Arrange - 準備：有効な日付文字列とフック
-      const validDateString = '2024-01-15';
+      const validDateString = TEST_DATE_STRING;
       const { result } = renderHook(() => useDateFormat());
 
       // Act - 実行：日付文字列の有効性をチェック

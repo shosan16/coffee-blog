@@ -1,4 +1,4 @@
-import { RoastLevel, GrindSize } from '@prisma/client';
+import type { RoastLevel, GrindSize } from '@prisma/client';
 
 export type Recipe = {
   id: string;

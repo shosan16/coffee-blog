@@ -1,10 +1,12 @@
 'use client';
 
-import { lazy, Suspense } from 'react';
 import { Loader2 } from 'lucide-react';
+import { lazy, Suspense } from 'react';
+
+import { RecipeDetailSkeleton } from '@/client/shared/components/skeleton';
 
 import type { RecipeDetailInfo } from '../../types/recipe-detail';
-import { RecipeDetailSkeleton } from '@/client/shared/components/skeleton';
+
 import RecipeDetailErrorBoundary from './RecipeDetailErrorBoundary';
 
 // 動的インポートでRecipeDetailViewを遅延読み込み

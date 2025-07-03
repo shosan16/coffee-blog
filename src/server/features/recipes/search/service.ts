@@ -1,4 +1,4 @@
-import { RoastLevel, GrindSize } from '@prisma/client';
+import type { RoastLevel, GrindSize } from '@prisma/client';
 
 import type {
   SearchRecipesParams,
@@ -40,28 +40,33 @@ export class SearchRecipesService {
   private readonly logger = createChildLogger({ service: 'SearchRecipesService' });
 
   /**
-   * WHERE句を構築する
+   * 焙煎レベルフィルターを構築
    */
-  private buildWhereClause(params: SearchRecipesParams): PrismaWhereClause {
-    const where: PrismaWhereClause = {
-      isPublished: true, // 公開済みの投稿のみを取得
-    };
-
-    // 焙煎レベルフィルター
-    if (params.roastLevel?.length) {
-      where.roastLevel = {
+  private buildRoastLevelFilter(params: SearchRecipesParams): Partial<PrismaWhereClause> {
+    if (!params.roastLevel?.length) return {};
+    return {
+      roastLevel: {
         in: params.roastLevel,
-      };
-    }
+      },
+    };
+  }
 
-    // 挽き目フィルター
-    if (params.grindSize?.length) {
-      where.grindSize = {
+  /**
+   * 挽き目フィルターを構築
+   */
+  private buildGrindSizeFilter(params: SearchRecipesParams): Partial<PrismaWhereClause> {
+    if (!params.grindSize?.length) return {};
+    return {
+      grindSize: {
         in: params.grindSize,
-      };
-    }
+      },
+    };
+  }
 
-    // 器具フィルター（器具名と器具タイプの組み合わせ）
+  /**
+   * 器具フィルターを構築
+   */
+  private buildEquipmentFilter(params: SearchRecipesParams): Partial<PrismaWhereClause> {
     const equipmentConditions: EquipmentCondition[] = [];
 
     if (params.equipment?.length) {
@@ -90,59 +95,71 @@ export class SearchRecipesService {
       });
     }
 
-    if (equipmentConditions.length > 0) {
-      where.AND = equipmentConditions;
+    if (equipmentConditions.length === 0) return {};
+    return { AND: equipmentConditions };
+  }
+
+  /**
+   * 数値範囲フィルターを構築
+   */
+  private buildRangeFilter(
+    range: { min?: number; max?: number } | undefined
+  ): { gte?: number; lte?: number } | undefined {
+    if (!range || (range.min === undefined && range.max === undefined)) {
+      return undefined;
     }
 
-    // 豆の重量フィルター
-    if (params.beanWeight) {
-      const { min, max } = params.beanWeight;
-      if (min !== undefined || max !== undefined) {
-        where.beanWeight = {};
-        if (min !== undefined) {
-          where.beanWeight.gte = min;
-        }
-        if (max !== undefined) {
-          where.beanWeight.lte = max;
-        }
-      }
+    const filter: { gte?: number; lte?: number } = {};
+    if (range.min !== undefined) {
+      filter.gte = range.min;
     }
-
-    // 水温フィルター
-    if (params.waterTemp) {
-      const { min, max } = params.waterTemp;
-      if (min !== undefined || max !== undefined) {
-        where.waterTemp = {};
-        if (min !== undefined) {
-          where.waterTemp.gte = min;
-        }
-        if (max !== undefined) {
-          where.waterTemp.lte = max;
-        }
-      }
+    if (range.max !== undefined) {
+      filter.lte = range.max;
     }
+    return filter;
+  }
 
-    // 水量フィルター
-    if (params.waterAmount) {
-      const { min, max } = params.waterAmount;
-      if (min !== undefined || max !== undefined) {
-        where.waterAmount = {};
-        if (min !== undefined) {
-          where.waterAmount.gte = min;
-        }
-        if (max !== undefined) {
-          where.waterAmount.lte = max;
-        }
-      }
-    }
-
-    // 検索キーワードフィルター
-    if (params.search) {
-      const searchTerm = params.search;
-      where.OR = [
+  /**
+   * 検索キーワードフィルターを構築
+   */
+  private buildSearchFilter(searchTerm: string | undefined): Partial<PrismaWhereClause> {
+    if (!searchTerm) return {};
+    return {
+      OR: [
         { title: { contains: searchTerm, mode: 'insensitive' } },
         { summary: { contains: searchTerm, mode: 'insensitive' } },
-      ];
+      ],
+    };
+  }
+
+  /**
+   * WHERE句を構築する
+   */
+  private buildWhereClause(params: SearchRecipesParams): PrismaWhereClause {
+    const where: PrismaWhereClause = {
+      isPublished: true, // 公開済みの投稿のみを取得
+    };
+
+    // 各フィルターを適用
+    Object.assign(where, this.buildRoastLevelFilter(params));
+    Object.assign(where, this.buildGrindSizeFilter(params));
+    Object.assign(where, this.buildEquipmentFilter(params));
+    Object.assign(where, this.buildSearchFilter(params.search));
+
+    // 数値範囲フィルター
+    const beanWeightFilter = this.buildRangeFilter(params.beanWeight);
+    if (beanWeightFilter) {
+      where.beanWeight = beanWeightFilter;
+    }
+
+    const waterTempFilter = this.buildRangeFilter(params.waterTemp);
+    if (waterTempFilter) {
+      where.waterTemp = waterTempFilter;
+    }
+
+    const waterAmountFilter = this.buildRangeFilter(params.waterAmount);
+    if (waterAmountFilter) {
+      where.waterAmount = waterAmountFilter;
     }
 
     return where;

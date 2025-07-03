@@ -37,51 +37,70 @@ export default function RecipePagination({
     router.push(createPageUrl(page));
   };
 
+  // シンプルなページ番号生成（7ページ以下）
+  const generateSimplePages = (totalPages: number): number[] => {
+    const pages: number[] = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
+  };
+
+  // 開始部分のページ番号を生成
+  const generateStartPages = (delta: number, totalPages: number): (number | 'ellipsis')[] => {
+    const pages: (number | 'ellipsis')[] = [1];
+    for (let i = 2; i <= Math.min(delta + 3, totalPages - 1); i++) {
+      pages.push(i);
+    }
+    if (totalPages > delta + 3) {
+      pages.push('ellipsis');
+    }
+    return pages;
+  };
+
+  // 終了部分のページ番号を生成
+  const generateEndPages = (delta: number, totalPages: number): (number | 'ellipsis')[] => {
+    const pages: (number | 'ellipsis')[] = [1];
+    if (totalPages > delta + 3) {
+      pages.push('ellipsis');
+    }
+    for (let i = Math.max(totalPages - delta - 2, 2); i <= totalPages - 1; i++) {
+      pages.push(i);
+    }
+    return pages;
+  };
+
+  // 中間部分のページ番号を生成
+  const generateMiddlePages = (currentPage: number, delta: number): (number | 'ellipsis')[] => {
+    const pages: (number | 'ellipsis')[] = [1, 'ellipsis'];
+    for (let i = currentPage - delta; i <= currentPage + delta; i++) {
+      pages.push(i);
+    }
+    pages.push('ellipsis');
+    return pages;
+  };
+
   // ページ番号を生成する関数
   const generatePageNumbers = () => {
-    const pages: (number | 'ellipsis')[] = [];
     const delta = 2; // 現在のページの前後に表示するページ数
 
     if (totalPages <= 7) {
-      // 7ページ以下の場合は全て表示
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
+      return generateSimplePages(totalPages);
+    }
+
+    let pages: (number | 'ellipsis')[];
+
+    if (currentPage <= delta + 3) {
+      pages = generateStartPages(delta, totalPages);
+    } else if (currentPage >= totalPages - delta - 2) {
+      pages = generateEndPages(delta, totalPages);
     } else {
-      // 常に最初のページを表示
-      pages.push(1);
+      pages = generateMiddlePages(currentPage, delta);
+    }
 
-      // 現在のページが最初の方にある場合
-      if (currentPage <= delta + 3) {
-        for (let i = 2; i <= Math.min(delta + 3, totalPages - 1); i++) {
-          pages.push(i);
-        }
-        if (totalPages > delta + 3) {
-          pages.push('ellipsis');
-        }
-      }
-      // 現在のページが最後の方にある場合
-      else if (currentPage >= totalPages - delta - 2) {
-        if (totalPages > delta + 3) {
-          pages.push('ellipsis');
-        }
-        for (let i = Math.max(totalPages - delta - 2, 2); i <= totalPages - 1; i++) {
-          pages.push(i);
-        }
-      }
-      // 現在のページが中間にある場合
-      else {
-        pages.push('ellipsis');
-        for (let i = currentPage - delta; i <= currentPage + delta; i++) {
-          pages.push(i);
-        }
-        pages.push('ellipsis');
-      }
-
-      // 常に最後のページを表示
-      if (totalPages > 1) {
-        pages.push(totalPages);
-      }
+    // 常に最後のページを表示
+    if (totalPages > 1) {
+      pages.push(totalPages);
     }
 
     return pages;

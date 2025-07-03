@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { cn } from '@/client/lib/tailwind';
 
-import { ButtonProps, buttonVariants } from './button';
+import { type ButtonProps, buttonVariants } from './button';
 
 function Pagination({ className, ...props }: React.ComponentProps<'nav'>) {
   return (

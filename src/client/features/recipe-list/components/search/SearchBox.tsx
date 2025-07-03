@@ -1,7 +1,7 @@
 'use client';
 
-import * as React from 'react';
 import { SearchIcon, XIcon } from 'lucide-react';
+import * as React from 'react';
 
 import { cn } from '@/client/lib/tailwind';
 

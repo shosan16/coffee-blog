@@ -1,6 +1,8 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
+
 import type { MultiComboboxItem } from '../types';
+
 import { useMultiCombobox } from './useMultiCombobox';
 
 const mockItems: MultiComboboxItem[] = [

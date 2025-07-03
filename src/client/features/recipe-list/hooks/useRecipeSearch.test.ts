@@ -43,6 +43,12 @@ describe('useRecipeSearch', () => {
 
     const mockSearchParams = {
       get: mockGet,
+      has: vi.fn(() => false),
+      keys: vi.fn(() => []),
+      values: vi.fn(() => []),
+      entries: vi.fn(() => []),
+      forEach: vi.fn(),
+      toString: vi.fn(() => ''),
     };
     mockedUseSearchParams.mockReturnValue(mockSearchParams as unknown as ReadonlyURLSearchParams);
 

@@ -1,8 +1,9 @@
-import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+
+import type { BaristaInfo } from '../../types/recipe-detail';
 
 import BaristaCard from './BaristaCard';
-import type { BaristaInfo } from '../../types/recipe-detail';
 
 describe('BaristaCard', () => {
   describe('基本表示', () => {

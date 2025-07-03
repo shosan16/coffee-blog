@@ -1,8 +1,8 @@
-import { RoastLevel, GrindSize } from '@prisma/client';
+import type { RoastLevel, GrindSize } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
-import { RecipeListResponse } from '@/client/features/recipe-list/types/api';
+import type { RecipeListResponse } from '@/client/features/recipe-list/types/api';
 import { SearchRecipesService } from '@/server/features/recipes/search/service';
 import type { SearchRecipesParams } from '@/server/features/recipes/search/types';
 import { searchRecipesQuerySchema } from '@/server/features/recipes/search/validation';

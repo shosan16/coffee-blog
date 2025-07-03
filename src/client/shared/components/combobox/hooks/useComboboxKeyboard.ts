@@ -15,6 +15,45 @@ type UseComboboxKeyboardProps = {
   disabled?: boolean;
 };
 
+const handleEnterKey = (
+  isOpen: boolean,
+  focusedIndex: number,
+  filteredOptions: ComboboxOptionType[],
+  actions: UseComboboxKeyboardProps['actions']
+): void => {
+  if (isOpen && focusedIndex >= 0 && filteredOptions[focusedIndex]) {
+    actions.selectOption(filteredOptions[focusedIndex]);
+  } else if (!isOpen) {
+    actions.open();
+  }
+};
+
+const handleArrowDown = (
+  isOpen: boolean,
+  focusedIndex: number,
+  filteredOptions: ComboboxOptionType[],
+  actions: UseComboboxKeyboardProps['actions']
+): void => {
+  if (!isOpen) {
+    actions.open();
+  } else {
+    const nextIndex = focusedIndex < filteredOptions.length - 1 ? focusedIndex + 1 : 0;
+    actions.setFocusedIndex(nextIndex);
+  }
+};
+
+const handleArrowUp = (
+  isOpen: boolean,
+  focusedIndex: number,
+  filteredOptions: ComboboxOptionType[],
+  actions: UseComboboxKeyboardProps['actions']
+): void => {
+  if (isOpen) {
+    const prevIndex = focusedIndex > 0 ? focusedIndex - 1 : filteredOptions.length - 1;
+    actions.setFocusedIndex(prevIndex);
+  }
+};
+
 export const useComboboxKeyboard = ({
   isOpen,
   focusedIndex,
@@ -29,11 +68,7 @@ export const useComboboxKeyboard = ({
       switch (e.key) {
         case 'Enter':
           e.preventDefault();
-          if (isOpen && focusedIndex >= 0 && filteredOptions[focusedIndex]) {
-            actions.selectOption(filteredOptions[focusedIndex]);
-          } else if (!isOpen) {
-            actions.open();
-          }
+          handleEnterKey(isOpen, focusedIndex, filteredOptions, actions);
           break;
         case 'Escape':
           e.preventDefault();
@@ -41,19 +76,11 @@ export const useComboboxKeyboard = ({
           break;
         case 'ArrowDown':
           e.preventDefault();
-          if (!isOpen) {
-            actions.open();
-          } else {
-            const nextIndex = focusedIndex < filteredOptions.length - 1 ? focusedIndex + 1 : 0;
-            actions.setFocusedIndex(nextIndex);
-          }
+          handleArrowDown(isOpen, focusedIndex, filteredOptions, actions);
           break;
         case 'ArrowUp':
           e.preventDefault();
-          if (isOpen) {
-            const prevIndex = focusedIndex > 0 ? focusedIndex - 1 : filteredOptions.length - 1;
-            actions.setFocusedIndex(prevIndex);
-          }
+          handleArrowUp(isOpen, focusedIndex, filteredOptions, actions);
           break;
         case 'Tab':
           actions.close();

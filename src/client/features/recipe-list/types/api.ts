@@ -1,6 +1,6 @@
-import { RoastLevel, GrindSize } from '@prisma/client';
+import type { RoastLevel, GrindSize } from '@prisma/client';
 
-import { Recipe } from '@/client/features/recipe-list/types/recipe';
+import type { Recipe } from '@/client/features/recipe-list/types/recipe';
 
 /**
  * ページネーション情報の型定義

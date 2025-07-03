@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import RecipeEquipmentList from './RecipeEquipmentList';
 import type { DetailedEquipmentInfo } from '../../types/recipe-detail';
+
+import RecipeEquipmentList from './RecipeEquipmentList';
 
 const meta = {
   title: 'Features/Recipes/Detail/RecipeEquipmentList',

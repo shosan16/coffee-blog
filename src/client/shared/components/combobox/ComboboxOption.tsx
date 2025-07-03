@@ -1,7 +1,6 @@
 'use client';
 
 import { cn } from '@/client/lib/tailwind';
-
 import type { ComboboxOptionType } from '@/client/shared/components/combobox/types';
 
 type ComboboxOptionProps = {

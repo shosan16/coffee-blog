@@ -1,5 +1,5 @@
 import { RoastLevel, GrindSize } from '@prisma/client';
-import { ReadonlyURLSearchParams } from 'next/navigation';
+import type { ReadonlyURLSearchParams } from 'next/navigation';
 import { describe, it, expect } from 'vitest';
 
 import { parseFiltersFromSearchParams } from './filter';
