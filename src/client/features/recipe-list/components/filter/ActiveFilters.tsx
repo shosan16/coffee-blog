@@ -66,8 +66,8 @@ const ActiveFilters = React.memo<ActiveFiltersProps>(({ className }) => {
 
   // 器具を分類する関数
   const categorizeEquipment = React.useCallback(
-    (equipmentName: string) => {
-      if (!equipmentData) return 'equipment';
+    (equipmentName: string): 'grinder' | 'dripper' | 'filter' | null => {
+      if (!equipmentData) return null;
 
       const grinderItem = equipmentData.grinder.find((item) => item.name === equipmentName);
       const dripperItem = equipmentData.dripper.find((item) => item.name === equipmentName);
@@ -76,7 +76,7 @@ const ActiveFilters = React.memo<ActiveFiltersProps>(({ className }) => {
       if (grinderItem) return 'grinder';
       if (dripperItem) return 'dripper';
       if (filterItem) return 'filter';
-      return 'equipment';
+      return null;
     },
     [equipmentData]
   );
@@ -108,7 +108,7 @@ const ActiveFilters = React.memo<ActiveFiltersProps>(({ className }) => {
           dripper: 'ドリッパー',
           filter: 'ペーパーフィルター',
         };
-        const categoryLabel = categoryLabels[category] ?? 'equipment';
+        const categoryLabel = category ? categoryLabels[category] : 'equipment';
         const displayName = getEquipmentDisplayName(equipmentName);
 
         return {

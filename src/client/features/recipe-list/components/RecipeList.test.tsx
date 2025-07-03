@@ -10,6 +10,9 @@ import RecipeList from './RecipeList';
 // モック設定
 vi.mock('next/navigation', () => ({
   useSearchParams: vi.fn(),
+  useRouter: vi.fn(() => ({
+    push: vi.fn(),
+  })),
 }));
 
 vi.mock('@/client/features/recipe-list/hooks/useRecipes', () => ({
@@ -24,7 +27,7 @@ vi.mock('@/client/features/recipe-list/components/RecipeCard', () => ({
   ),
 }));
 
-vi.mock('@/components/Pagination', () => ({
+vi.mock('@/client/shared/components/Pagination', () => ({
   default: ({ currentPage, totalPages }: { currentPage: number; totalPages: number }) => (
     <div data-testid="pagination">
       Page {currentPage} of {totalPages}
