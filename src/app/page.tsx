@@ -1,5 +1,5 @@
 import { Coffee } from 'lucide-react';
-import { type ReadonlyURLSearchParams } from 'next/navigation';
+import type { ReadonlyURLSearchParams } from 'next/navigation';
 
 import LazyRecipeFilter from '@/client/features/recipe-list/components/filter/LazyRecipeFilter';
 import RecipeList from '@/client/features/recipe-list/components/RecipeList';

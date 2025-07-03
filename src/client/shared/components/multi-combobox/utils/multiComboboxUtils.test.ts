@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
+
 import type { MultiComboboxItem } from '../types';
+
 import {
   createSelectedItemIds,
   filterItems,

@@ -3,6 +3,7 @@
  */
 
 import { prisma } from '@/server/shared/database/prisma';
+
 import {
   RecipeDetailError,
   type RecipeDetail,

@@ -11,16 +11,27 @@ module.exports = {
     'dist/**',
     'build/**',
     'out/**',
+    '.next/**',
+    '.vercel/**',
+    'coverage/**',
     '*.lock',
     'package-lock.json',
     'package.json',
     'src/shared/components/ui/**',
+    'storybook-static/**',
+    '.storybook/dist/**',
+    '**/*.d.ts',
+    '*.log',
+    '.env*',
+    'prisma/migrations/**',
   ],
 
   extends: [
     'next/core-web-vitals', // Next.js公式の推奨設定を適用
     // SonarJS推奨設定を追加（コード品質・複雑度・重複検出を強化）
     'plugin:sonarjs/recommended-legacy',
+    // Prettierとの競合を解決（最後に配置することが重要）
+    'prettier',
   ],
 
   // import resolverの設定を追加してnative bindingエラーを回避
@@ -79,8 +90,25 @@ module.exports = {
     'sonarjs/deprecation': 'warn', // 非推奨API使用を警告に変更
     'sonarjs/pseudo-random': 'off', // 疑似乱数使用の制限（ログID生成等で安全）
     'sonarjs/redundant-type-aliases': 'off', // 冗長型エイリアス制限（ドメインモデリングで有用）
-    // Import ルール（結合度制御・依存関係管理）- 段階的導入
-    'import/order': 'off', // 一旦無効（段階的に有効化予定）
+    // Import ルール（結合度制御・依存関係管理）
+    'import/order': [
+      'error',
+      {
+        groups: [
+          'builtin', // Node.js組み込みモジュール
+          'external', // node_modulesからのimport
+          'internal', // プロジェクト内の絶対パス
+          'parent', // 親ディレクトリからの相対パス
+          'sibling', // 同一ディレクトリからの相対パス
+          'index', // index.jsファイル
+        ],
+        'newlines-between': 'always', // グループ間に空行を強制
+        alphabetize: {
+          order: 'asc', // アルファベット順でソート
+          caseInsensitive: true, // 大文字小文字を区別しない
+        },
+      },
+    ],
     'import/no-cycle': 'error', // 循環依存を禁止（アーキテクチャの健全性保持）
     'import/max-dependencies': ['warn', { max: 20 }], // 依存過多を警告（結合度制御・複雑性管理）
     'import/no-self-import': 'error', // 自己インポートを禁止（論理的エラー防止）
@@ -172,6 +200,19 @@ module.exports = {
         '@typescript-eslint/no-non-null-assertion': 'error', // ! 演算子の使用を禁止（null安全性向上）
         '@typescript-eslint/prefer-readonly': 'error', // 変更されないプロパティにreadonlyを推奨
         '@typescript-eslint/consistent-type-definitions': ['error', 'type'], // interfaceの代わりにtypeの使用を強制
+
+        // 最新TypeScript ESLintルール（型安全性強化）
+        '@typescript-eslint/consistent-type-exports': 'error', // 型のエクスポートを統一
+        '@typescript-eslint/consistent-type-imports': [
+          'error',
+          { prefer: 'type-imports', fixStyle: 'inline-type-imports' },
+        ], // 型インポートの統一
+        '@typescript-eslint/no-import-type-side-effects': 'error', // 型インポートの副作用を防止
+        '@typescript-eslint/no-redundant-type-constituents': 'error', // 冗長な型の組み合わせを検出
+        '@typescript-eslint/no-unsafe-unary-minus': 'error', // 安全でない単項マイナス演算子を禁止
+        '@typescript-eslint/prefer-find': 'error', // filter(...)[0]よりもfind()を推奨
+        '@typescript-eslint/prefer-includes': 'error', // indexOf() !== -1よりもincludes()を推奨
+        '@typescript-eslint/prefer-string-starts-ends-with': 'error', // 文字列の開始・終了チェックの最適化
 
         // 命名規則
         '@typescript-eslint/naming-convention': [

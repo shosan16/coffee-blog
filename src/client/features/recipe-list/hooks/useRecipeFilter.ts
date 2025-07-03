@@ -1,10 +1,10 @@
 'use client';
 
+import isEqual from 'lodash.isequal';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState, useMemo } from 'react';
-import isEqual from 'lodash.isequal';
 
-import { RecipeFilters } from '@/client/features/recipe-list/types/api';
+import type { RecipeFilters } from '@/client/features/recipe-list/types/api';
 import { parseFiltersFromSearchParams } from '@/client/features/recipe-list/utils/filter';
 import { buildQueryParams } from '@/client/shared/api/request';
 

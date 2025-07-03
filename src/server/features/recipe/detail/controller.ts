@@ -2,15 +2,15 @@
  * レシピ詳細取得コントローラ
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 import { ApiError, type ErrorResponse } from '@/server/shared/api-error';
 import { createRequestLogger } from '@/server/shared/logger';
 import { RequestId } from '@/server/shared/request-id';
 
-import { validateRecipeId } from './validation';
 import { getRecipeDetail } from './service';
 import { RecipeDetailError, type RecipeDetail } from './types';
+import { validateRecipeId } from './validation';
 
 /**
  * レシピ詳細取得リクエストのハンドラ

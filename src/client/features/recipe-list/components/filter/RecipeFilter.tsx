@@ -1,6 +1,6 @@
 'use client';
 
-import { RoastLevel, GrindSize } from '@prisma/client';
+import type { RoastLevel, GrindSize } from '@prisma/client';
 import { X, Filter, RotateCcw } from 'lucide-react';
 import React, { useState, useMemo, useCallback } from 'react';
 

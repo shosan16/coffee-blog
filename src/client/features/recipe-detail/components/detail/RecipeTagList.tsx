@@ -1,7 +1,8 @@
 import { Tag } from 'lucide-react';
 
-import type { RecipeTagInfo } from '../../types/recipe-detail';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
+
+import type { RecipeTagInfo } from '../../types/recipe-detail';
 
 type RecipeTagListProps = {
   /** タグリスト */

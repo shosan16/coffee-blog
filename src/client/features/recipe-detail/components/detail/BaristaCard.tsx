@@ -1,7 +1,8 @@
 import { Users, ExternalLink } from 'lucide-react';
 
-import type { BaristaInfo } from '../../types/recipe-detail';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
+
+import type { BaristaInfo } from '../../types/recipe-detail';
 
 type BaristaCardProps = {
   /** バリスタ情報 */

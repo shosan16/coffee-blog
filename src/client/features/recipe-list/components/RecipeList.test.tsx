@@ -3,7 +3,7 @@ import { useSearchParams } from 'next/navigation';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 import { useRecipes } from '@/client/features/recipe-list/hooks/useRecipes';
-import { RecipeListResponse } from '@/client/features/recipe-list/types/api';
+import type { RecipeListResponse } from '@/client/features/recipe-list/types/api';
 
 import RecipeList from './RecipeList';
 

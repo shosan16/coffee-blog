@@ -1,10 +1,11 @@
 'use client';
 
-import * as React from 'react';
 import { Coffee } from 'lucide-react';
+import * as React from 'react';
+
+import { useRecipeSearch } from '../../hooks/useRecipeSearch';
 
 import SearchBox from './SearchBox';
-import { useRecipeSearch } from '../../hooks/useRecipeSearch';
 
 type HeroSearchSectionProps = {
   /** 初期の検索結果数 */

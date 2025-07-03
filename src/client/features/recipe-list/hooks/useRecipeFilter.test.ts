@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { useRouter, useSearchParams, type ReadonlyURLSearchParams } from 'next/navigation';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { useRouter, useSearchParams, type ReadonlyURLSearchParams } from 'next/navigation';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { useRecipeFilter } from './useRecipeFilter';
 

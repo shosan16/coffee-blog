@@ -1,10 +1,11 @@
 import { Bean, Droplet, Clock, Eye } from 'lucide-react';
 
-import type { RecipeDetailInfo } from '../../types/recipe-detail';
-import { Card, CardContent } from '@/client/shared/shadcn/card';
 import { getRoastLevelLabel, getGrindSizeLabel } from '@/client/shared/constants/filters';
-import { useTimeFormat } from '../../hooks/useTimeFormat';
+import { Card, CardContent } from '@/client/shared/shadcn/card';
+
 import { useNumberFormat } from '../../hooks/useNumberFormat';
+import { useTimeFormat } from '../../hooks/useTimeFormat';
+import type { RecipeDetailInfo } from '../../types/recipe-detail';
 
 type RecipeInfoCardsProps = {
   /** レシピ詳細情報 */

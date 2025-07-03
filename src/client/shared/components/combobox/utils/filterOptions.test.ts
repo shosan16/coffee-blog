@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { filterOptions } from '../utils/filterOptions';
 import type { ComboboxOptionType } from '../types';
+import { filterOptions } from '../utils/filterOptions';
 
 describe('filterOptions', () => {
   const mockOptions: ComboboxOptionType[] = [

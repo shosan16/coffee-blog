@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
+
+import type { Recipe } from '../types/recipe';
+
 import RecipeCard from './RecipeCard';
-import { Recipe } from '../types/recipe';
 
 const mockRecipe: Recipe = {
   id: '1',

@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 
 import RecipeCard from '@/client/features/recipe-list/components/RecipeCard';
 import { useRecipes } from '@/client/features/recipe-list/hooks/useRecipes';
-import { RecipeListResponse } from '@/client/features/recipe-list/types/api';
+import type { RecipeListResponse } from '@/client/features/recipe-list/types/api';
 import { parseFiltersFromSearchParams } from '@/client/features/recipe-list/utils/filter';
 import { RecipeListSkeleton } from '@/client/shared/components/skeleton';
 import RecipePagination from '@/components/Pagination';

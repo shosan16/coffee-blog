@@ -3,8 +3,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 import { useRecipes } from '@/client/features/recipe-list/hooks/useRecipes';
-import { RecipeFilters, RecipeListResponse } from '@/client/features/recipe-list/types/api';
-import { Recipe } from '@/client/features/recipe-list/types/recipe';
+import type { RecipeFilters, RecipeListResponse } from '@/client/features/recipe-list/types/api';
+import type { Recipe } from '@/client/features/recipe-list/types/recipe';
 
 // fetchRecipes関数をモック化（古典学派アプローチ：外部API依存のみモック）
 vi.mock('@/client/features/recipe-list/utils/recipeApi', () => ({

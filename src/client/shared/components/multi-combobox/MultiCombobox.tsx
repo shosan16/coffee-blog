@@ -1,12 +1,14 @@
 'use client';
 
-import * as React from 'react';
-import { X, ChevronDown } from 'lucide-react';
 import * as Popover from '@radix-ui/react-popover';
+import { X, ChevronDown } from 'lucide-react';
+import * as React from 'react';
+
 import { cn } from '@/client/lib/tailwind';
 import { Badge } from '@/client/shared/shadcn/badge';
-import type { MultiComboboxProps } from './types';
+
 import { useMultiCombobox } from './hooks/useMultiCombobox';
+import type { MultiComboboxProps } from './types';
 
 /**
  * 複数選択可能なコンボボックスコンポーネント

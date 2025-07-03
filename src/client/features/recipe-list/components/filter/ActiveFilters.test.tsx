@@ -1,8 +1,9 @@
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import ActiveFilters from './ActiveFilters';
 import { useRecipeSearch } from '../../hooks/useRecipeSearch';
+
+import ActiveFilters from './ActiveFilters';
 
 // useRecipeSearchフックをモック
 vi.mock('../../hooks/useRecipeSearch', () => ({

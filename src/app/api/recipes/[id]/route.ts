@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
-import { ApiError, type ErrorResponse } from '@/server/shared/api-error';
-import { RequestId } from '@/server/shared/request-id';
 import { handleGetRecipeDetail } from '@/server/features/recipe/detail/controller';
 import type { RecipeDetail } from '@/server/features/recipe/detail/types';
+import { ApiError, type ErrorResponse } from '@/server/shared/api-error';
+import { RequestId } from '@/server/shared/request-id';
 
 export const dynamic = 'force-dynamic';
 
