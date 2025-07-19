@@ -1,6 +1,6 @@
 import type { RoastLevel, GrindSize } from '@prisma/client';
 
-import type { Recipe } from '../entities/Recipe.entity';
+import type { Recipe } from '../entities/recipe';
 import type { RecipeId } from '../value-objects/RecipeId';
 
 /**

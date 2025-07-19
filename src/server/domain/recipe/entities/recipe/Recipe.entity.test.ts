@@ -1,9 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 
-import { BrewingConditions } from '../value-objects/BrewingConditions';
-import { RecipeId } from '../value-objects/RecipeId';
+import { BrewingConditions } from '../../value-objects/BrewingConditions';
+import { RecipeId } from '../../value-objects/RecipeId';
 
-import { Recipe, type RecipeStep } from './Recipe.entity';
+import { Recipe } from './Recipe.entity';
+import type { RecipeStep } from './Recipe.types';
 
 describe('Recipe Entity', () => {
   // テスト用の共通データ

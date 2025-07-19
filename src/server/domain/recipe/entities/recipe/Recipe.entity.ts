@@ -1,5 +1,7 @@
-import type { BrewingConditions } from '../value-objects/BrewingConditions';
-import type { RecipeId } from '../value-objects/RecipeId';
+import type { BrewingConditions } from '../../value-objects/BrewingConditions';
+import type { RecipeId } from '../../value-objects/RecipeId';
+
+import type { RecipeStep } from './Recipe.types';
 
 /**
  * レシピエンティティ
@@ -131,12 +133,3 @@ export class Recipe {
     return this._id.equals(other._id);
   }
 }
-
-/**
- * レシピステップ
- */
-export type RecipeStep = {
-  readonly stepOrder: number;
-  readonly timeSeconds?: number;
-  readonly description: string;
-};

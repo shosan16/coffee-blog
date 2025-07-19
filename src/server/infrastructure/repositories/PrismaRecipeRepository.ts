@@ -8,7 +8,7 @@
 import { PrismaClient } from '@prisma/client';
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-import { Recipe } from '@/server/domain/recipe/entities/Recipe.entity';
+import { Recipe } from '@/server/domain/recipe/entities/recipe';
 import type {
   IRecipeRepository,
   RecipeSearchCriteria,

@@ -1,7 +1,7 @@
 import { RoastLevel, GrindSize } from '@prisma/client';
 import { describe, it, expect, beforeEach } from 'vitest';
 
-import { Recipe, type RecipeStep } from '@/server/domain/recipe/entities/Recipe.entity';
+import { Recipe, type RecipeStep } from '@/server/domain/recipe/entities/recipe';
 import type { RecipeSearchCriteria } from '@/server/domain/recipe/repositories/IRecipeRepository';
 import { BrewingConditions } from '@/server/domain/recipe/value-objects/BrewingConditions';
 import { RecipeId } from '@/server/domain/recipe/value-objects/RecipeId';

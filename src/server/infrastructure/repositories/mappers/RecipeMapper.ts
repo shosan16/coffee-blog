@@ -15,7 +15,7 @@ import type {
   PostTag,
 } from '@prisma/client';
 
-import { Recipe, type RecipeStep } from '@/server/domain/recipe/entities/Recipe.entity';
+import { Recipe, type RecipeStep } from '@/server/domain/recipe/entities/recipe';
 import { BrewingConditions } from '@/server/domain/recipe/value-objects/BrewingConditions';
 import { RecipeId } from '@/server/domain/recipe/value-objects/RecipeId';
 
@@ -176,13 +176,14 @@ export class RecipeMapper {
     range?: { min?: number; max?: number }
   ): void {
     if (range) {
-      where[field] = {};
+      const fieldValue: Record<string, unknown> = {};
       if (range.min !== undefined) {
-        (where[field] as any).gte = range.min;
+        fieldValue.gte = range.min;
       }
       if (range.max !== undefined) {
-        (where[field] as any).lte = range.max;
+        fieldValue.lte = range.max;
       }
+      where[field] = fieldValue;
     }
   }
 

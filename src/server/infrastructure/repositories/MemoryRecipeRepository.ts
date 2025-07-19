@@ -5,7 +5,7 @@
  * テストでのモック化や高速なテスト実行を目的とする
  */
 
-import type { Recipe } from '@/server/domain/recipe/entities/Recipe.entity';
+import type { Recipe } from '@/server/domain/recipe/entities/recipe';
 import type {
   IRecipeRepository,
   RecipeSearchCriteria,
@@ -78,7 +78,7 @@ export class MemoryRecipeRepository implements IRecipeRepository {
     // 基本フィルター
     if (criteria.roastLevel?.length) {
       filteredRecipes = filteredRecipes.filter((recipe) =>
-        criteria.roastLevel!.includes(recipe.brewingConditions.roastLevel)
+        (criteria.roastLevel ?? []).includes(recipe.brewingConditions.roastLevel)
       );
     }
 
@@ -86,7 +86,7 @@ export class MemoryRecipeRepository implements IRecipeRepository {
       filteredRecipes = filteredRecipes.filter(
         (recipe) =>
           recipe.brewingConditions.grindSize &&
-          criteria.grindSize!.includes(recipe.brewingConditions.grindSize)
+          (criteria.grindSize ?? []).includes(recipe.brewingConditions.grindSize)
       );
     }
 
@@ -97,8 +97,8 @@ export class MemoryRecipeRepository implements IRecipeRepository {
         if (beanWeight === undefined) return false;
 
         return (
-          (criteria.beanWeight!.min === undefined || beanWeight >= criteria.beanWeight!.min) &&
-          (criteria.beanWeight!.max === undefined || beanWeight <= criteria.beanWeight!.max)
+          (criteria.beanWeight?.min === undefined || beanWeight >= criteria.beanWeight.min) &&
+          (criteria.beanWeight?.max === undefined || beanWeight <= criteria.beanWeight.max)
         );
       });
     }
@@ -109,8 +109,8 @@ export class MemoryRecipeRepository implements IRecipeRepository {
         if (waterTemp === undefined) return false;
 
         return (
-          (criteria.waterTemp!.min === undefined || waterTemp >= criteria.waterTemp!.min) &&
-          (criteria.waterTemp!.max === undefined || waterTemp <= criteria.waterTemp!.max)
+          (criteria.waterTemp?.min === undefined || waterTemp >= criteria.waterTemp.min) &&
+          (criteria.waterTemp?.max === undefined || waterTemp <= criteria.waterTemp.max)
         );
       });
     }
@@ -121,8 +121,8 @@ export class MemoryRecipeRepository implements IRecipeRepository {
         if (waterAmount === undefined) return false;
 
         return (
-          (criteria.waterAmount!.min === undefined || waterAmount >= criteria.waterAmount!.min) &&
-          (criteria.waterAmount!.max === undefined || waterAmount <= criteria.waterAmount!.max)
+          (criteria.waterAmount?.min === undefined || waterAmount >= criteria.waterAmount.min) &&
+          (criteria.waterAmount?.max === undefined || waterAmount <= criteria.waterAmount.max)
         );
       });
     }
@@ -133,8 +133,8 @@ export class MemoryRecipeRepository implements IRecipeRepository {
         if (brewingTime === undefined) return false;
 
         return (
-          (criteria.brewingTime!.min === undefined || brewingTime >= criteria.brewingTime!.min) &&
-          (criteria.brewingTime!.max === undefined || brewingTime <= criteria.brewingTime!.max)
+          (criteria.brewingTime?.min === undefined || brewingTime >= criteria.brewingTime.min) &&
+          (criteria.brewingTime?.max === undefined || brewingTime <= criteria.brewingTime.max)
         );
       });
     }
@@ -142,13 +142,15 @@ export class MemoryRecipeRepository implements IRecipeRepository {
     // 関連エンティティフィルター
     if (criteria.equipmentIds?.length) {
       filteredRecipes = filteredRecipes.filter((recipe) =>
-        criteria.equipmentIds!.some((equipmentId) => recipe.equipmentIds.includes(equipmentId))
+        (criteria.equipmentIds ?? []).some((equipmentId) =>
+          recipe.equipmentIds.includes(equipmentId)
+        )
       );
     }
 
     if (criteria.tagIds?.length) {
       filteredRecipes = filteredRecipes.filter((recipe) =>
-        criteria.tagIds!.some((tagId) => recipe.tagIds.includes(tagId))
+        (criteria.tagIds ?? []).some((tagId) => recipe.tagIds.includes(tagId))
       );
     }
 

@@ -260,14 +260,15 @@ describe('RecipeMapper', () => {
       const where = RecipeMapper.toWhereClause(criteria);
 
       // Assert - 変換結果を確認
-      expect(where.OR as any).toHaveLength(3);
-      expect((where.OR as any)[0]).toEqual({
+      const orConditions = where.OR as unknown[];
+      expect(orConditions).toHaveLength(3);
+      expect(orConditions[0]).toEqual({
         title: { contains: 'コーヒー', mode: 'insensitive' },
       });
-      expect((where.OR as any)[1]).toEqual({
+      expect(orConditions[1]).toEqual({
         summary: { contains: 'コーヒー', mode: 'insensitive' },
       });
-      expect((where.OR as any)[2]).toEqual({
+      expect(orConditions[2]).toEqual({
         remarks: { contains: 'コーヒー', mode: 'insensitive' },
       });
 
