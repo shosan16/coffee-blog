@@ -69,15 +69,6 @@ export type RecipeSearchResult = {
 };
 
 /**
- * レシピ保存オプション
- */
-export type RecipeSaveOptions = {
-  readonly includeSteps?: boolean;
-  readonly includeEquipment?: boolean;
-  readonly includeTags?: boolean;
-};
-
-/**
  * レシピリポジトリインターフェース
  *
  * レシピエンティティの永続化とクエリ操作を定義
@@ -101,25 +92,6 @@ export type IRecipeRepository = {
    * @throws Error データアクセスエラーの場合
    */
   findPublishedById(id: RecipeId): Promise<Recipe | null>;
-
-  /**
-   * レシピを保存
-   *
-   * @param recipe - レシピエンティティ
-   * @param options - 保存オプション
-   * @returns 保存されたレシピエンティティ
-   * @throws Error 保存エラーの場合
-   */
-  save(recipe: Recipe, options?: RecipeSaveOptions): Promise<Recipe>;
-
-  /**
-   * レシピを削除
-   *
-   * @param id - レシピID
-   * @returns 削除の成功可否
-   * @throws Error 削除エラーの場合
-   */
-  delete(id: RecipeId): Promise<boolean>;
 
   /**
    * レシピ検索
@@ -153,15 +125,6 @@ export type IRecipeRepository = {
     baristaId: string,
     criteria: Omit<RecipeSearchCriteria, 'baristaId'>
   ): Promise<RecipeSearchResult>;
-
-  /**
-   * ビューカウントを増加
-   *
-   * @param id - レシピID
-   * @returns 新しいビューカウント
-   * @throws Error 更新エラーの場合、またはレシピが見つからない場合
-   */
-  incrementViewCount(id: RecipeId): Promise<number>;
 
   /**
    * レシピの存在確認
