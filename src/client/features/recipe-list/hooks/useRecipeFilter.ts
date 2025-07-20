@@ -1,6 +1,6 @@
 'use client';
 
-import isEqual from 'lodash.isequal';
+import { isEqual } from 'lodash';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 

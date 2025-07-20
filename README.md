@@ -85,7 +85,7 @@
 - **フレームワーク**: Next.js 15 (App Router), React 18, TypeScript
 - **UI**: Tailwind CSS, shadcn/ui, Radix UI, Lucide React
 - **状態管理**: ハイブリッドアプローチ
-  - 検索・フィルタリング: SWR + Zustand
+  - 検索・フィルタリング: SWR
   - レシピ詳細: Server Actions + SSR
 - **フォーム**: React Hook Form + Zod
 - **日時処理**: date-fns
