@@ -5,8 +5,14 @@ import { z } from 'zod';
  */
 const RecipeIdSchema = z.string().refine(
   (value) => {
+    // Check if string represents a positive integer
     const numericValue = parseInt(value, 10);
-    return !isNaN(numericValue) && numericValue > 0;
+    return (
+      !isNaN(numericValue) &&
+      numericValue > 0 &&
+      Number.isInteger(numericValue) &&
+      value === numericValue.toString() // Ensure no decimal points or extra characters
+    );
   },
   {
     message: 'Recipe ID must be a positive integer string',

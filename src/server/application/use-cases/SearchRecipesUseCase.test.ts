@@ -6,15 +6,16 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 
+import { Recipe } from '@/server/domain/recipe/entities/recipe';
+import { BrewingConditions } from '@/server/domain/recipe/value-objects/BrewingConditions';
+import { RecipeId } from '@/server/domain/recipe/value-objects/RecipeId';
+import { MemoryRecipeRepository } from '@/server/infrastructure/repositories/MemoryRecipeRepository';
+
 import {
   SearchRecipesUseCase,
   SearchRecipesUseCaseError,
   type SearchRecipesInput,
 } from './SearchRecipesUseCase';
-import { MemoryRecipeRepository } from '@/server/infrastructure/repositories/MemoryRecipeRepository';
-import { Recipe } from '@/server/domain/recipe/entities/recipe';
-import { RecipeId } from '@/server/domain/recipe/value-objects/RecipeId';
-import { BrewingConditions } from '@/server/domain/recipe/value-objects/BrewingConditions';
 
 describe('SearchRecipesUseCase', () => {
   let useCase: SearchRecipesUseCase;
@@ -309,6 +310,7 @@ describe('SearchRecipesUseCase', () => {
           waterTemp: 92,
           waterAmount: 250,
         }),
+        equipmentIds: ['drip-01', 'filter-02'],
         viewCount: 100,
         isPublished: true,
         createdAt: new Date('2023-01-01'),
@@ -318,7 +320,7 @@ describe('SearchRecipesUseCase', () => {
       repository.add(testRecipe);
 
       const input: SearchRecipesInput = {
-        page: 2,
+        page: 1,
         limit: 5,
         search: 'Test',
         roastLevel: ['MEDIUM'],
@@ -336,7 +338,7 @@ describe('SearchRecipesUseCase', () => {
       const result = await useCase.execute(input);
 
       // Assert - 確認：変換が正しく行われ、結果が期待通りであることを確認
-      expect(result.pagination.currentPage).toBe(2);
+      expect(result.pagination.currentPage).toBe(1);
       expect(result.pagination.itemsPerPage).toBe(5);
       // 実際のフィルタリングロジックは MemoryRecipeRepository で実装済み
       expect(result.recipes).toHaveLength(1);

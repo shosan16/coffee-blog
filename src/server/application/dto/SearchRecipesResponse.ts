@@ -53,36 +53,17 @@ export class SearchRecipesResponseMapper {
    */
   static toDto(result: SearchResultEntity): SearchRecipesResponseDto {
     // 型ガード：必須プロパティの存在確認
-    if (!result || typeof result !== 'object') {
+    if (!result) {
       throw new Error('Invalid search result: result must be an object');
-    }
-
-    if (!Array.isArray(result.recipes)) {
-      throw new Error('Invalid search result: recipes must be an array');
-    }
-
-    if (!result.pagination || typeof result.pagination !== 'object') {
-      throw new Error('Invalid search result: pagination is required');
-    }
-
-    // ページネーション情報の型ガード
-    const pagination = result.pagination;
-    if (
-      typeof pagination.currentPage !== 'number' ||
-      typeof pagination.totalPages !== 'number' ||
-      typeof pagination.totalItems !== 'number' ||
-      typeof pagination.itemsPerPage !== 'number'
-    ) {
-      throw new Error('Invalid search result: pagination properties must be numbers');
     }
 
     return {
       recipes: result.recipes.map((recipe) => this.mapRecipeSummaryDto(recipe)),
       pagination: {
-        currentPage: pagination.currentPage,
-        totalPages: pagination.totalPages,
-        totalItems: pagination.totalItems,
-        itemsPerPage: pagination.itemsPerPage,
+        currentPage: result.pagination.currentPage,
+        totalPages: result.pagination.totalPages,
+        totalItems: result.pagination.totalItems,
+        itemsPerPage: result.pagination.itemsPerPage,
       },
     };
   }

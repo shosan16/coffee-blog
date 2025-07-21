@@ -34,7 +34,8 @@ export type RecipeSearchCriteria = {
 
   // 関連エンティティフィルター
   readonly equipmentIds?: string[];
-  readonly equipmentTypeIds?: string[];
+  readonly equipmentNames?: string[];
+  readonly equipmentTypeNames?: string[];
   readonly tagIds?: string[];
   readonly baristaId?: string;
 

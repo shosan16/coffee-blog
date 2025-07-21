@@ -199,7 +199,7 @@ describe('SearchRecipesService', () => {
       expect(whereClause.roastLevel.in).toEqual([RoastLevel.MEDIUM]);
       expect(whereClause.grindSize.in).toEqual([GrindSize.MEDIUM]);
       expect(whereClause.AND).toBeDefined();
-      expect(whereClause.AND[0].equipment.some.name.in).toEqual(['V60']);
+      expect(whereClause.AND[0].equipment.some.name.in).toEqual(['1']);
       expect(whereClause.beanWeight.gte).toBe(15);
       expect(whereClause.beanWeight.lte).toBe(25);
       expect(whereClause.waterTemp.gte).toBe(85);
@@ -256,11 +256,12 @@ describe('SearchRecipesService', () => {
       // Act - 実行： キーワード検索を実行
       await service.searchRecipes(searchParams);
 
-      // Assert - 確認： WHERE句にタイトルと概要のOR検索条件が含まれる
+      // Assert - 確認： WHERE句にタイトル、概要、備考のOR検索条件が含まれる
       const whereClause = mockPrisma.post.findMany.mock.calls[0][0].where;
-      expect(whereClause.OR).toHaveLength(2);
+      expect(whereClause.OR).toHaveLength(3);
       expect(whereClause.OR[0].title.contains).toBe('ハンドドリップ');
       expect(whereClause.OR[1].summary.contains).toBe('ハンドドリップ');
+      expect(whereClause.OR[2].remarks.contains).toBe('ハンドドリップ');
     });
 
     it('検索キーワードが大文字小文字を区別しない', async () => {
@@ -374,9 +375,9 @@ describe('SearchRecipesService', () => {
       // Act - 実行： 器具情報を含むデータで検索を実行
       const result = await service.searchRecipes(searchParams);
 
-      // Assert - 確認： 器具名が配列として正しく変換されている
+      // Assert - 確認： 器具IDが配列として正しく変換されている
       expect(Array.isArray(result.recipes[0].equipment)).toBe(true);
-      expect(result.recipes[0].equipment).toEqual(['V60']);
+      expect(result.recipes[0].equipment).toEqual(['1']);
     });
   });
 

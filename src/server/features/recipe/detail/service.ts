@@ -43,10 +43,14 @@ export async function getRecipeDetail(id: number): Promise<GetRecipeDetailResult
   } catch (error) {
     // ユースケースエラーをサービス層エラーに変換
     if (error instanceof RecipeDetailUseCaseError) {
-      throw new RecipeDetailError(error.message, error.code, error.statusCode);
+      throw new RecipeDetailError(
+        error.message,
+        error.code as 'RECIPE_NOT_FOUND' | 'RECIPE_NOT_PUBLISHED' | 'INVALID_ID',
+        error.statusCode
+      );
     }
 
-    // 予期しないエラーの場合
-    throw new RecipeDetailError('Internal server error', 'RECIPE_NOT_FOUND', 500);
+    // データベースエラーや予期しないエラーは、そのまま再スローして適切に伝播
+    throw error;
   }
 }

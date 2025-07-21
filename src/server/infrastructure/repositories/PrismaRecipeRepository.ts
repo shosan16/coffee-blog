@@ -59,7 +59,8 @@ export class PrismaRecipeRepository implements IRecipeRepository {
       return RecipeMapper.toDomain(post);
     } catch (error) {
       logger.error('Failed to find recipe by id', { id: id.value, error });
-      throw new Error(`Failed to find recipe by id: ${id.value}`);
+      // データベースエラーは、そのまま上位層に委譲
+      throw error;
     }
   }
 
@@ -98,7 +99,8 @@ export class PrismaRecipeRepository implements IRecipeRepository {
       return RecipeMapper.toDomain(post);
     } catch (error) {
       logger.error('Failed to find published recipe by id', { id: id.value, error });
-      throw new Error(`Failed to find published recipe by id: ${id.value}`);
+      // データベースエラーは、そのまま上位層に委譲
+      throw error;
     }
   }
 
@@ -153,7 +155,8 @@ export class PrismaRecipeRepository implements IRecipeRepository {
       };
     } catch (error) {
       logger.error('Failed to search recipes', { criteria, error });
-      throw new Error('Failed to search recipes');
+      // データベースエラーは、そのまま上位層に委譲
+      throw error;
     }
   }
 

@@ -20,6 +20,7 @@
     "test:coverage": "npx vitest run --coverage",
     "validate": "npm run quality:check && npm run test",
     "ci": "npm run validate && npm run build",
+    "check-all": "npm run format && npm run lint && npm run type:check && npm run test",
     "db:generate": "npx prisma generate",
     "db:migrate": "npx prisma migrate deploy",
     "db:migrate:local": "DATABASE_URL=\"postgresql://user:password@localhost:5432/db?schema=public\" npx prisma migrate deploy",

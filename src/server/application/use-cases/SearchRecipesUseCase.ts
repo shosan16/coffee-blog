@@ -15,8 +15,8 @@ import type {
   RecipeSearchCriteria,
   RecipeSearchResult,
 } from '@/server/domain/recipe/repositories/IRecipeRepository';
-import { createChildLogger } from '@/server/shared/logger';
 import { UseCaseError } from '@/server/shared/errors/DomainError';
+import { createChildLogger } from '@/server/shared/logger';
 
 /**
  * レシピ検索ユースケース固有のエラー
@@ -127,10 +127,8 @@ export class SearchRecipesUseCase {
       return result;
     } catch (error) {
       this.logger.error({ error, input }, 'Recipe search failed');
-      throw SearchRecipesUseCaseError.searchFailed({
-        input,
-        error: error instanceof Error ? error.message : 'Unknown error',
-      });
+      // データベースエラーはそのまま上位層に伝播
+      throw error;
     }
   }
 
@@ -200,8 +198,8 @@ export class SearchRecipesUseCase {
       searchTerm: input.search,
       roastLevel: input.roastLevel,
       grindSize: input.grindSize,
-      equipmentIds: input.equipment,
-      equipmentTypeIds: input.equipmentType,
+      equipmentNames: input.equipment,
+      equipmentTypeNames: input.equipmentType,
       beanWeight: input.beanWeight,
       waterTemp: input.waterTemp,
       waterAmount: input.waterAmount,

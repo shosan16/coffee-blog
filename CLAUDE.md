@@ -56,10 +56,10 @@
 
 ### ✅ 品質チェックと最終確認
 
-すべての実装が完了したら、以下の品質チェックコマンドを実行
+実装が完了した際には、以下の品質チェックコマンドを実行し、すべてのテストとリンティングがパスするまで粘り強く修正を続けてください。
 
 ```bash
-npm run format && npm run lint && npx tsc --noEmit && npm test --coverage
+npm run check-all
 ```
 
 ## 📝 コーディング規約
@@ -69,23 +69,21 @@ npm run format && npm run lint && npx tsc --noEmit && npm test --coverage
 <!-- TODO: 契約と設計について記載する -->
 
 - **配置**: 実装ファイルと同じディレクトリに `*.test.tsx` として配置（コロケーション）
-- **テスト種別**:
-  - ロジック/インタラクション: `Vitest`
 - **構造**: AAA (Arrange-Act-Assert) パターンを厳守し、各ブロックの直前にコメントを記載
 
 ```javascript
 describe('calculateTaxForSimplifiedInvoice', () => {
   describe('税込価額を税率ごとに区分して合計した金額に対して税額を計算した場合', () => {
     it('端数を切り捨てること', () => {
-      // Arrange - 準備：適格簡易請求書を作成し、品目を追加
+      // Arrange - 適格簡易請求書を作成し、品目を追加
       const inv = createSimplifiedInvoice();
       inv.add(new Item('技評茶', 130, 飲料), 2); // 軽減税率（8%）
       inv.add(new Item('技評酒', 150, 酒類), 3); // 標準税率（10%）
 
-      // Act - 実行：合計金額（含む税額）を計算
+      // Act - 合計金額（含む税額）を計算
       const total = inv.total();
 
-      // Assert - 確認：税率ごとの税額、および合計税額を検証
+      // Assert - 税率ごとの税額、および合計税額を検証
       expect(total.tax).toEqual({
         reduced: 19, // (130*2)*(8/108) = 19.25 → 切り捨てて 19
         standard: 40, // (150*3)*(10/110) = 40.90 → 切り捨てて 40

@@ -34,6 +34,23 @@ export type PrismaRecipeWithRelations = Post & {
  */
 export class RecipeMapper {
   /**
+   * 安全にBigIntに変換
+   * 数値以外の文字列の場合は0を返す
+   */
+  private static safeBigIntConvert(value: string): bigint {
+    try {
+      // 数値文字列の場合のみBigIntに変換
+      const numValue = Number(value);
+      if (isNaN(numValue)) {
+        return BigInt(0); // デフォルト値として0を返す
+      }
+      return BigInt(numValue);
+    } catch {
+      return BigInt(0);
+    }
+  }
+
+  /**
    * PrismaモデルからDomainエンティティへの変換
    *
    * @param prismaPost - Prisma Post（関連データを含む）
@@ -100,71 +117,84 @@ export class RecipeMapper {
     waterTemp?: { min?: number; max?: number };
     waterAmount?: { min?: number; max?: number };
     brewingTime?: { min?: number; max?: number };
-    equipmentIds?: string[];
-    equipmentTypeIds?: string[];
+    equipmentNames?: string[];
+    equipmentTypeNames?: string[];
     tagIds?: string[];
     baristaId?: string;
     isPublished?: boolean;
   }): Record<string, unknown> {
     const where: Record<string, unknown> = {};
 
-    this.addTextSearchCondition(where, criteria.searchTerm);
-    this.addBasicFilters(where, criteria);
-    this.addRangeFilters(where, criteria);
-    this.addRelationFilters(where, criteria);
-    this.addStatusFilters(where, criteria);
-
-    return where;
-  }
-
-  /**
-   * テキスト検索条件を追加
-   */
-  private static addTextSearchCondition(where: Record<string, unknown>, searchTerm?: string): void {
-    if (searchTerm) {
+    // テキスト検索
+    if (criteria.searchTerm) {
       where.OR = [
-        { title: { contains: searchTerm, mode: 'insensitive' } },
-        { summary: { contains: searchTerm, mode: 'insensitive' } },
-        { remarks: { contains: searchTerm, mode: 'insensitive' } },
+        { title: { contains: criteria.searchTerm, mode: 'insensitive' } },
+        { summary: { contains: criteria.searchTerm, mode: 'insensitive' } },
+        { remarks: { contains: criteria.searchTerm, mode: 'insensitive' } },
       ];
     }
-  }
 
-  /**
-   * 基本フィルター条件を追加
-   */
-  private static addBasicFilters(
-    where: Record<string, unknown>,
-    criteria: {
-      roastLevel?: RoastLevel[];
-      grindSize?: GrindSize[];
-    }
-  ): void {
+    // 基本フィルター
     if (criteria.roastLevel?.length) {
       where.roastLevel = { in: criteria.roastLevel };
     }
-
     if (criteria.grindSize?.length) {
       where.grindSize = { in: criteria.grindSize };
     }
-  }
 
-  /**
-   * 範囲フィルター条件を追加
-   */
-  private static addRangeFilters(
-    where: Record<string, unknown>,
-    criteria: {
-      beanWeight?: { min?: number; max?: number };
-      waterTemp?: { min?: number; max?: number };
-      waterAmount?: { min?: number; max?: number };
-      brewingTime?: { min?: number; max?: number };
-    }
-  ): void {
+    // 範囲フィルター
     this.addRangeFilter(where, 'beanWeight', criteria.beanWeight);
     this.addRangeFilter(where, 'waterTemp', criteria.waterTemp);
     this.addRangeFilter(where, 'waterAmount', criteria.waterAmount);
     this.addRangeFilter(where, 'brewingTime', criteria.brewingTime);
+
+    // 関連エンティティフィルター
+    const andConditions: Array<Record<string, unknown>> = [];
+
+    if (criteria.equipmentNames?.length) {
+      andConditions.push({
+        equipment: {
+          some: {
+            name: { in: criteria.equipmentNames },
+          },
+        },
+      });
+    }
+
+    if (criteria.equipmentTypeNames?.length) {
+      andConditions.push({
+        equipment: {
+          some: {
+            equipmentType: {
+              name: { in: criteria.equipmentTypeNames },
+            },
+          },
+        },
+      });
+    }
+
+    if (andConditions.length > 0) {
+      where.AND = andConditions;
+    }
+
+    if (criteria.tagIds?.length) {
+      where.tags = {
+        some: {
+          tagId: { in: criteria.tagIds.map((id) => this.safeBigIntConvert(id)) },
+        },
+      };
+    }
+
+    if (criteria.baristaId) {
+      where.baristaId = this.safeBigIntConvert(criteria.baristaId);
+    }
+
+    // 状態フィルター
+    if (criteria.isPublished !== undefined) {
+      where.isPublished = criteria.isPublished;
+    }
+
+    return where;
   }
 
   /**
@@ -188,61 +218,6 @@ export class RecipeMapper {
   }
 
   /**
-   * 関連エンティティフィルター条件を追加
-   */
-  private static addRelationFilters(
-    where: Record<string, unknown>,
-    criteria: {
-      equipmentIds?: string[];
-      equipmentTypeIds?: string[];
-      tagIds?: string[];
-      baristaId?: string;
-    }
-  ): void {
-    if (criteria.equipmentIds?.length) {
-      where.equipment = {
-        some: {
-          id: { in: criteria.equipmentIds.map((id) => BigInt(id)) },
-        },
-      };
-    }
-
-    if (criteria.equipmentTypeIds?.length) {
-      where.equipment = {
-        some: {
-          typeId: { in: criteria.equipmentTypeIds.map((id) => BigInt(id)) },
-        },
-      };
-    }
-
-    if (criteria.tagIds?.length) {
-      where.tags = {
-        some: {
-          tagId: { in: criteria.tagIds.map((id) => BigInt(id)) },
-        },
-      };
-    }
-
-    if (criteria.baristaId) {
-      where.baristaId = BigInt(criteria.baristaId);
-    }
-  }
-
-  /**
-   * 状態フィルター条件を追加
-   */
-  private static addStatusFilters(
-    where: Record<string, unknown>,
-    criteria: {
-      isPublished?: boolean;
-    }
-  ): void {
-    if (criteria.isPublished !== undefined) {
-      where.isPublished = criteria.isPublished;
-    }
-  }
-
-  /**
    * ソート条件の変換
    *
    * @param sortBy - ソート項目
@@ -250,8 +225,8 @@ export class RecipeMapper {
    * @returns Prisma OrderBy句
    */
   static toOrderBy(
-    sortBy: 'id' | 'title' | 'viewCount' | 'createdAt' | 'updatedAt' | 'publishedAt' = 'createdAt',
-    sortOrder: 'asc' | 'desc' = 'desc'
+    sortBy: 'id' | 'title' | 'viewCount' | 'createdAt' | 'updatedAt' | 'publishedAt' = 'id',
+    sortOrder: 'asc' | 'desc' = 'asc'
   ): Record<string, 'asc' | 'desc'> {
     return {
       [sortBy]: sortOrder,

@@ -94,36 +94,8 @@ export class RecipeDetailResponseMapper {
    */
   static toDto(recipe: RecipeEntity): RecipeDetailDto {
     // 型ガード：必須プロパティの存在確認
-    if (!recipe || typeof recipe !== 'object') {
+    if (!recipe) {
       throw new Error('Invalid recipe entity: recipe must be an object');
-    }
-
-    if (!recipe.id || typeof recipe.id.value !== 'string') {
-      throw new Error('Invalid recipe entity: id is required');
-    }
-
-    if (!recipe.title || typeof recipe.title !== 'string') {
-      throw new Error('Invalid recipe entity: title is required');
-    }
-
-    if (!recipe.brewingConditions || typeof recipe.brewingConditions !== 'object') {
-      throw new Error('Invalid recipe entity: brewingConditions is required');
-    }
-
-    if (typeof recipe.viewCount !== 'number') {
-      throw new Error('Invalid recipe entity: viewCount must be a number');
-    }
-
-    if (typeof recipe.isPublished !== 'boolean') {
-      throw new Error('Invalid recipe entity: isPublished must be a boolean');
-    }
-
-    if (!(recipe.createdAt instanceof Date)) {
-      throw new Error('Invalid recipe entity: createdAt must be a Date');
-    }
-
-    if (!(recipe.updatedAt instanceof Date)) {
-      throw new Error('Invalid recipe entity: updatedAt must be a Date');
     }
 
     // 型安全な変換

@@ -100,7 +100,8 @@ export class SearchRecipesService {
       }
 
       this.logger.error({ err: error, params }, 'Unexpected error in recipe search service');
-      throw new Error('レシピの検索に失敗しました');
+      // データベースエラーや予期しないエラーは、そのまま再スローして適切に伝播
+      throw error;
     }
   }
 }

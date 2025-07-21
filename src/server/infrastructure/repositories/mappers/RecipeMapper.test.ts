@@ -250,7 +250,7 @@ describe('RecipeMapper', () => {
         grindSize: [GrindSize.MEDIUM],
         beanWeight: { min: 15, max: 25 },
         waterTemp: { min: 80, max: 95 },
-        equipmentIds: ['1', '2'],
+        equipmentNames: ['V60', 'Chemex'],
         tagIds: ['1'],
         baristaId: '1',
         isPublished: true,
@@ -278,9 +278,12 @@ describe('RecipeMapper', () => {
       expect(where.beanWeight).toEqual({ gte: 15, lte: 25 });
       expect(where.waterTemp).toEqual({ gte: 80, lte: 95 });
 
-      expect(where.equipment).toEqual({
-        some: {
-          id: { in: [BigInt(1), BigInt(2)] },
+      expect(where.AND).toBeDefined();
+      expect((where.AND as unknown[])[0]).toEqual({
+        equipment: {
+          some: {
+            name: { in: ['V60', 'Chemex'] },
+          },
         },
       });
 
@@ -316,7 +319,7 @@ describe('RecipeMapper', () => {
       // Assert - 変換結果を確認
       expect(orderBy1).toEqual({ title: 'asc' });
       expect(orderBy2).toEqual({ viewCount: 'desc' });
-      expect(orderBy3).toEqual({ createdAt: 'desc' });
+      expect(orderBy3).toEqual({ id: 'asc' });
     });
   });
 });

@@ -11,8 +11,8 @@
 import type { Recipe } from '@/server/domain/recipe/entities/recipe';
 import type { IRecipeRepository } from '@/server/domain/recipe/repositories/IRecipeRepository';
 import { RecipeId } from '@/server/domain/recipe/value-objects/RecipeId';
-import { createChildLogger } from '@/server/shared/logger';
 import { UseCaseError } from '@/server/shared/errors/DomainError';
+import { createChildLogger } from '@/server/shared/logger';
 
 /**
  * レシピ詳細取得ユースケース固有のエラー
@@ -102,8 +102,15 @@ export class GetRecipeDetailUseCase {
       );
     }
 
-    // 2. レシピ取得（YAGNI原則：必要最小限の機能）
-    const recipe = await this.recipeRepository.findById(recipeId);
+    // 2. レシピ取得
+    let recipe: Recipe | null;
+    try {
+      recipe = await this.recipeRepository.findById(recipeId);
+    } catch (error) {
+      this.logger.error({ recipeId: id, error }, 'Database error while finding recipe');
+      // データベースエラーはそのまま上位層に伝播
+      throw error;
+    }
 
     if (!recipe) {
       this.logger.warn({ recipeId: id }, 'Recipe not found');
