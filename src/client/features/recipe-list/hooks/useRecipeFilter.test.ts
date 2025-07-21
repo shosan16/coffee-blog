@@ -54,7 +54,7 @@ describe('useRecipeFilter', () => {
 
     it('isEqualを使った深い比較が正しく動作することを確認', async () => {
       // Green: isEqualによる正しい深い比較の実装テスト
-      const { default: isEqual } = await import('lodash.isequal');
+      const { isEqual } = await import('lodash');
 
       const complexObject1 = {
         roastLevel: ['LIGHT', 'MEDIUM'],

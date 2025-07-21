@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "filter": "git checkout -b*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat .claude/commands/tdd.md"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -7,8 +7,8 @@ import RecipeCard from '@/client/features/recipe-list/components/RecipeCard';
 import { useRecipes } from '@/client/features/recipe-list/hooks/useRecipes';
 import type { RecipeListResponse } from '@/client/features/recipe-list/types/api';
 import { parseFiltersFromSearchParams } from '@/client/features/recipe-list/utils/filter';
+import RecipePagination from '@/client/shared/components/Pagination';
 import { RecipeListSkeleton } from '@/client/shared/components/skeleton';
-import RecipePagination from '@/components/Pagination';
 
 type RecipeListProps = {
   initialData: RecipeListResponse;
