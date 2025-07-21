@@ -33,6 +33,16 @@ describe('RecipeMapper', () => {
           affiliation: 'テスト店舗',
           createdAt: new Date('2024-01-01'),
           updatedAt: new Date('2024-01-01'),
+          socialLinks: [
+            {
+              id: BigInt(1),
+              baristaId: BigInt(1),
+              platform: 'Instagram',
+              url: 'https://instagram.com/test-barista',
+              createdAt: new Date('2024-01-01'),
+              updatedAt: new Date('2024-01-01'),
+            },
+          ],
         },
         steps: [
           {
@@ -65,6 +75,13 @@ describe('RecipeMapper', () => {
             affiliateLink: 'https://example.com',
             createdAt: new Date('2024-12-01'),
             updatedAt: new Date('2024-12-01'),
+            equipmentType: {
+              id: BigInt(1),
+              name: 'ドリッパー',
+              description: 'コーヒードリッパー',
+              createdAt: new Date('2024-12-01'),
+              updatedAt: new Date('2024-12-01'),
+            },
           },
         ],
         tags: [

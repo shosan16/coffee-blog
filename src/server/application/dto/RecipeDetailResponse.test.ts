@@ -10,6 +10,23 @@ import type { PrismaRecipeWithRelations } from '@/server/infrastructure/reposito
 
 import { RecipeDetailResponseMapper } from './RecipeDetailResponse';
 
+const RECIPE_CREATED_AT = new Date('2024-01-01T00:00:00.000Z');
+const RECIPE_UPDATED_AT = new Date('2024-01-02T00:00:00.000Z');
+const RECIPE_PUBLISHED_AT = new Date('2024-01-03T00:00:00.000Z');
+const BARISTA_CREATED_AT = new Date('2024-01-01T00:00:00.000Z');
+const BARISTA_UPDATED_AT = new Date('2024-01-01T00:00:00.000Z');
+const SOCIAL_LINK_CREATED_AT = new Date('2024-01-01T00:00:00.000Z');
+const SOCIAL_LINK_UPDATED_AT = new Date('2024-01-01T00:00:00.000Z');
+const STEP_CREATED_AT = new Date('2024-01-01T00:00:00.000Z');
+const STEP_UPDATED_AT = new Date('2024-01-01T00:00:00.000Z');
+const EQUIPMENT_CREATED_AT = new Date('2024-01-01T00:00:00.000Z');
+const EQUIPMENT_UPDATED_AT = new Date('2024-01-01T00:00:00.000Z');
+const EQUIPMENT_TYPE_CREATED_AT = new Date('2024-01-01T00:00:00.000Z');
+const EQUIPMENT_TYPE_UPDATED_AT = new Date('2024-01-01T00:00:00.000Z');
+const TAG_CREATED_AT = new Date('2024-01-01T00:00:00.000Z');
+const TAG_UPDATED_AT = new Date('2024-01-01T00:00:00.000Z');
+const POST_TAG_CREATED_AT = new Date('2024-01-01T00:00:00.000Z');
+
 describe('RecipeDetailResponseMapper', () => {
   describe('toDto', () => {
     let recipe: Recipe;
@@ -34,8 +51,8 @@ describe('RecipeDetailResponseMapper', () => {
         brewingConditions,
         viewCount: 100,
         isPublished: true,
-        createdAt: new Date('2023-01-01'),
-        updatedAt: new Date('2023-01-02'),
+        createdAt: RECIPE_CREATED_AT,
+        updatedAt: RECIPE_UPDATED_AT,
         baristaId: '1',
         steps: [
           { stepOrder: 1, description: 'Bloom for 30s', timeSeconds: 30 },
@@ -48,6 +65,7 @@ describe('RecipeDetailResponseMapper', () => {
       // Arrange - テスト用のPrismaデータを作成
       prismaData = {
         id: BigInt(1),
+        authorId: BigInt(1),
         title: 'V60 Medium Roast',
         summary: 'Balanced V60 recipe',
         remarks: null,
@@ -59,24 +77,24 @@ describe('RecipeDetailResponseMapper', () => {
         brewingTime: 240,
         viewCount: 100,
         isPublished: true,
-        publishedAt: new Date('2023-01-01'),
-        createdAt: new Date('2023-01-01'),
-        updatedAt: new Date('2023-01-02'),
+        publishedAt: RECIPE_PUBLISHED_AT,
+        createdAt: RECIPE_CREATED_AT,
+        updatedAt: RECIPE_UPDATED_AT,
         baristaId: BigInt(1),
         barista: {
           id: BigInt(1),
           name: 'Test Barista',
           affiliation: 'Test Shop',
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt: BARISTA_CREATED_AT,
+          updatedAt: BARISTA_UPDATED_AT,
           socialLinks: [
             {
               id: BigInt(1),
               baristaId: BigInt(1),
               platform: 'Instagram',
               url: 'https://instagram.com/test',
-              createdAt: new Date(),
-              updatedAt: new Date(),
+              createdAt: SOCIAL_LINK_CREATED_AT,
+              updatedAt: SOCIAL_LINK_UPDATED_AT,
             },
           ],
         },
@@ -87,8 +105,8 @@ describe('RecipeDetailResponseMapper', () => {
             stepOrder: 1,
             description: 'Bloom for 30s',
             timeSeconds: 30,
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            createdAt: STEP_CREATED_AT,
+            updatedAt: STEP_UPDATED_AT,
           },
           {
             id: BigInt(2),
@@ -96,8 +114,8 @@ describe('RecipeDetailResponseMapper', () => {
             stepOrder: 2,
             description: 'Pour to 300ml',
             timeSeconds: 180,
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            createdAt: STEP_CREATED_AT,
+            updatedAt: STEP_UPDATED_AT,
           },
         ],
         equipment: [
@@ -107,15 +125,16 @@ describe('RecipeDetailResponseMapper', () => {
             brand: 'Hario',
             description: 'Ceramic dripper',
             affiliateLink: 'https://example.com/v60',
-            equipmentTypeId: BigInt(1),
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            postId: BigInt(1),
+            typeId: BigInt(1),
+            createdAt: EQUIPMENT_CREATED_AT,
+            updatedAt: EQUIPMENT_UPDATED_AT,
             equipmentType: {
               id: BigInt(1),
               name: 'Dripper',
               description: 'Pour over dripper',
-              createdAt: new Date(),
-              updatedAt: new Date(),
+              createdAt: EQUIPMENT_TYPE_CREATED_AT,
+              updatedAt: EQUIPMENT_TYPE_UPDATED_AT,
             },
           },
           {
@@ -124,15 +143,16 @@ describe('RecipeDetailResponseMapper', () => {
             brand: 'Timemore',
             description: 'Digital scale',
             affiliateLink: null,
-            equipmentTypeId: BigInt(2),
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            postId: BigInt(1),
+            typeId: BigInt(2),
+            createdAt: EQUIPMENT_CREATED_AT,
+            updatedAt: EQUIPMENT_UPDATED_AT,
             equipmentType: {
               id: BigInt(2),
               name: 'Scale',
               description: 'Digital weighing scale',
-              createdAt: new Date(),
-              updatedAt: new Date(),
+              createdAt: EQUIPMENT_TYPE_CREATED_AT,
+              updatedAt: EQUIPMENT_TYPE_UPDATED_AT,
             },
           },
         ],
@@ -140,23 +160,25 @@ describe('RecipeDetailResponseMapper', () => {
           {
             postId: BigInt(1),
             tagId: BigInt(1),
+            createdAt: POST_TAG_CREATED_AT,
             tag: {
               id: BigInt(1),
               name: 'V60',
               slug: 'v60',
-              createdAt: new Date(),
-              updatedAt: new Date(),
+              createdAt: TAG_CREATED_AT,
+              updatedAt: TAG_UPDATED_AT,
             },
           },
           {
             postId: BigInt(1),
             tagId: BigInt(2),
+            createdAt: POST_TAG_CREATED_AT,
             tag: {
               id: BigInt(2),
               name: 'Medium Roast',
               slug: 'medium-roast',
-              createdAt: new Date(),
-              updatedAt: new Date(),
+              createdAt: TAG_CREATED_AT,
+              updatedAt: TAG_UPDATED_AT,
             },
           },
         ],

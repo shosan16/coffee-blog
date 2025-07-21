@@ -17,6 +17,9 @@ import {
   type GetRecipeDetailResult,
 } from './GetRecipeDetailUseCase';
 
+const RECIPE_CREATED_AT = new Date('2024-01-01T00:00:00.000Z');
+const RECIPE_UPDATED_AT = new Date('2024-01-01T00:00:00.000Z');
+
 describe('GetRecipeDetailUseCase', () => {
   let useCase: GetRecipeDetailUseCase;
   let repository: MemoryRecipeRepository;
@@ -48,9 +51,9 @@ describe('GetRecipeDetailUseCase', () => {
         brewingConditions,
         viewCount: 100,
         isPublished: true,
-        publishedAt: new Date('2023-01-01'),
-        createdAt: new Date('2023-01-01'),
-        updatedAt: new Date('2023-01-01'),
+        publishedAt: RECIPE_CREATED_AT,
+        createdAt: RECIPE_CREATED_AT,
+        updatedAt: RECIPE_UPDATED_AT,
         baristaId: 'barista-1',
       });
 
@@ -78,8 +81,8 @@ describe('GetRecipeDetailUseCase', () => {
         brewingConditions,
         viewCount: 500,
         isPublished: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: RECIPE_CREATED_AT,
+        updatedAt: RECIPE_UPDATED_AT,
       });
 
       repository.add(recipe);
@@ -123,8 +126,8 @@ describe('GetRecipeDetailUseCase', () => {
         brewingConditions,
         viewCount: 0,
         isPublished: false, // 非公開
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: RECIPE_CREATED_AT,
+        updatedAt: RECIPE_UPDATED_AT,
       });
 
       repository.add(unpublishedRecipe);
@@ -180,8 +183,8 @@ describe('GetRecipeDetailUseCase', () => {
           brewingConditions,
           viewCount: 0,
           isPublished: true,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt: RECIPE_CREATED_AT,
+          updatedAt: RECIPE_UPDATED_AT,
         });
 
         repository.add(recipe);
@@ -206,8 +209,8 @@ describe('GetRecipeDetailUseCase', () => {
         brewingConditions,
         viewCount: 999999, // 高いビューカウント
         isPublished: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: RECIPE_CREATED_AT,
+        updatedAt: RECIPE_UPDATED_AT,
       });
 
       repository.add(highViewRecipe);
@@ -231,8 +234,8 @@ describe('GetRecipeDetailUseCase', () => {
         brewingConditions,
         viewCount: 0,
         isPublished: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: RECIPE_CREATED_AT,
+        updatedAt: RECIPE_UPDATED_AT,
         // オプショナルなフィールドはundefined
       });
 

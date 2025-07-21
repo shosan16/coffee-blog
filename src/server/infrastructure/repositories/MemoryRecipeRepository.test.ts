@@ -8,6 +8,10 @@ import { RecipeId } from '@/server/domain/recipe/value-objects/RecipeId';
 
 import { MemoryRecipeRepository } from './MemoryRecipeRepository';
 
+const RECIPE_CREATED_AT = new Date('2024-01-01T00:00:00.000Z');
+const RECIPE_UPDATED_AT = new Date('2024-01-02T00:00:00.000Z');
+const RECIPE_PUBLISHED_AT = new Date('2024-01-03T00:00:00.000Z');
+
 describe('MemoryRecipeRepository', () => {
   let repository: MemoryRecipeRepository;
   let testRecipe: Recipe;
@@ -50,8 +54,8 @@ describe('MemoryRecipeRepository', () => {
       viewCount: 0,
       isPublished: false,
       publishedAt: undefined,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: RECIPE_CREATED_AT,
+      updatedAt: RECIPE_UPDATED_AT,
       steps,
       equipmentIds: ['1', '2'],
       tagIds: ['1'],
@@ -95,9 +99,9 @@ describe('MemoryRecipeRepository', () => {
         baristaId: testRecipe.baristaId,
         viewCount: 0,
         isPublished: true,
-        publishedAt: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        publishedAt: RECIPE_PUBLISHED_AT,
+        createdAt: RECIPE_CREATED_AT,
+        updatedAt: RECIPE_UPDATED_AT,
         steps: [
           {
             stepOrder: 1,
@@ -147,9 +151,9 @@ describe('MemoryRecipeRepository', () => {
         baristaId: '1',
         viewCount: 0,
         isPublished: true,
-        publishedAt: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        publishedAt: RECIPE_PUBLISHED_AT,
+        createdAt: RECIPE_CREATED_AT,
+        updatedAt: RECIPE_UPDATED_AT,
         steps: [{ stepOrder: 1, description: 'ステップ1' }],
         equipmentIds: [],
         tagIds: [],
@@ -170,9 +174,9 @@ describe('MemoryRecipeRepository', () => {
         baristaId: '2',
         viewCount: 0,
         isPublished: true,
-        publishedAt: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        publishedAt: RECIPE_PUBLISHED_AT,
+        createdAt: RECIPE_CREATED_AT,
+        updatedAt: RECIPE_UPDATED_AT,
         steps: [{ stepOrder: 1, description: 'ステップ1' }],
         equipmentIds: [],
         tagIds: [],
@@ -327,9 +331,9 @@ describe('MemoryRecipeRepository', () => {
         }),
         viewCount: 0,
         isPublished: true,
-        publishedAt: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        publishedAt: RECIPE_PUBLISHED_AT,
+        createdAt: RECIPE_CREATED_AT,
+        updatedAt: RECIPE_UPDATED_AT,
         steps: [{ stepOrder: 1, description: 'ステップ1' }],
         equipmentIds: [],
         tagIds: [],

@@ -34,6 +34,9 @@ async function getPrismaRecipeWithRelations(
           socialLinks: true,
         },
       },
+      steps: {
+        orderBy: { stepOrder: 'asc' },
+      },
       equipment: {
         include: {
           equipmentType: true,

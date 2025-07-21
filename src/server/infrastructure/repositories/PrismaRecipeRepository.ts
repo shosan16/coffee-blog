@@ -126,7 +126,11 @@ export class PrismaRecipeRepository implements IRecipeRepository {
         this.prisma.post.findMany({
           where,
           include: {
-            barista: true,
+            barista: {
+              include: {
+                socialLinks: true,
+              },
+            },
             steps: {
               orderBy: { stepOrder: 'asc' },
             },
