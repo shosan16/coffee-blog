@@ -67,8 +67,8 @@ export default function RecipeSteps({ steps }: RecipeStepsProps) {
                       <Clock className="text-muted-foreground h-4 w-4" />
                       <span className="text-muted-foreground text-sm font-medium">
                         {formatSeconds(step.timeSeconds)}
-                        {index === 0 && '（開始）'}
-                        {index > 0 && '（累積）'}
+                        {index === 0}
+                        {index > 0}
                       </span>
                     </div>
                   )}
