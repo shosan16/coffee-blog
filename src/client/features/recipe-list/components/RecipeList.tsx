@@ -58,7 +58,7 @@ export default function RecipeList({ initialData }: RecipeListProps) {
       {/* ページネーション */}
       {pagination && pagination.totalPages > 1 && (
         <div className="mt-12 flex justify-center">
-          <div className="rounded-xl border border-black bg-white p-4 shadow-lg">
+          <div className="rounded-xl bg-white p-4 shadow-lg">
             <RecipePagination
               currentPage={pagination.currentPage}
               totalPages={pagination.totalPages}
