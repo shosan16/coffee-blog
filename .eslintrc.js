@@ -181,7 +181,7 @@ module.exports = {
         '@typescript-eslint/no-misused-promises': 'error', // Promiseの誤用を防止（条件式での使用等）
         '@typescript-eslint/prefer-nullish-coalescing': 'error', // || の代わりに ?? の使用を推奨
         '@typescript-eslint/prefer-optional-chain': 'error', // && による連鎖の代わりに ?. の使用を推奨
-        '@typescript-eslint/no-unnecessary-condition': 'warn', // 型チェックで自明な条件式を警告
+        '@typescript-eslint/no-unnecessary-condition': 'error', // 型チェックで自明な条件式を警告
         '@typescript-eslint/prefer-as-const': 'error', // リテラル型を保持するため as const の使用を推奨
         '@typescript-eslint/ban-ts-comment': [
           // TypeScriptコメントディレクティブの使用を制限

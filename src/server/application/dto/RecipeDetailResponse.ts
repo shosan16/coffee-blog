@@ -93,11 +93,6 @@ export class RecipeDetailResponseMapper {
    * @throws Error 無効なエンティティの場合
    */
   static toDto(recipe: RecipeEntity): RecipeDetailDto {
-    // 型ガード：必須プロパティの存在確認
-    if (!recipe) {
-      throw new Error('Invalid recipe entity: recipe must be an object');
-    }
-
     // 型安全な変換
     return {
       id: recipe.id.value,

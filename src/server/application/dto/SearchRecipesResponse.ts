@@ -5,6 +5,8 @@
  * Clean Architectureの境界を明確にする
  */
 
+import type { IEquipmentRepository } from '@/server/domain/recipe/repositories/IEquipmentRepository';
+
 /**
  * レシピ要約DTO（検索結果用）
  */
@@ -44,6 +46,8 @@ export type SearchRecipesResponseDto = {
  * ドメイン検索結果からDTOへの型安全な変換を提供
  */
 export class SearchRecipesResponseMapper {
+  constructor(private readonly equipmentRepository: IEquipmentRepository) {}
+
   /**
    * 検索結果からDTOに変換
    *
@@ -51,14 +55,17 @@ export class SearchRecipesResponseMapper {
    * @returns 検索レスポンスDTO
    * @throws Error 無効な検索結果の場合
    */
-  static toDto(result: SearchResultEntity): SearchRecipesResponseDto {
-    // 型ガード：必須プロパティの存在確認
-    if (!result) {
-      throw new Error('Invalid search result: result must be an object');
-    }
+  async toDto(result: SearchResultEntity): Promise<SearchRecipesResponseDto> {
+    // すべてのレシピの器具IDを収集
+    const allEquipmentIds = result.recipes.flatMap((recipe) => recipe.equipmentIds);
+    const uniqueEquipmentIds = [...new Set(allEquipmentIds)];
+
+    // 器具情報を一括取得
+    const equipmentList = await this.equipmentRepository.findByIds(uniqueEquipmentIds);
+    const equipmentMap = new Map(equipmentList.map((eq) => [eq.id, eq]));
 
     return {
-      recipes: result.recipes.map((recipe) => this.mapRecipeSummaryDto(recipe)),
+      recipes: result.recipes.map((recipe) => this.mapRecipeSummaryDto(recipe, equipmentMap)),
       pagination: {
         currentPage: result.pagination.currentPage,
         totalPages: result.pagination.totalPages,
@@ -72,43 +79,56 @@ export class SearchRecipesResponseMapper {
    * レシピエンティティから要約DTOに変換
    *
    * @param recipe - レシピエンティティ
+   * @param equipmentMap - 器具IDから器具エンティティへのマップ
    * @returns レシピ要約DTO
    * @throws Error 無効なレシピエンティティの場合
    */
-  private static mapRecipeSummaryDto(recipe: RecipeEntityForSearch): RecipeSummaryDto {
-    // 型ガード：必須プロパティの存在確認
-    if (!recipe || typeof recipe !== 'object') {
-      throw new Error('Invalid recipe entity: recipe must be an object');
-    }
-
-    if (!recipe.id || typeof recipe.id.value !== 'string') {
-      throw new Error('Invalid recipe entity: id is required');
-    }
-
-    if (!recipe.title || typeof recipe.title !== 'string') {
-      throw new Error('Invalid recipe entity: title is required');
-    }
-
-    if (!recipe.brewingConditions || typeof recipe.brewingConditions !== 'object') {
-      throw new Error('Invalid recipe entity: brewingConditions is required');
-    }
-
+  private mapRecipeSummaryDto(
+    recipe: RecipeEntityForSearch,
+    equipmentMap: Map<string, { id: string; name: string; brand?: string }>
+  ): RecipeSummaryDto {
     const brewingConditions = recipe.brewingConditions;
-    if (!brewingConditions.roastLevel || typeof brewingConditions.roastLevel !== 'string') {
-      throw new Error('Invalid recipe entity: roastLevel is required');
-    }
+
+    // 器具IDを器具名に変換
+    const equipmentNames = this.convertEquipmentIdsToNames(recipe.equipmentIds, equipmentMap);
 
     return {
       id: recipe.id.value,
       title: recipe.title,
       summary: recipe.summary ?? '',
-      equipment: Array.isArray(recipe.equipmentIds) ? [...recipe.equipmentIds] : [],
+      equipment: equipmentNames,
       roastLevel: brewingConditions.roastLevel,
       grindSize: brewingConditions.grindSize ?? undefined,
       beanWeight: brewingConditions.beanWeight ?? 0,
       waterTemp: brewingConditions.waterTemp ?? 0,
       waterAmount: brewingConditions.waterAmount ?? 0,
     };
+  }
+
+  /**
+   * 器具IDリストを器具名リストに変換
+   *
+   * @param equipmentIds - 器具IDリスト
+   * @param equipmentMap - 器具IDから器具エンティティへのマップ
+   * @returns 器具名リスト
+   */
+  private convertEquipmentIdsToNames(
+    equipmentIds: readonly string[],
+    equipmentMap: Map<string, { id: string; name: string; brand?: string }>
+  ): string[] {
+    if (!Array.isArray(equipmentIds)) {
+      return [];
+    }
+
+    return equipmentIds.map((id) => {
+      const equipment = equipmentMap.get(id);
+      if (!equipment) {
+        return id; // 器具が見つからない場合はIDをそのまま返す
+      }
+
+      // ブランドがある場合は「ブランド名 器具名」、なければ「器具名」のみ
+      return equipment.brand ? `${equipment.brand} ${equipment.name}` : equipment.name;
+    });
   }
 }
 
