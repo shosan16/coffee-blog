@@ -122,8 +122,14 @@ describe('getRecipeDetail', () => {
 
       expect(result.recipe.barista).toMatchObject({
         id: '1',
-        name: 'Unknown Barista',
-        socialLinks: [],
+        name: '佐藤花子',
+        socialLinks: [
+          {
+            id: '1',
+            platform: 'Instagram',
+            url: 'https://instagram.com/hanako_barista',
+          },
+        ],
       });
 
       expect(result.recipe.steps).toHaveLength(2);

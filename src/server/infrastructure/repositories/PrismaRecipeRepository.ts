@@ -35,7 +35,11 @@ export class PrismaRecipeRepository implements IRecipeRepository {
       const post = await this.prisma.post.findUnique({
         where: { id: BigInt(id.value) },
         include: {
-          barista: true,
+          barista: {
+            include: {
+              socialLinks: true,
+            },
+          },
           steps: {
             orderBy: { stepOrder: 'asc' },
           },
@@ -75,7 +79,11 @@ export class PrismaRecipeRepository implements IRecipeRepository {
           isPublished: true,
         },
         include: {
-          barista: true,
+          barista: {
+            include: {
+              socialLinks: true,
+            },
+          },
           steps: {
             orderBy: { stepOrder: 'asc' },
           },
@@ -215,7 +223,11 @@ export class PrismaRecipeRepository implements IRecipeRepository {
           id: { in: ids.map((id) => BigInt(id.value)) },
         },
         include: {
-          barista: true,
+          barista: {
+            include: {
+              socialLinks: true,
+            },
+          },
           steps: {
             orderBy: { stepOrder: 'asc' },
           },

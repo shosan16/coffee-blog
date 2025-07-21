@@ -5,6 +5,8 @@
  * Clean Architectureの境界を明確にする
  */
 
+import type { PrismaRecipeWithRelations } from '@/server/infrastructure/repositories/mappers/RecipeMapper';
+
 /**
  * バリスタ情報DTO
  */
@@ -82,17 +84,18 @@ export type RecipeDetailDto = {
 /**
  * レシピ詳細レスポンスマッパー
  *
- * ドメインエンティティからDTOへの型安全な変換を提供
+ * PrismaデータとDTOの型安全な変換を提供
  */
 export class RecipeDetailResponseMapper {
   /**
-   * レシピエンティティからDTOに変換
+   * PrismaデータからDTOに変換
    *
    * @param recipe - レシピエンティティ
+   * @param prismaData - Prismaから取得した関連データ
    * @returns レシピ詳細DTO
    * @throws Error 無効なエンティティの場合
    */
-  static toDto(recipe: RecipeEntity): RecipeDetailDto {
+  static toDto(recipe: RecipeEntity, prismaData?: PrismaRecipeWithRelations): RecipeDetailDto {
     // 型安全な変換
     return {
       id: recipe.id.value,
@@ -110,26 +113,29 @@ export class RecipeDetailResponseMapper {
       publishedAt: recipe.publishedAt?.toISOString() ?? undefined,
       createdAt: recipe.createdAt.toISOString(),
       updatedAt: recipe.updatedAt.toISOString(),
-      barista: recipe.baristaId ? this.mapBaristaDto(recipe.baristaId) : undefined,
+      barista: prismaData?.barista ? this.mapBaristaDto(prismaData.barista) : undefined,
       steps: this.mapStepsDto(recipe.steps),
-      equipment: this.mapEquipmentDto(recipe.equipmentIds),
-      tags: this.mapTagsDto(recipe.tagIds),
+      equipment: prismaData?.equipment ? this.mapEquipmentDto(prismaData.equipment) : [],
+      tags: prismaData?.tags ? this.mapTagsDto(prismaData.tags) : [],
     };
   }
 
   /**
    * バリスタ情報をDTOに変換
    *
-   * @param baristaId - バリスタID
-   * @returns バリスタDTO（簡略版）
+   * @param prismaBarista - Prismaバリスタデータ
+   * @returns バリスタDTO
    */
-  private static mapBaristaDto(baristaId: string): BaristaDto {
-    // YAGNI原則：現時点では簡略化された実装
-    // 将来的にはBaristaエンティティから変換予定
+  private static mapBaristaDto(prismaBarista: PrismaBaristaWithSocialLinks): BaristaDto {
     return {
-      id: baristaId,
-      name: 'Unknown Barista',
-      socialLinks: [],
+      id: prismaBarista.id.toString(),
+      name: prismaBarista.name,
+      affiliation: prismaBarista.affiliation ?? undefined,
+      socialLinks: prismaBarista.socialLinks.map((link) => ({
+        id: link.id.toString(),
+        platform: link.platform,
+        url: link.url,
+      })),
     };
   }
 
@@ -151,18 +157,22 @@ export class RecipeDetailResponseMapper {
   /**
    * 器具情報をDTOに変換
    *
-   * @param equipmentIds - 器具ID配列
+   * @param prismaEquipment - Prisma器具データ配列
    * @returns 器具詳細DTO配列
    */
-  private static mapEquipmentDto(equipmentIds: readonly string[]): DetailedEquipmentDto[] {
-    // YAGNI原則：現時点では簡略化された実装
-    // 将来的にはEquipmentエンティティから変換予定
-    return equipmentIds.map((id) => ({
-      id,
-      name: 'Unknown Equipment',
+  private static mapEquipmentDto(
+    prismaEquipment: PrismaEquipmentWithType[]
+  ): DetailedEquipmentDto[] {
+    return prismaEquipment.map((equipment) => ({
+      id: equipment.id.toString(),
+      name: equipment.name,
+      brand: equipment.brand ?? undefined,
+      description: equipment.description ?? undefined,
+      affiliateLink: equipment.affiliateLink ?? undefined,
       equipmentType: {
-        id: 'unknown',
-        name: 'Unknown Type',
+        id: equipment.equipmentType.id.toString(),
+        name: equipment.equipmentType.name,
+        description: equipment.equipmentType.description ?? undefined,
       },
     }));
   }
@@ -170,19 +180,24 @@ export class RecipeDetailResponseMapper {
   /**
    * タグ情報をDTOに変換
    *
-   * @param tagIds - タグID配列
+   * @param prismaTags - PrismaタグとPostTagの関連データ配列
    * @returns レシピタグDTO配列
    */
-  private static mapTagsDto(tagIds: readonly string[]): RecipeTagDto[] {
-    // YAGNI原則：現時点では簡略化された実装
-    // 将来的にはTagエンティティから変換予定
-    return tagIds.map((id) => ({
-      id,
-      name: 'Unknown Tag',
-      slug: id.toLowerCase().replace(/\s+/g, '-'),
+  private static mapTagsDto(prismaTags: PrismaPostTagWithTag[]): RecipeTagDto[] {
+    return prismaTags.map((postTag) => ({
+      id: postTag.tag.id.toString(),
+      name: postTag.tag.name,
+      slug: postTag.tag.slug,
     }));
   }
 }
+
+/**
+ * Prismaデータ型定義
+ */
+type PrismaBaristaWithSocialLinks = NonNullable<PrismaRecipeWithRelations['barista']>;
+type PrismaEquipmentWithType = PrismaRecipeWithRelations['equipment'][number];
+type PrismaPostTagWithTag = PrismaRecipeWithRelations['tags'][number];
 
 /**
  * レシピエンティティの型定義

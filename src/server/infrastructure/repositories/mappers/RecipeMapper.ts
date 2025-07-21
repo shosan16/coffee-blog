@@ -13,6 +13,8 @@ import type {
   Tag,
   Barista,
   PostTag,
+  EquipmentType,
+  SocialLink,
 } from '@prisma/client';
 
 import { Recipe, type RecipeStep } from '@/server/domain/recipe/entities/recipe';
@@ -23,9 +25,15 @@ import { RecipeId } from '@/server/domain/recipe/value-objects/RecipeId';
  * Prisma Post型の拡張（関連データを含む）
  */
 export type PrismaRecipeWithRelations = Post & {
-  barista?: Barista | null;
+  barista?:
+    | (Barista & {
+        socialLinks: SocialLink[];
+      })
+    | null;
   steps: Step[];
-  equipment: Equipment[];
+  equipment: (Equipment & {
+    equipmentType: EquipmentType;
+  })[];
   tags: Array<PostTag & { tag: Tag }>;
 };
 
