@@ -8,7 +8,6 @@ import { useRecipeFilter } from '@/client/features/recipe-list/hooks/useRecipeFi
 import { Button } from '@/client/shared/shadcn/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
 
-import ActiveFilters from './ActiveFilters';
 import ConditionFilter from './ConditionFilter';
 import EquipmentFilter from './EquipmentFilter';
 
@@ -123,9 +122,6 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
                 <div className="border-primary h-6 w-6 animate-spin rounded-full border-b-2"></div>
               </div>
             )}
-
-            {/* アクティブフィルター表示 */}
-            <ActiveFilters />
 
             {/* 器具フィルター */}
             <EquipmentFilter

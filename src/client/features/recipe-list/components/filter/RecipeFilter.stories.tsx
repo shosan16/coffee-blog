@@ -10,10 +10,6 @@ type MockData = {
   hasChanges?: boolean;
   activeFilterCount?: number;
   pendingFilterCount?: number;
-  filters?: {
-    roastLevel?: string[];
-    equipment?: string[];
-  };
 };
 
 // モックされたRecipeFilterコンポーネント
@@ -76,33 +72,6 @@ function MockRecipeFilter({
             {isLoading && (
               <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/50 backdrop-blur-sm">
                 <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-blue-600"></div>
-              </div>
-            )}
-
-            {/* アクティブフィルター表示 */}
-            {activeFilterCount > 0 && (
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-gray-700">適用中のフィルター</h3>
-                <div className="flex flex-wrap gap-2">
-                  {mockData.filters?.roastLevel?.map((level: string) => (
-                    <span
-                      key={level}
-                      className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800"
-                    >
-                      {level}
-                      <button className="text-blue-600 hover:text-blue-800">×</button>
-                    </span>
-                  ))}
-                  {mockData.filters?.equipment?.map((item: string) => (
-                    <span
-                      key={item}
-                      className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800"
-                    >
-                      {item}
-                      <button className="text-green-600 hover:text-green-800">×</button>
-                    </span>
-                  ))}
-                </div>
               </div>
             )}
 
@@ -212,20 +181,16 @@ export const Default: Story = {
   },
 };
 
-export const WithActiveFilters: Story = {
+export const WithFilterCount: Story = {
   args: {
     mockData: {
       activeFilterCount: 3,
-      filters: {
-        roastLevel: ['MEDIUM_DARK'],
-        equipment: ['V60', 'ペーパーフィルター'],
-      },
     },
   },
   parameters: {
     docs: {
       description: {
-        story: 'アクティブなフィルターがある状態',
+        story: 'フィルターが適用されている状態（カウント表示）',
       },
     },
   },
