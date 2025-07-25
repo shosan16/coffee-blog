@@ -102,7 +102,12 @@ describe('calculateTaxForSimplifiedInvoice', () => {
 
 ### 入力バリデーション
 
-- 外部からの入力（APIリクエスト、フォーム入力など）は、必ず **Zod** スキーマを使用してバリデーションを行う
+- 外部入力のバリデーションには、**Zod** スキーマを使用する
+- 型定義には `z.infer<typeof XxxSchema>` を使用する
+- バリデーションには `safeParse()` を使い、例外処理ではなく結果オブジェクトで制御する
+- `strict()` を使用して `unknown` プロパティを拒否する
+- `default()`, `optional()` を用いて、nullable / optional の扱いを明示する
+- `refine()`, `transform()`, `message()` を活用し、ユーザーにとってわかりやすいエラーメッセージを設定する
 
 ### ログ管理規約
 
