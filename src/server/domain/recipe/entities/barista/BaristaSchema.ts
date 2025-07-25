@@ -21,24 +21,28 @@ export const BaristaAffiliationSchema = z
 /**
  * バリスタ作成パラメータのZodスキーマ
  */
-export const BaristaCreateSchema = z.object({
-  id: z.string().min(1, 'Barista ID is required'),
-  name: BaristaNameSchema,
-  affiliation: BaristaAffiliationSchema,
-});
+export const BaristaCreateSchema = z
+  .object({
+    id: z.string().min(1, 'Barista ID is required'),
+    name: BaristaNameSchema,
+    affiliation: BaristaAffiliationSchema,
+  })
+  .strict();
 
 /**
  * バリスタ更新パラメータのZodスキーマ
  */
-export const BaristaUpdateSchema = z.object({
-  name: BaristaNameSchema.optional(),
-  affiliation: z
-    .string()
-    .trim()
-    .max(200, 'Affiliation must be 200 characters or less')
-    .optional()
-    .nullable(),
-});
+export const BaristaUpdateSchema = z
+  .object({
+    name: BaristaNameSchema.optional(),
+    affiliation: z
+      .string()
+      .trim()
+      .max(200, 'Affiliation must be 200 characters or less')
+      .optional()
+      .nullable(),
+  })
+  .strict();
 
 /**
  * バリスタ作成パラメータの型定義

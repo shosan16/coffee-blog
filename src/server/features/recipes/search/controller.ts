@@ -60,7 +60,18 @@ export class SearchRecipesController {
       logger.debug({ parsedParams, requestId }, 'Parameters parsed and transformed');
 
       // パラメータのバリデーション
-      const validatedParams = searchRecipesQuerySchema.parse(parsedParams);
+      const validationResult = searchRecipesQuerySchema.safeParse(parsedParams);
+      if (!validationResult.success) {
+        logger.warn(
+          {
+            validationErrors: validationResult.error.errors,
+            requestId,
+          },
+          'Parameter validation failed'
+        );
+        throw validationResult.error;
+      }
+      const validatedParams = validationResult.data;
       logger.debug({ validatedParams, requestId }, 'Parameters validated successfully');
 
       // 検索パラメータの型変換

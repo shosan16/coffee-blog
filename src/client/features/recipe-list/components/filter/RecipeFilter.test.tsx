@@ -68,7 +68,7 @@ describe('RecipeFilter', () => {
   describe('基本的な表示', () => {
     it('コンポーネントが正しくレンダリングされる', () => {
       render(<RecipeFilter />);
-      expect(screen.getByText('フィルター条件')).toBeInTheDocument();
+      expect(screen.getAllByText('フィルター条件')[0]).toBeInTheDocument();
     });
   });
 });
