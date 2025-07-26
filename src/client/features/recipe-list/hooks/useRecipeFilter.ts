@@ -50,8 +50,6 @@ export function useRecipeFilter(): UseRecipeFilterReturn {
           value == null ||
           (Array.isArray(value) && value.length === 0) ||
           (typeof value === 'object' &&
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-            value != null &&
             'min' in value &&
             'max' in value &&
             (value as { min?: unknown; max?: unknown }).min === undefined &&

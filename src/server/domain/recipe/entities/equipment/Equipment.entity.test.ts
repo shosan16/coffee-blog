@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ZodError } from 'zod';
 
 import { Equipment } from './Equipment.entity';
@@ -280,17 +280,26 @@ describe('Equipment Entity', () => {
         expect(equipment.affiliateLink).toBeUndefined();
       });
 
-      it('updatedAtが更新されること', async () => {
-        // Arrange - 元のupdatedAtを記録
-        const originalUpdatedAt = equipment.updatedAt;
+      it('updatedAtが更新されること', () => {
+        // Arrange - フェイクタイマーを使用して時間を制御
+        vi.useFakeTimers();
+        const fixedTime = new Date('2024-01-15T10:00:00Z');
+        vi.setSystemTime(fixedTime);
+
+        // フェイクタイマー環境で新しい器具インスタンスを作成
+        const testEquipment = Equipment.create(createValidParams(), testEquipmentType);
+        const originalUpdatedAt = testEquipment.updatedAt;
         const updateParams = createValidUpdateParams();
 
-        // Act - 少し時間を置いてから更新
-        await new Promise((resolve) => setTimeout(resolve, 2));
-        equipment.update(updateParams);
+        // Act - 時間を進めてから更新
+        vi.advanceTimersByTime(1000); // 1秒進める
+        testEquipment.update(updateParams);
 
         // Assert - updatedAtが更新されていることを確認
-        expect(equipment.updatedAt.getTime()).toBeGreaterThan(originalUpdatedAt.getTime());
+        expect(testEquipment.updatedAt.getTime()).toBeGreaterThan(originalUpdatedAt.getTime());
+
+        // Cleanup - リアルタイマーに戻す
+        vi.useRealTimers();
       });
     });
 

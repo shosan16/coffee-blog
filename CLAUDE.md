@@ -69,6 +69,7 @@ npm run check-all
 - **配置**: 実装ファイルと同じディレクトリに `*.test.tsx` として配置（コロケーション）
 - **書き方**: AAA (Arrange-Act-Assert) パターンを厳守し、各ブロックの直前にコメントを記載する
 - **検証基準**: 契約による設計の3原則（事前条件・事後条件・不変条件）をテストの中で必ず検証する
+- **時間依存テスト**: vi.useFakeTimers()とvi.advanceTimersByTime()を使用し、実時間待機（setTimeout等）は禁止
 
 ```javascript
 describe('calculateTaxForSimplifiedInvoice', () => {

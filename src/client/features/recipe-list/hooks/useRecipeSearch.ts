@@ -77,9 +77,7 @@ export function useRecipeSearch(): UseRecipeSearchReturn {
 
   // URLから現在の検索キーワードを取得
   const currentSearchValue = useMemo(() => {
-    // searchParamsがnullの場合を考慮（テスト環境やSSR初期状態）
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    return searchParams?.get('search') ?? '';
+    return searchParams.get('search') ?? '';
   }, [searchParams]);
 
   // 初期化時にpending状態を現在の状態と同期
@@ -115,8 +113,6 @@ export function useRecipeSearch(): UseRecipeSearchReturn {
           value == null ||
           (Array.isArray(value) && value.length === 0) ||
           (typeof value === 'object' &&
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-            value != null &&
             'min' in value &&
             'max' in value &&
             (value as { min?: unknown; max?: unknown }).min === undefined &&

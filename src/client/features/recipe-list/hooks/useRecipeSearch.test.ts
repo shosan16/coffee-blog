@@ -82,6 +82,29 @@ describe('useRecipeSearch', () => {
       expect(result.current.searchValue).toBe('');
       expect(result.current.pendingSearchValue).toBe('');
     });
+
+    it('searchパラメータが存在しない場合は空文字になること', () => {
+      // Arrange - searchパラメータなしの状態を設定
+      const mockSearchParamsEmpty = {
+        get: vi.fn(() => null),
+        has: vi.fn(() => false),
+        keys: vi.fn(() => []),
+        values: vi.fn(() => []),
+        entries: vi.fn(() => []),
+        forEach: vi.fn(),
+        toString: vi.fn(() => ''),
+      };
+      mockedUseSearchParams.mockReturnValue(
+        mockSearchParamsEmpty as unknown as ReadonlyURLSearchParams
+      );
+
+      // Act - フックを実行
+      const { result } = renderHook(() => useRecipeSearch());
+
+      // Assert - 空文字で初期化されることを確認
+      expect(result.current.searchValue).toBe('');
+      expect(result.current.pendingSearchValue).toBe('');
+    });
   });
 
   describe('検索キーワードの更新', () => {

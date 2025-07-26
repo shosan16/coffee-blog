@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { cn } from '@/client/lib/tailwind';
 
-function Textarea({ className, ...props }: React.ComponentProps<'textarea'>) {
+export default function Textarea({ className, ...props }: React.ComponentProps<'textarea'>) {
   return (
     <textarea
       data-slot="textarea"
@@ -14,6 +14,3 @@ function Textarea({ className, ...props }: React.ComponentProps<'textarea'>) {
     />
   );
 }
-
-// eslint-disable-next-line import/prefer-default-export
-export { Textarea };
