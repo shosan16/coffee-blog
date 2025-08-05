@@ -111,7 +111,6 @@ import { prisma } from '@/server/shared/database/prisma';
 **実装後**: 4つの専門ファイルに分離
 
 - **単一責任原則（S）**: 各ファイルが明確な責任を持つ
-
   - types.ts: 型定義のみ
   - schema.ts: バリデーションのみ
   - service.ts: ビジネスロジックのみ

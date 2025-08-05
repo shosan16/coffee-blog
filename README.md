@@ -303,6 +303,14 @@ npm install
 npm run db:setup
 ```
 
+### 古いキャッシュが残っている場合
+
+```
+docker-compose down -v
+docker-compose build --no-cache
+docker-compose up
+```
+
 ## 📚 API仕様書
 
 開発サーバー起動後、以下のURLでAPI仕様書を確認できます：

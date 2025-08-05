@@ -145,16 +145,13 @@
 ### 即座に対応すべき項目
 
 1. **IRecipeRepository の簡素化**
-
    - `save`、`delete`、`incrementViewCount` メソッドの削除
 
 2. **Recipe エンティティの簡素化**
-
    - 作成・更新系メソッドの削除
    - `create` メソッドの削除
 
 3. **リポジトリ実装の簡素化**
-
    - `MemoryRecipeRepository` の CUD操作メソッド削除
    - `PrismaRecipeRepository` の CUD操作メソッド削除
 
@@ -164,7 +161,6 @@
 ### 段階的に対応すべき項目
 
 1. **関連する型定義の整理**
-
    - `RecipeSaveOptions` 型の削除
    - 作成・更新関連の型定義の整理
 

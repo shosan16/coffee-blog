@@ -86,12 +86,10 @@ export function useDebounce<T>(value: T, delay: number): T;
 #### RecipeFilter.tsx 修正点
 
 1. **「絞り込む」ボタン削除**
-
    - `applyFilters`関数の呼び出し削除
    - ボタンUIの完全削除
 
 2. **即時適用機能**
-
    - `useRealtimeRecipeSearch`への変更
    - フィルター変更時の即座URL更新
 
@@ -110,7 +108,6 @@ export function useDebounce<T>(value: T, delay: number): T;
 #### SearchBox.tsx 修正点
 
 1. **リアルタイム検索対応**
-
    - `useRealtimeRecipeSearch`への統合
    - デバウンス機能の内蔵
 
@@ -157,7 +154,6 @@ src/app/page.tsx                      # 新フック統合
 ### 単体テスト
 
 1. **useRealtimeRecipeSearch.test.ts**
-
    - デバウンス動作の検証
    - 重複リクエスト防止の確認
    - エラーハンドリングのテスト
@@ -169,7 +165,6 @@ src/app/page.tsx                      # 新フック統合
 ### 統合テスト
 
 1. **RecipeFilter.test.tsx**
-
    - フィルター変更時の即時検索実行
    - ローディング状態の表示確認
 
@@ -182,7 +177,6 @@ src/app/page.tsx                      # 新フック統合
 ### パフォーマンス最適化
 
 1. **メモ化の活用**
-
    - `useMemo`での重い計算のキャッシュ
    - `useCallback`でのコールバック最適化
 
@@ -193,7 +187,6 @@ src/app/page.tsx                      # 新フック統合
 ### エラーハンドリング
 
 1. **グレースフルデグラデーション**
-
    - API失敗時の前回結果保持
    - 明確なエラーメッセージ表示
 
