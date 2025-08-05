@@ -28,7 +28,7 @@
     "db:seed": "npx tsx src/db/seed.ts",
     "db:seed:local": "DATABASE_URL=\"postgresql://user:password@localhost:5432/db?schema=public\" npx tsx src/db/seed.ts",
     "db:seed:docker": "docker exec coffee-blog-app-dev-1 npm run db:seed",
-    "db:setup": "npm run db:generate && npm run db:migrate:docker && npm run db:seed",
+    "db:setup": "npm run db:generate && npm run db:migrate:docker && npm run db:seed:docker",
     "db:studio": "npx prisma studio",
     "prepare": "husky"
   },
