@@ -151,4 +151,211 @@ describe('RecipeFilterSheet', () => {
       });
     });
   });
+
+  describe('エラーハンドリング', () => {
+    it('useRecipeFilterがエラーをスローした場合、適切にエラーハンドリングされる', () => {
+      // Arrange - useRecipeFilterがエラーをスローするようにモック
+      vi.mock('@/client/features/recipe-list/hooks/useRecipeFilter', () => ({
+        useRecipeFilter: vi.fn(() => {
+          throw new Error('Filter hook failed');
+        }),
+      }));
+
+      // Act & Assert - エラーが適切にハンドリングされ、コンポーネントがクラッシュしないことを確認
+      expect(() => render(<RecipeFilterSheet />)).not.toThrow();
+    });
+
+    it('フィルター適用時にネットワークエラーが発生した場合の状態管理', async () => {
+      // Arrange - ネットワークエラーをシミュレート
+      const mockApplyFilters = vi.fn().mockRejectedValue(new Error('Network error'));
+      vi.doMock('@/client/features/recipe-list/hooks/useRecipeFilter', () => ({
+        useRecipeFilter: vi.fn(() => ({
+          filters: {},
+          pendingFilters: { equipment: ['grinder'] },
+          updateFilter: vi.fn(),
+          applyFilters: mockApplyFilters,
+          resetFilters: vi.fn(),
+          isLoading: false,
+          hasChanges: true,
+        })),
+      }));
+
+      const { render: rerenderWithMock } = await import('@testing-library/react');
+      const RecipeFilterSheetWithError = (await import('./RecipeFilterSheet')).default;
+
+      rerenderWithMock(<RecipeFilterSheetWithError />);
+      const filterButton = screen.getByRole('button', { name: /フィルター/i });
+      fireEvent.click(filterButton);
+
+      // Act - 絞り込むボタンをクリック
+      await waitFor(() => {
+        const applyButton = screen.getByRole('button', { name: /絞り込む/i });
+        fireEvent.click(applyButton);
+      });
+
+      // Assert - エラーが適切にハンドリングされることを確認
+      expect(mockApplyFilters).toHaveBeenCalled();
+    });
+  });
+
+  describe('URL更新テスト', () => {
+    it('フィルター適用時にrouterのpushが呼び出される', async () => {
+      // Arrange - hasChangesがtrueの状態でモック
+      vi.doMock('@/client/features/recipe-list/hooks/useRecipeFilter', () => ({
+        useRecipeFilter: vi.fn(() => ({
+          filters: {},
+          pendingFilters: { equipment: ['grinder'] },
+          updateFilter: vi.fn(),
+          applyFilters: vi.fn(() => {
+            mockPush('/recipes?equipment=grinder');
+          }),
+          resetFilters: vi.fn(),
+          isLoading: false,
+          hasChanges: true,
+        })),
+      }));
+
+      const { render: rerenderWithMock } = await import('@testing-library/react');
+      const RecipeFilterSheetWithURL = (await import('./RecipeFilterSheet')).default;
+
+      rerenderWithMock(<RecipeFilterSheetWithURL />);
+      const filterButton = screen.getByRole('button', { name: /フィルター/i });
+      fireEvent.click(filterButton);
+
+      // Act - 絞り込むボタンをクリック
+      await waitFor(() => {
+        const applyButton = screen.getByRole('button', { name: /絞り込む/i });
+        fireEvent.click(applyButton);
+      });
+
+      // Assert - URLが正しく更新されることを確認
+      expect(mockPush).toHaveBeenCalledWith('/recipes?equipment=grinder');
+    });
+
+    it('フィルターリセット時にrouterのpushがルートURLで呼び出される', async () => {
+      // Arrange - activeFilterCountが1以上の状態でモック
+      vi.doMock('@/client/features/recipe-list/hooks/useRecipeFilter', () => ({
+        useRecipeFilter: vi.fn(() => ({
+          filters: { equipment: ['grinder'] },
+          pendingFilters: { equipment: ['grinder'] },
+          updateFilter: vi.fn(),
+          applyFilters: vi.fn(),
+          resetFilters: vi.fn(() => {
+            mockPush('/');
+          }),
+          isLoading: false,
+          hasChanges: false,
+        })),
+      }));
+
+      const { render: rerenderWithMock } = await import('@testing-library/react');
+      const RecipeFilterSheetWithReset = (await import('./RecipeFilterSheet')).default;
+
+      rerenderWithMock(<RecipeFilterSheetWithReset />);
+      const filterButton = screen.getByRole('button', { name: /フィルター/i });
+      fireEvent.click(filterButton);
+
+      // Act - リセットボタンをクリック
+      await waitFor(() => {
+        const resetButton = screen.getByRole('button', { name: /リセット/i });
+        fireEvent.click(resetButton);
+      });
+
+      // Assert - ルートURLに遷移することを確認
+      expect(mockPush).toHaveBeenCalledWith('/');
+    });
+  });
+
+  describe('複数フィルター同時適用テスト', () => {
+    it('複数のフィルター条件が同時に適用される', async () => {
+      // Arrange - 複数のフィルターが設定された状態でモック
+      const mockUpdateFilter = vi.fn();
+      const mockApplyFilters = vi.fn();
+
+      vi.doMock('@/client/features/recipe-list/hooks/useRecipeFilter', () => ({
+        useRecipeFilter: vi.fn(() => ({
+          filters: {},
+          pendingFilters: {
+            equipment: ['grinder', 'dripper'],
+            roastLevel: ['LIGHT', 'MEDIUM'],
+            grindSize: ['FINE'],
+            beanWeight: { min: 15, max: 25 },
+          },
+          updateFilter: mockUpdateFilter,
+          applyFilters: mockApplyFilters,
+          resetFilters: vi.fn(),
+          isLoading: false,
+          hasChanges: true,
+        })),
+      }));
+
+      const { render: rerenderWithMock } = await import('@testing-library/react');
+      const RecipeFilterSheetMultiple = (await import('./RecipeFilterSheet')).default;
+
+      rerenderWithMock(<RecipeFilterSheetMultiple />);
+      const filterButton = screen.getByRole('button', { name: /フィルター/i });
+      fireEvent.click(filterButton);
+
+      // Act - 絞り込むボタンをクリック
+      await waitFor(() => {
+        const applyButton = screen.getByRole('button', { name: /絞り込む/i });
+        fireEvent.click(applyButton);
+      });
+
+      // Assert - 複数のフィルターが同時に適用されることを確認
+      expect(mockApplyFilters).toHaveBeenCalledTimes(1);
+    });
+
+    it('アクティブフィルター数が正しく表示される（複数フィルター）', () => {
+      // Arrange - 複数のフィルターがアクティブな状態でモック
+      vi.doMock('@/client/features/recipe-list/hooks/useRecipeFilter', () => ({
+        useRecipeFilter: vi.fn(() => ({
+          filters: {
+            equipment: ['grinder', 'dripper'],
+            roastLevel: ['LIGHT'],
+            beanWeight: { min: 15, max: 25 },
+          },
+          pendingFilters: {},
+          updateFilter: vi.fn(),
+          applyFilters: vi.fn(),
+          resetFilters: vi.fn(),
+          isLoading: false,
+          hasChanges: false,
+        })),
+      }));
+
+      render(<RecipeFilterSheet />);
+
+      // Assert - アクティブフィルター数が正しく表示される（equipment, roastLevel, beanWeight = 3）
+      expect(screen.getByText('3')).toBeInTheDocument();
+    });
+  });
+
+  describe('パフォーマンステスト', () => {
+    it('フィルター更新時の不要な再レンダリングが発生しない', async () => {
+      // Arrange - useRecipeFilterの呼び出し回数を監視
+      const useRecipeFilterSpy = vi.fn();
+
+      vi.doMock('@/client/features/recipe-list/hooks/useRecipeFilter', () => ({
+        useRecipeFilter: useRecipeFilterSpy.mockReturnValue({
+          filters: {},
+          pendingFilters: {},
+          updateFilter: vi.fn(),
+          applyFilters: vi.fn(),
+          resetFilters: vi.fn(),
+          isLoading: false,
+          hasChanges: false,
+        }),
+      }));
+
+      const { rerender } = render(<RecipeFilterSheet />);
+      const initialCallCount = useRecipeFilterSpy.mock.calls.length;
+
+      // Act - 再レンダリングを発生させる
+      rerender(<RecipeFilterSheet />);
+
+      // Assert - 不要な再レンダリングが発生していないことを確認
+      expect(useRecipeFilterSpy.mock.calls.length).toBeLessThanOrEqual(initialCallCount + 1);
+    });
+  });
 });

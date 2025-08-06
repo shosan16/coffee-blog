@@ -1,8 +1,7 @@
 'use client';
 
-import type { RoastLevel, GrindSize } from '@prisma/client';
-import { Filter, RotateCcw } from 'lucide-react';
-import React, { useState, useMemo, useCallback } from 'react';
+import { Filter } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
 
 import { useRecipeFilter } from '@/client/features/recipe-list/hooks/useRecipeFilter';
 import { Button } from '@/client/shared/shadcn/button';
@@ -14,77 +13,47 @@ import {
   SheetTrigger,
 } from '@/client/shared/shadcn/sheet';
 
-import ConditionFilter from './ConditionFilter';
-import EquipmentFilter from './EquipmentFilter';
+import FilterActions from './FilterActions';
+import FilterContent from './FilterContent';
+import { useFilterHandlers } from './FilterHandlers';
 
 /**
- * Sheetベースのフィルターコンポーネント
+ * レシピ検索フィルターのメインUI
  *
- * @description 右側からスライドインするSheet形式でフィルター機能を提供
- * モバイル・デスクトップ両方で統一されたUI体験を提供する
+ * @description レシピ一覧画面でユーザーが検索条件を絞り込むためのフィルター機能を提供する。
+ * 右側からスライドイン表示されるSheetモーダル内に、フィルター条件入力フォームと
+ * 操作ボタンを配置している。
+ *
+ * フィルター操作の流れ：
+ * 1. ユーザーがフィルターボタンをクリック
+ * 2. Sheetが開き、現在のフィルター条件が表示される
+ * 3. ユーザーが条件を変更（即座に内部状態に反映）
+ * 4. 「絞り込む」ボタンで検索結果に適用、またはリセットで全クリア
+ *
+ * フィルターボタンには現在設定中のフィルター数がバッジで表示され、
+ * ユーザーが現在の絞り込み状況を把握できる。
+ *
+ * @example
+ * ```tsx
+ * // レシピ一覧ページで使用
+ * <RecipeFilterSheet />
+ * ```
  */
 export default function RecipeFilterSheet() {
   const [isOpen, setIsOpen] = useState(false);
-  const {
-    filters,
-    pendingFilters,
-    updateFilter,
-    applyFilters,
-    resetFilters,
-    isLoading,
-    hasChanges,
-  } = useRecipeFilter();
+  const { filters, pendingFilters, applyFilters, resetFilters, isLoading, hasChanges } =
+    useRecipeFilter();
 
-  // アクティブフィルター数をカウント（メモ化で再計算を最適化）
+  // フィルター更新ハンドラー群を取得
+  const handlers = useFilterHandlers();
+
+  // 設定中のフィルター数をカウント（page/limitは除外）
   const activeFilterCount = useMemo(() => {
-    return Object.keys(filters).filter(
-      (key) =>
-        key !== 'page' && key !== 'limit' && filters[key as keyof typeof filters] !== undefined
+    const excludeKeys = ['page', 'limit'];
+    return Object.entries(filters).filter(
+      ([key, value]) => !excludeKeys.includes(key) && Boolean(value)
     ).length;
   }, [filters]);
-
-  // フィルター更新処理をメモ化
-  const handleEquipmentChange = useCallback(
-    (equipment: string[]): void => {
-      updateFilter('equipment', equipment);
-    },
-    [updateFilter]
-  );
-
-  const handleRoastLevelChange = useCallback(
-    (levels: RoastLevel[]): void => {
-      updateFilter('roastLevel', levels);
-    },
-    [updateFilter]
-  );
-
-  const handleGrindSizeChange = useCallback(
-    (sizes: GrindSize[]): void => {
-      updateFilter('grindSize', sizes);
-    },
-    [updateFilter]
-  );
-
-  const handleBeanWeightChange = useCallback(
-    (range: { min?: number; max?: number }): void => {
-      updateFilter('beanWeight', range);
-    },
-    [updateFilter]
-  );
-
-  const handleWaterTempChange = useCallback(
-    (range: { min?: number; max?: number }): void => {
-      updateFilter('waterTemp', range);
-    },
-    [updateFilter]
-  );
-
-  const handleWaterAmountChange = useCallback(
-    (range: { min?: number; max?: number }): void => {
-      updateFilter('waterAmount', range);
-    },
-    [updateFilter]
-  );
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -114,56 +83,25 @@ export default function RecipeFilterSheet() {
           <SheetTitle>フィルター条件</SheetTitle>
         </SheetHeader>
 
-        <div className="mt-6 space-y-6 px-4 sm:px-6">
-          {/* 抽出器具フィルター */}
-          <div>
-            <EquipmentFilter
-              selectedEquipment={pendingFilters.equipment ?? []}
-              onChange={handleEquipmentChange}
-            />
-          </div>
+        {/* フィルター条件の入力フォーム */}
+        <FilterContent
+          selectedEquipment={pendingFilters.equipment ?? []}
+          selectedRoastLevels={pendingFilters.roastLevel ?? []}
+          selectedGrindSizes={pendingFilters.grindSize ?? []}
+          beanWeightRange={pendingFilters.beanWeight ?? {}}
+          waterTempRange={pendingFilters.waterTemp ?? {}}
+          waterAmountRange={pendingFilters.waterAmount ?? {}}
+          handlers={handlers}
+        />
 
-          {/* 抽出条件フィルター */}
-          <div>
-            <ConditionFilter
-              roastLevels={pendingFilters.roastLevel ?? []}
-              grindSizes={pendingFilters.grindSize ?? []}
-              beanWeight={pendingFilters.beanWeight ?? {}}
-              waterTemp={pendingFilters.waterTemp ?? {}}
-              waterAmount={pendingFilters.waterAmount ?? {}}
-              onRoastLevelChange={handleRoastLevelChange}
-              onGrindSizeChange={handleGrindSizeChange}
-              onBeanWeightChange={handleBeanWeightChange}
-              onWaterTempChange={handleWaterTempChange}
-              onWaterAmountChange={handleWaterAmountChange}
-            />
-          </div>
-
-          {/* フィルター操作ボタン */}
-          <div className="space-y-3 border-t px-4 pt-4 sm:px-6">
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                onClick={resetFilters}
-                disabled={isLoading || activeFilterCount === 0}
-                className="flex-1"
-              >
-                <RotateCcw className="mr-2 h-4 w-4" />
-                リセット
-              </Button>
-              <Button onClick={applyFilters} disabled={isLoading || !hasChanges} className="flex-1">
-                <Filter className="mr-2 h-4 w-4" />
-                絞り込む
-              </Button>
-            </div>
-
-            {hasChanges && (
-              <div className="text-muted-foreground text-center text-sm">
-                変更があります。絞り込むボタンを押して適用してください。
-              </div>
-            )}
-          </div>
-        </div>
+        {/* フィルター操作ボタン */}
+        <FilterActions
+          onApply={applyFilters}
+          onReset={resetFilters}
+          isLoading={isLoading}
+          hasChanges={hasChanges}
+          activeFilterCount={activeFilterCount}
+        />
       </SheetContent>
     </Sheet>
   );
