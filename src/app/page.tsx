@@ -42,22 +42,12 @@ export default async function Home({
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <div className="flex gap-8">
-          {/* メインコンテンツ */}
-          <div className="min-w-0 flex-1">
-            {/* モバイル用フィルター */}
-            <div className="mb-6 lg:hidden">
-              <LazyRecipeFilter />
-            </div>
-
-            <RecipeList initialData={initialData} />
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-end">
+            <LazyRecipeFilter />
           </div>
-          {/* サイドバー（フィルター） */}
-          <aside className="hidden w-100 flex-shrink-0 lg:block">
-            <div className="top-32">
-              <LazyRecipeFilter />
-            </div>
-          </aside>
+
+          <RecipeList initialData={initialData} />
         </div>
       </main>
 

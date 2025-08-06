@@ -1,22 +1,26 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { type ComponentProps, Suspense } from 'react';
+import { Suspense } from 'react';
 
 import { RecipeFilterSkeleton } from '@/client/shared/components/skeleton';
 
-// RecipeFilterを動的インポート（バンドルサイズ最適化）
-const RecipeFilter = dynamic(() => import('./RecipeFilter'), {
+// RecipeFilterSheetを動的インポート（バンドルサイズ最適化）
+const RecipeFilterSheet = dynamic(() => import('./RecipeFilterSheet'), {
   loading: () => <RecipeFilterSkeleton />,
   ssr: false,
 });
 
-type LazyRecipeFilterProps = ComponentProps<typeof RecipeFilter>;
-
-export default function LazyRecipeFilter(props: LazyRecipeFilterProps) {
+/**
+ * 遅延読み込み対応のレシピフィルターコンポーネント
+ *
+ * @description Sheet形式のフィルターを動的インポートでバンドルサイズを最適化
+ * モバイル・デスクトップ両方で統一されたUI体験を提供
+ */
+export default function LazyRecipeFilter() {
   return (
     <Suspense fallback={<RecipeFilterSkeleton />}>
-      <RecipeFilter {...props} />
+      <RecipeFilterSheet />
     </Suspense>
   );
 }
