@@ -7,6 +7,47 @@ Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {
   writable: true,
 });
 
+// ResizeObserverのモック（Radix UI等で使用）
+global.ResizeObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
+}));
+
+// MutationObserverのモック（DOM変更監視用）
+global.MutationObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  disconnect: vi.fn(),
+  takeRecords: vi.fn(() => []),
+}));
+
+// IntersectionObserverのモック（要素の可視性監視用）
+global.IntersectionObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
+}));
+
+// matchMediaのモック（レスポンシブデザイン用）
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: vi.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+});
+
+// getComputedStyleのモック（スタイル計算用）
+global.getComputedStyle = vi.fn().mockImplementation(() => ({
+  getPropertyValue: vi.fn(() => ''),
+}));
+
 // テスト環境でのログを制御
 // console.logのモック（テスト環境では無効化）
 if (process.env.NODE_ENV === 'test') {

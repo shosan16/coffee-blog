@@ -1,6 +1,6 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 import MultiCombobox from './MultiCombobox';
 import type { MultiComboboxItem } from './types';
@@ -16,6 +16,14 @@ const defaultProps = {
   selectedItems: [],
   placeholder: 'テスト用プレースホルダー',
 };
+
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+
+afterEach(() => {
+  cleanup();
+});
 
 describe('MultiCombobox', () => {
   describe('初回クリック動作', () => {

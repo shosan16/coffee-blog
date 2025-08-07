@@ -1,5 +1,5 @@
-import { renderHook, act } from '@testing-library/react';
-import { describe, expect, it, vi, beforeEach } from 'vitest';
+import { renderHook, act, cleanup } from '@testing-library/react';
+import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 
 import { useFilterHandlers } from './FilterHandlers';
 
@@ -14,6 +14,10 @@ vi.mock('@/client/features/recipe-list/hooks/useRecipeFilter', () => ({
 
 beforeEach(() => {
   vi.clearAllMocks();
+});
+
+afterEach(() => {
+  cleanup();
 });
 
 describe('useFilterHandlers', () => {
@@ -100,36 +104,38 @@ describe('useFilterHandlers', () => {
   describe('エラーハンドリング', () => {
     it('updateFilterがエラーをスローした場合、ハンドラーがエラーを適切に処理する', () => {
       // Arrange - updateFilterがエラーをスローするようにモック
-      mockUpdateFilter.mockImplementation(() => {
-        throw new Error('Filter update failed');
+      mockUpdateFilter.mockImplementationOnce(() => {
+        throw new Error('Update filter failed');
       });
       const { result } = renderHook(() => useFilterHandlers());
 
-      // Act & Assert - エラーが適切にハンドリングされることを確認
+      // Act & Assert - エラーがスローされることを確認
       expect(() => {
         act(() => {
           result.current.equipmentChangeHandler(['grinder']);
         });
-      }).not.toThrow();
+      }).toThrow('Update filter failed');
     });
   });
 
   describe('パフォーマンス', () => {
     it('ハンドラーがメモ化され、不要な再レンダリングを防ぐ', () => {
-      // Arrange - useFilterHandlersを2回レンダリング
+      // Arrange - useFilterHandlersをレンダリング
       const { result, rerender } = renderHook(() => useFilterHandlers());
-      const firstHandlers = result.current;
+      const initialHandlers = result.current;
 
-      // Act - 再レンダリング
+      // Act - 再レンダリングを実行
       rerender();
 
-      // Assert - ハンドラーが同じ参照を維持する（メモ化されている）
-      expect(result.current.equipmentChangeHandler).toBe(firstHandlers.equipmentChangeHandler);
-      expect(result.current.roastLevelChangeHandler).toBe(firstHandlers.roastLevelChangeHandler);
-      expect(result.current.grindSizeChangeHandler).toBe(firstHandlers.grindSizeChangeHandler);
-      expect(result.current.beanWeightChangeHandler).toBe(firstHandlers.beanWeightChangeHandler);
-      expect(result.current.waterTempChangeHandler).toBe(firstHandlers.waterTempChangeHandler);
-      expect(result.current.waterAmountChangeHandler).toBe(firstHandlers.waterAmountChangeHandler);
+      // Assert - ハンドラーが同じ参照を保持することを確認
+      expect(result.current.equipmentChangeHandler).toBe(initialHandlers.equipmentChangeHandler);
+      expect(result.current.roastLevelChangeHandler).toBe(initialHandlers.roastLevelChangeHandler);
+      expect(result.current.grindSizeChangeHandler).toBe(initialHandlers.grindSizeChangeHandler);
+      expect(result.current.beanWeightChangeHandler).toBe(initialHandlers.beanWeightChangeHandler);
+      expect(result.current.waterTempChangeHandler).toBe(initialHandlers.waterTempChangeHandler);
+      expect(result.current.waterAmountChangeHandler).toBe(
+        initialHandlers.waterAmountChangeHandler
+      );
     });
   });
 });

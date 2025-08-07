@@ -282,6 +282,7 @@ describe('Equipment Entity', () => {
 
       it('updatedAtが更新されること', () => {
         // Arrange - フェイクタイマーを使用して時間を制御
+        vi.useRealTimers();
         vi.useFakeTimers();
         const fixedTime = new Date('2024-01-15T10:00:00Z');
         vi.setSystemTime(fixedTime);
