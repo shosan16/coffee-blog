@@ -18,9 +18,14 @@ type GlobalWithPrisma = {
 };
 
 describe('Prisma Client Singleton', () => {
+  let originalNodeEnv: string | undefined;
+
   beforeEach(() => {
     // 各テスト前にモックをリセット
     vi.clearAllMocks();
+
+    // 元の環境変数を保存
+    originalNodeEnv = process.env.NODE_ENV;
 
     // グローバル変数をクリア
     const globalWithPrisma = global as GlobalWithPrisma;
@@ -28,11 +33,24 @@ describe('Prisma Client Singleton', () => {
       delete globalWithPrisma.prisma;
     }
 
-    // 環境変数をリセット
-    vi.stubEnv('NODE_ENV', '');
+    // 環境変数をリセット（デフォルト値を設定）
+    vi.stubEnv('NODE_ENV', 'test');
 
     // モジュールキャッシュをクリア
     vi.resetModules();
+  });
+
+  afterEach(() => {
+    // 環境変数を元に戻す
+    if (originalNodeEnv !== undefined) {
+      vi.stubEnv('NODE_ENV', originalNodeEnv);
+    } else {
+      // プロセス環境変数をクリア（TypeScriptエラー回避）
+      vi.stubEnv('NODE_ENV', undefined);
+    }
+
+    // モックをリストア
+    vi.restoreAllMocks();
   });
 
   describe('シングルトンパターンの検証', () => {

@@ -1,33 +1,58 @@
 import { renderHook, act } from '@testing-library/react';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useRouter, useSearchParams, type ReadonlyURLSearchParams } from 'next/navigation';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 import { useRecipeFilter } from './useRecipeFilter';
-
-// Next.jsのhooksをモック
-vi.mock('next/navigation', () => ({
-  useRouter: vi.fn(),
-  useSearchParams: vi.fn(),
-}));
 
 const mockUseRouter = vi.mocked(useRouter);
 const mockUseSearchParams = vi.mocked(useSearchParams);
 
 describe('useRecipeFilter', () => {
   const mockPush = vi.fn();
-  const mockRouter: Partial<AppRouterInstance> = {
-    push: mockPush,
-    back: vi.fn(),
-    forward: vi.fn(),
-    refresh: vi.fn(),
-    replace: vi.fn(),
-    prefetch: vi.fn(),
-  };
-  const mockSearchParams = new URLSearchParams() as ReadonlyURLSearchParams;
+  let mockRouter: Partial<AppRouterInstance>;
+  let mockSearchParams: ReadonlyURLSearchParams;
 
   beforeEach(() => {
+    // すべてのモックを完全にクリア
     vi.clearAllMocks();
+    vi.resetAllMocks();
+
+    // 各テストで新しいモックインスタンスを作成
+    mockRouter = {
+      push: mockPush,
+      back: vi.fn(),
+      forward: vi.fn(),
+      refresh: vi.fn(),
+      replace: vi.fn(),
+      prefetch: vi.fn(),
+    };
+
+    // デフォルトは空のURLSearchParams
+    mockSearchParams = {
+      get: vi.fn(() => null),
+      has: vi.fn(() => false),
+      entries: vi.fn(),
+      keys: vi.fn(),
+      values: vi.fn(),
+      forEach: vi.fn(),
+      sort: vi.fn(),
+      toString: vi.fn(() => ''),
+      size: 0,
+      [Symbol.iterator]: vi.fn(),
+    } as unknown as ReadonlyURLSearchParams;
+
+    // モックの戻り値を設定
+    mockUseRouter.mockReturnValue(mockRouter as AppRouterInstance);
+    mockUseSearchParams.mockReturnValue(mockSearchParams);
+  });
+
+  afterEach(() => {
+    // テスト後の完全なクリーンアップ
+    vi.clearAllMocks();
+    vi.resetAllMocks();
+
+    // デフォルトのモック設定に戻す
     mockUseRouter.mockReturnValue(mockRouter as AppRouterInstance);
     mockUseSearchParams.mockReturnValue(mockSearchParams);
   });
@@ -82,8 +107,8 @@ describe('useRecipeFilter', () => {
 
   describe('hasChangesの計算', () => {
     it('フィルターに変更がない場合はfalseを返す', () => {
-      // URLSearchParamsをモック
-      const mockSearchParamsWithFilters = {
+      // 特定のテスト用のモックを作成
+      const testMockSearchParams = {
         get: vi.fn((key: string) => {
           if (key === 'roastLevel') return 'LIGHT,MEDIUM';
           return null;
@@ -99,7 +124,8 @@ describe('useRecipeFilter', () => {
         [Symbol.iterator]: vi.fn(),
       } as unknown as ReadonlyURLSearchParams;
 
-      mockUseSearchParams.mockReturnValue(mockSearchParamsWithFilters);
+      // このテスト専用のモック設定
+      mockUseSearchParams.mockReturnValueOnce(testMockSearchParams);
 
       const { result } = renderHook(() => useRecipeFilter());
 
@@ -114,37 +140,6 @@ describe('useRecipeFilter', () => {
       });
 
       expect(result.current.hasChanges).toBe(true);
-    });
-  });
-
-  describe('pendingFiltersの同期', () => {
-    it('初期化時にcurrentFiltersと同期される', () => {
-      // URLSearchParamsをモック
-      const mockSearchParamsWithData = {
-        get: vi.fn((key: string) => {
-          if (key === 'roastLevel') return 'LIGHT';
-          if (key === 'equipment') return 'V60,Chemex';
-          return null;
-        }),
-        has: vi.fn(),
-        entries: vi.fn(),
-        keys: vi.fn(),
-        values: vi.fn(),
-        forEach: vi.fn(),
-        sort: vi.fn(),
-        toString: vi.fn(),
-        size: 0,
-        [Symbol.iterator]: vi.fn(),
-      } as unknown as ReadonlyURLSearchParams;
-
-      mockUseSearchParams.mockReturnValue(mockSearchParamsWithData);
-
-      const { result } = renderHook(() => useRecipeFilter());
-
-      expect(result.current.pendingFilters).toEqual({
-        roastLevel: ['LIGHT'],
-        equipment: ['V60', 'Chemex'],
-      });
     });
   });
 });

@@ -4,12 +4,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { useRecipeSearch } from './useRecipeSearch';
 
-// Next.jsのモジュールをモック
-vi.mock('next/navigation', () => ({
-  useRouter: vi.fn(),
-  useSearchParams: vi.fn(),
-}));
-
 const mockedUseRouter = vi.mocked(useRouter);
 const mockedUseSearchParams = vi.mocked(useSearchParams);
 
@@ -29,6 +23,18 @@ describe('useRecipeSearch', () => {
     return null;
   });
 
+  // テスト用のデフォルトmockSearchParams
+  const createMockSearchParams = (): ReadonlyURLSearchParams =>
+    ({
+      get: mockGet,
+      has: vi.fn(() => false),
+      keys: vi.fn(),
+      values: vi.fn(),
+      entries: vi.fn(),
+      forEach: vi.fn(),
+      toString: vi.fn(() => ''),
+    }) as unknown as ReadonlyURLSearchParams;
+
   beforeEach(() => {
     vi.clearAllMocks();
 
@@ -41,21 +47,21 @@ describe('useRecipeSearch', () => {
       refresh: vi.fn(),
     });
 
-    const mockSearchParams = {
-      get: mockGet,
-      has: vi.fn(() => false),
-      keys: vi.fn(() => []),
-      values: vi.fn(() => []),
-      entries: vi.fn(() => []),
-      forEach: vi.fn(),
-      toString: vi.fn(() => ''),
-    };
+    const mockSearchParams = createMockSearchParams();
     mockedUseSearchParams.mockReturnValue(mockSearchParams as unknown as ReadonlyURLSearchParams);
 
     mockGet.mockImplementation((key: string) => {
       if (key === 'search') return '';
       return null;
     });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.clearAllMocks();
+    // モックを確実にリセット
+    mockedUseRouter.mockClear();
+    mockedUseSearchParams.mockClear();
   });
 
   describe('初期状態', () => {

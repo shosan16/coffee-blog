@@ -8,9 +8,16 @@ import { RecipeId } from '@/server/domain/recipe/value-objects/RecipeId';
 
 import { MemoryRecipeRepository } from './MemoryRecipeRepository';
 
-const RECIPE_CREATED_AT = new Date('2024-01-01T00:00:00.000Z');
-const RECIPE_UPDATED_AT = new Date('2024-01-02T00:00:00.000Z');
-const RECIPE_PUBLISHED_AT = new Date('2024-01-03T00:00:00.000Z');
+// 日付定数をファクトリー関数として定義してテスト分離を強化
+const getTestDates = (): {
+  RECIPE_CREATED_AT: Date;
+  RECIPE_UPDATED_AT: Date;
+  RECIPE_PUBLISHED_AT: Date;
+} => ({
+  RECIPE_CREATED_AT: new Date('2024-01-01T00:00:00.000Z'),
+  RECIPE_UPDATED_AT: new Date('2024-01-02T00:00:00.000Z'),
+  RECIPE_PUBLISHED_AT: new Date('2024-01-03T00:00:00.000Z'),
+});
 
 describe('MemoryRecipeRepository', () => {
   let repository: MemoryRecipeRepository;
@@ -19,6 +26,9 @@ describe('MemoryRecipeRepository', () => {
   beforeEach(() => {
     // Arrange - 各テストでリポジトリを初期化
     repository = new MemoryRecipeRepository();
+
+    // テスト独立性を保つため、各テストで新しい日付オブジェクトを取得
+    const dates = getTestDates();
 
     // テスト用のレシピエンティティを作成
     const recipeId = RecipeId.fromString('1');
@@ -54,8 +64,8 @@ describe('MemoryRecipeRepository', () => {
       viewCount: 0,
       isPublished: false,
       publishedAt: undefined,
-      createdAt: RECIPE_CREATED_AT,
-      updatedAt: RECIPE_UPDATED_AT,
+      createdAt: dates.RECIPE_CREATED_AT,
+      updatedAt: dates.RECIPE_UPDATED_AT,
       steps,
       equipmentIds: ['1', '2'],
       tagIds: ['1'],
@@ -90,6 +100,7 @@ describe('MemoryRecipeRepository', () => {
   describe('findPublishedById()', () => {
     it('公開済みレシピのみ取得できること', async () => {
       // Arrange - 公開済みレシピを作成
+      const dates = getTestDates();
       const publishedRecipe = Recipe.reconstruct({
         id: testRecipe.id,
         title: testRecipe.title,
@@ -99,9 +110,9 @@ describe('MemoryRecipeRepository', () => {
         baristaId: testRecipe.baristaId,
         viewCount: 0,
         isPublished: true,
-        publishedAt: RECIPE_PUBLISHED_AT,
-        createdAt: RECIPE_CREATED_AT,
-        updatedAt: RECIPE_UPDATED_AT,
+        publishedAt: dates.RECIPE_PUBLISHED_AT,
+        createdAt: dates.RECIPE_CREATED_AT,
+        updatedAt: dates.RECIPE_UPDATED_AT,
         steps: [
           {
             stepOrder: 1,
@@ -136,6 +147,7 @@ describe('MemoryRecipeRepository', () => {
   describe('search()', () => {
     beforeEach(() => {
       // Arrange - 複数のテストレシピを追加
+      const dates = getTestDates();
       const recipe1 = Recipe.reconstruct({
         id: RecipeId.fromString('1'),
         title: 'エスプレッソレシピ',
@@ -151,9 +163,9 @@ describe('MemoryRecipeRepository', () => {
         baristaId: '1',
         viewCount: 0,
         isPublished: true,
-        publishedAt: RECIPE_PUBLISHED_AT,
-        createdAt: RECIPE_CREATED_AT,
-        updatedAt: RECIPE_UPDATED_AT,
+        publishedAt: dates.RECIPE_PUBLISHED_AT,
+        createdAt: dates.RECIPE_CREATED_AT,
+        updatedAt: dates.RECIPE_UPDATED_AT,
         steps: [{ stepOrder: 1, description: 'ステップ1' }],
         equipmentIds: [],
         tagIds: [],
@@ -174,9 +186,9 @@ describe('MemoryRecipeRepository', () => {
         baristaId: '2',
         viewCount: 0,
         isPublished: true,
-        publishedAt: RECIPE_PUBLISHED_AT,
-        createdAt: RECIPE_CREATED_AT,
-        updatedAt: RECIPE_UPDATED_AT,
+        publishedAt: dates.RECIPE_PUBLISHED_AT,
+        createdAt: dates.RECIPE_CREATED_AT,
+        updatedAt: dates.RECIPE_UPDATED_AT,
         steps: [{ stepOrder: 1, description: 'ステップ1' }],
         equipmentIds: [],
         tagIds: [],
@@ -323,6 +335,7 @@ describe('MemoryRecipeRepository', () => {
   describe('findPublishedRecipes()', () => {
     it('公開レシピのみ取得できること', async () => {
       // Arrange - 公開・非公開のレシピを準備
+      const dates = getTestDates();
       const publishedRecipe = Recipe.reconstruct({
         id: RecipeId.fromString('1'),
         title: '公開レシピ',
@@ -331,9 +344,9 @@ describe('MemoryRecipeRepository', () => {
         }),
         viewCount: 0,
         isPublished: true,
-        publishedAt: RECIPE_PUBLISHED_AT,
-        createdAt: RECIPE_CREATED_AT,
-        updatedAt: RECIPE_UPDATED_AT,
+        publishedAt: dates.RECIPE_PUBLISHED_AT,
+        createdAt: dates.RECIPE_CREATED_AT,
+        updatedAt: dates.RECIPE_UPDATED_AT,
         steps: [{ stepOrder: 1, description: 'ステップ1' }],
         equipmentIds: [],
         tagIds: [],

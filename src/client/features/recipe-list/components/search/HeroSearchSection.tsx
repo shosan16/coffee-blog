@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { useRecipeSearch } from '../../hooks/useRecipeSearch';
 
-import SearchBox from './SearchBox';
+import IntegratedSearchBar from './IntegratedSearchBar';
 
 type HeroSearchSectionProps = {
   /** 初期の検索結果数 */
@@ -15,8 +15,8 @@ type HeroSearchSectionProps = {
 /**
  * ヒーローセクション用の検索コンポーネント
  *
- * メインビジュアルと検索機能を統合し、
- * インタラクティブな検索体験を提供する。
+ * メインビジュアルと統合検索機能を提供し、
+ * 食べログ風の統合検索体験を実現する。
  *
  * @example
  * ```tsx
@@ -24,8 +24,7 @@ type HeroSearchSectionProps = {
  * ```
  */
 const HeroSearchSection = React.memo<HeroSearchSectionProps>(({ initialResultCount }) => {
-  const { pendingSearchValue, updateSearchValue, applySearch, resultCount, setResultCount } =
-    useRecipeSearch();
+  const { resultCount, setResultCount } = useRecipeSearch();
 
   // 初期結果数の設定
   React.useEffect(() => {
@@ -33,24 +32,6 @@ const HeroSearchSection = React.memo<HeroSearchSectionProps>(({ initialResultCou
       setResultCount(initialResultCount);
     }
   }, [initialResultCount, resultCount, setResultCount]);
-
-  // 検索キーワードの変更ハンドラー
-  const handleSearchChange = React.useCallback(
-    (value: string) => {
-      updateSearchValue(value);
-    },
-    [updateSearchValue]
-  );
-
-  // Enterキーで検索実行
-  const handleKeyDown = React.useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter') {
-        applySearch();
-      }
-    },
-    [applySearch]
-  );
 
   return (
     <div className="bg-primary text-primary-foreground relative overflow-hidden py-20">
@@ -66,28 +47,13 @@ const HeroSearchSection = React.memo<HeroSearchSectionProps>(({ initialResultCou
             おうちカフェを極上の体験に
           </p>
 
-          {/* 検索ボックス */}
-          <div className="w-full max-w-2xl space-y-4">
-            <div onKeyDown={handleKeyDown}>
-              <SearchBox
-                value={pendingSearchValue}
-                onChange={handleSearchChange}
-                placeholder="レシピを検索... （例：エスプレッソ、ドリップ）"
-                className="bg-card text-card-foreground h-14 border-0 text-lg shadow-2xl"
-                aria-label="コーヒーレシピを検索"
-              />
-            </div>
-
-            {/* 検索ボタン */}
-            <div className="hidden sm:block">
-              <button
-                type="button"
-                onClick={applySearch}
-                className="bg-card text-card-foreground hover:bg-card/90 focus:ring-ring focus:ring-offset-primary rounded-lg px-8 py-3 font-semibold transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none"
-              >
-                レシピを検索
-              </button>
-            </div>
+          {/* 統合検索バー */}
+          <div className="w-full max-w-3xl">
+            <IntegratedSearchBar
+              placeholder="レシピを検索... （例：エスプレッソ、ドリップ）"
+              className="h-14 text-lg shadow-2xl"
+              aria-label="コーヒーレシピを検索"
+            />
           </div>
         </div>
       </div>

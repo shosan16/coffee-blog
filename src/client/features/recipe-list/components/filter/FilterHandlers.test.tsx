@@ -1,19 +1,28 @@
 import { renderHook, act, cleanup } from '@testing-library/react';
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 
-import { useFilterHandlers } from './FilterHandlers';
-
-// useRecipeFilterのモック
-const mockUpdateFilter = vi.fn();
+// FilterHandlers専用のモック
+const mockUpdateFilterForHandlers = vi.fn();
 
 vi.mock('@/client/features/recipe-list/hooks/useRecipeFilter', () => ({
   useRecipeFilter: vi.fn(() => ({
-    updateFilter: mockUpdateFilter,
+    filters: {},
+    pendingFilters: {},
+    updateFilter: mockUpdateFilterForHandlers,
+    applyFilters: vi.fn(),
+    resetFilters: vi.fn(),
+    isLoading: false,
+    hasChanges: false,
+    activeFilterCount: 0,
   })),
 }));
 
+import { useFilterHandlers } from './FilterHandlers';
+
 beforeEach(() => {
+  // すべてのモックをクリアして初期状態に戻す
   vi.clearAllMocks();
+  mockUpdateFilterForHandlers.mockClear();
 });
 
 afterEach(() => {
@@ -32,7 +41,7 @@ describe('useFilterHandlers', () => {
       });
 
       // Assert - updateFilterが正しい引数で呼び出される
-      expect(mockUpdateFilter).toHaveBeenCalledWith('equipment', ['grinder', 'dripper']);
+      expect(mockUpdateFilterForHandlers).toHaveBeenCalledWith('equipment', ['grinder', 'dripper']);
     });
 
     it('roastLevelChangeHandler が正しく動作する', () => {
@@ -45,7 +54,7 @@ describe('useFilterHandlers', () => {
       });
 
       // Assert - updateFilterが正しい引数で呼び出される
-      expect(mockUpdateFilter).toHaveBeenCalledWith('roastLevel', ['LIGHT', 'MEDIUM']);
+      expect(mockUpdateFilterForHandlers).toHaveBeenCalledWith('roastLevel', ['LIGHT', 'MEDIUM']);
     });
 
     it('grindSizeChangeHandler が正しく動作する', () => {
@@ -58,7 +67,7 @@ describe('useFilterHandlers', () => {
       });
 
       // Assert - updateFilterが正しい引数で呼び出される
-      expect(mockUpdateFilter).toHaveBeenCalledWith('grindSize', ['FINE', 'MEDIUM']);
+      expect(mockUpdateFilterForHandlers).toHaveBeenCalledWith('grindSize', ['FINE', 'MEDIUM']);
     });
 
     it('beanWeightChangeHandler が正しく動作する', () => {
@@ -71,7 +80,7 @@ describe('useFilterHandlers', () => {
       });
 
       // Assert - updateFilterが正しい引数で呼び出される
-      expect(mockUpdateFilter).toHaveBeenCalledWith('beanWeight', { min: 15, max: 25 });
+      expect(mockUpdateFilterForHandlers).toHaveBeenCalledWith('beanWeight', { min: 15, max: 25 });
     });
 
     it('waterTempChangeHandler が正しく動作する', () => {
@@ -84,7 +93,7 @@ describe('useFilterHandlers', () => {
       });
 
       // Assert - updateFilterが正しい引数で呼び出される
-      expect(mockUpdateFilter).toHaveBeenCalledWith('waterTemp', { min: 85, max: 95 });
+      expect(mockUpdateFilterForHandlers).toHaveBeenCalledWith('waterTemp', { min: 85, max: 95 });
     });
 
     it('waterAmountChangeHandler が正しく動作する', () => {
@@ -97,14 +106,17 @@ describe('useFilterHandlers', () => {
       });
 
       // Assert - updateFilterが正しい引数で呼び出される
-      expect(mockUpdateFilter).toHaveBeenCalledWith('waterAmount', { min: 200, max: 300 });
+      expect(mockUpdateFilterForHandlers).toHaveBeenCalledWith('waterAmount', {
+        min: 200,
+        max: 300,
+      });
     });
   });
 
   describe('エラーハンドリング', () => {
     it('updateFilterがエラーをスローした場合、ハンドラーがエラーを適切に処理する', () => {
       // Arrange - updateFilterがエラーをスローするようにモック
-      mockUpdateFilter.mockImplementationOnce(() => {
+      mockUpdateFilterForHandlers.mockImplementationOnce(() => {
         throw new Error('Update filter failed');
       });
       const { result } = renderHook(() => useFilterHandlers());

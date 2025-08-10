@@ -2,12 +2,6 @@ import { render, screen, cleanup } from '@testing-library/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { beforeEach, describe, expect, it, vi, afterEach } from 'vitest';
 
-// 全体的なモック設定
-vi.mock('next/navigation', () => ({
-  useRouter: vi.fn(),
-  useSearchParams: vi.fn(),
-}));
-
 vi.mock('@/client/features/recipes/hooks/useEquipment', () => ({
   useEquipment: vi.fn(() => ({
     equipmentData: {

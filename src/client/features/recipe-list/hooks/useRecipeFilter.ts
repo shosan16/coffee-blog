@@ -16,6 +16,7 @@ export type UseRecipeFilterReturn = {
   resetFilters: () => void;
   isLoading: boolean;
   hasChanges: boolean;
+  activeFilterCount: number;
 };
 
 export function useRecipeFilter(): UseRecipeFilterReturn {
@@ -39,6 +40,14 @@ export function useRecipeFilter(): UseRecipeFilterReturn {
   const hasChanges = useMemo(() => {
     return !isEqual(currentFilters, pendingFilters);
   }, [currentFilters, pendingFilters]);
+
+  // アクティブなフィルター数をカウント（page/limitは除外）
+  const activeFilterCount = useMemo(() => {
+    const excludeKeys = ['page', 'limit'];
+    return Object.entries(currentFilters).filter(
+      ([key, value]) => !excludeKeys.includes(key) && Boolean(value)
+    ).length;
+  }, [currentFilters]);
 
   // フィルター更新関数（pending状態のみ更新）
   const updateFilter = useCallback(
@@ -108,5 +117,6 @@ export function useRecipeFilter(): UseRecipeFilterReturn {
     resetFilters,
     isLoading,
     hasChanges,
+    activeFilterCount,
   };
 }

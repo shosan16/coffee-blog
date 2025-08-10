@@ -32,50 +32,47 @@ export type FilterHandlers = {
 export function useFilterHandlers(): FilterHandlers {
   const { updateFilter } = useRecipeFilter();
 
-  /**
-   * 汎用フィルター更新関数
-   *
-   * @template T フィルター値の型
-   * @param filterKey 更新するフィルターキー
-   * @param value 設定する値
-   */
-  const createFilterHandler = useCallback(
-    (filterKey: string) =>
-      (value: unknown): void => {
-        (updateFilter as (key: string, val: unknown) => void)(filterKey, value);
-      },
+  // 各フィルター種別のハンドラーを直接メモ化して生成
+  const equipmentChangeHandler = useCallback(
+    (equipment: string[]) => {
+      updateFilter('equipment', equipment);
+    },
     [updateFilter]
   );
 
-  // 各フィルター種別のハンドラーをメモ化して生成
-  const equipmentChangeHandler = useCallback(
-    (equipment: string[]) => createFilterHandler('equipment')(equipment),
-    [createFilterHandler]
-  );
-
   const roastLevelChangeHandler = useCallback(
-    (levels: RoastLevel[]) => createFilterHandler('roastLevel')(levels),
-    [createFilterHandler]
+    (levels: RoastLevel[]) => {
+      updateFilter('roastLevel', levels);
+    },
+    [updateFilter]
   );
 
   const grindSizeChangeHandler = useCallback(
-    (sizes: GrindSize[]) => createFilterHandler('grindSize')(sizes),
-    [createFilterHandler]
+    (sizes: GrindSize[]) => {
+      updateFilter('grindSize', sizes);
+    },
+    [updateFilter]
   );
 
   const beanWeightChangeHandler = useCallback(
-    (range: { min?: number; max?: number }) => createFilterHandler('beanWeight')(range),
-    [createFilterHandler]
+    (range: { min?: number; max?: number }) => {
+      updateFilter('beanWeight', range);
+    },
+    [updateFilter]
   );
 
   const waterTempChangeHandler = useCallback(
-    (range: { min?: number; max?: number }) => createFilterHandler('waterTemp')(range),
-    [createFilterHandler]
+    (range: { min?: number; max?: number }) => {
+      updateFilter('waterTemp', range);
+    },
+    [updateFilter]
   );
 
   const waterAmountChangeHandler = useCallback(
-    (range: { min?: number; max?: number }) => createFilterHandler('waterAmount')(range),
-    [createFilterHandler]
+    (range: { min?: number; max?: number }) => {
+      updateFilter('waterAmount', range);
+    },
+    [updateFilter]
   );
 
   return {

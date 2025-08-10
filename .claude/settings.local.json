@@ -46,7 +46,12 @@
       "mcp__serena__replace_regex",
       "mcp__serena__insert_after_symbol",
       "mcp__serena__replace_symbol_body",
-      "mcp__serena__find_file"
+      "mcp__serena__find_file",
+      "mcp__playwright__browser_resize",
+      "Bash(for i in {1..5})",
+      "Bash(do echo \"Test run $i:\")",
+      "Bash(done)",
+      "mcp__serena__think_about_collected_information"
     ],
     "deny": []
   }
