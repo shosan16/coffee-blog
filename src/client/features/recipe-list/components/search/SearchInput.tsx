@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, XIcon } from 'lucide-react';
+import { XIcon } from 'lucide-react';
 import * as React from 'react';
 
 import { useRecipeQuery } from '@/client/features/recipe-list/hooks/useRecipeQuery';
@@ -54,10 +54,9 @@ const SearchInput = React.memo<SearchInputProps>(
 
     return (
       <div className="flex flex-1 items-center px-3 py-2.5">
-        <Search className="text-muted-foreground mr-3 h-4 w-4" />
         <input
           type="text"
-          className="text-foreground placeholder:text-muted-foreground flex-1 bg-transparent text-sm outline-none"
+          className="text-foreground placeholder:text-muted-foreground flex-1 bg-transparent pl-2 text-sm outline-none"
           placeholder={placeholder}
           value={pendingSearchValue}
           onChange={handleInputChange}

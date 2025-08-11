@@ -1,6 +1,6 @@
 'use client';
 
-import { Filter } from 'lucide-react';
+import { SlidersHorizontal } from 'lucide-react';
 import * as React from 'react';
 
 import { useRecipeQuery } from '@/client/features/recipe-list/hooks/useRecipeQuery';
@@ -51,7 +51,7 @@ const FilterTriggerButton = React.memo<FilterTriggerButtonProps>(({ isOpen, onOp
             aria-label="フィルター条件を開く"
             aria-expanded={isOpen}
           >
-            <Filter className="h-4 w-4" />
+            <SlidersHorizontal className="h-4 w-4" />
             絞り込み
             {activeFilterCount > 0 && (
               <span className="bg-primary text-primary-foreground min-w-[20px] rounded-full px-2 py-1 text-center text-xs">

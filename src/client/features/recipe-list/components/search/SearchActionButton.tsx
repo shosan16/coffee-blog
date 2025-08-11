@@ -1,5 +1,6 @@
 'use client';
 
+import { Search } from 'lucide-react';
 import * as React from 'react';
 
 import { useRecipeQuery } from '@/client/features/recipe-list/hooks/useRecipeQuery';
@@ -25,9 +26,10 @@ const SearchActionButton = React.memo(() => {
       <Button
         onClick={handleIntegratedSearch}
         variant="default"
-        className="h-auto rounded-none px-10 py-5 text-sm font-medium"
+        className="h-auto rounded-none px-5 py-5 text-sm font-medium"
         disabled={isLoading}
       >
+        <Search className="h-4 w-4" />
         検索
       </Button>
     </div>

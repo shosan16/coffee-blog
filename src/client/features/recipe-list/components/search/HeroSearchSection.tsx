@@ -50,7 +50,7 @@ const HeroSearchSection = React.memo<HeroSearchSectionProps>(({ initialResultCou
           {/* 統合検索バー */}
           <div className="w-full max-w-3xl">
             <IntegratedSearchBar
-              placeholder="レシピを検索... （例：エスプレッソ、ドリップ）"
+              placeholder="キーワード  [例: バリスタ・レシピ・コーヒー豆]"
               className="h-14 text-lg shadow-2xl"
               aria-label="コーヒーレシピを検索"
             />
