@@ -3,7 +3,7 @@
 import { Coffee } from 'lucide-react';
 import * as React from 'react';
 
-import { useRecipeSearch } from '../../hooks/useRecipeSearch';
+import { useRecipeQuery } from '../../hooks/useRecipeQuery';
 
 import IntegratedSearchBar from './IntegratedSearchBar';
 
@@ -24,7 +24,7 @@ type HeroSearchSectionProps = {
  * ```
  */
 const HeroSearchSection = React.memo<HeroSearchSectionProps>(({ initialResultCount }) => {
-  const { resultCount, setResultCount } = useRecipeSearch();
+  const { resultCount, setResultCount } = useRecipeQuery();
 
   // 初期結果数の設定
   React.useEffect(() => {

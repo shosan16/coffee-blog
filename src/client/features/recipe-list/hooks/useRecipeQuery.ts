@@ -1,74 +1,64 @@
 'use client';
 
-import { isEqual } from 'lodash';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { isEqual } from 'lodash';
 
-import type { RecipeFilters } from '@/client/features/recipe-list/types/api';
-import { parseFiltersFromSearchParams } from '@/client/features/recipe-list/utils/filter';
+import type { RecipeFilters } from '../types/api';
 import { buildQueryParams } from '@/client/shared/api/request';
-
-export type UseRecipeSearchReturn = {
-  /** 現在の検索キーワード */
-  searchValue: string;
-  /** pending状態の検索キーワード */
-  pendingSearchValue: string;
-  /** 現在のフィルター */
-  filters: RecipeFilters;
-  /** pending状態のフィルター */
-  pendingFilters: RecipeFilters;
-  /** 検索キーワードの更新 */
-  updateSearchValue: (value: string) => void;
-  /** フィルターの更新 */
-  updateFilter: <K extends keyof RecipeFilters>(key: K, value: RecipeFilters[K]) => void;
-  /** フィルターの削除 */
-  removeFilter: <K extends keyof RecipeFilters>(key: K, itemToRemove?: string) => void;
-  /** 検索とフィルターの適用 */
-  applySearch: () => void;
-  /** 検索とフィルターのリセット */
-  resetSearch: () => void;
-  /** 検索のみリセット */
-  clearSearch: () => void;
-  /** ローディング状態 */
-  isLoading: boolean;
-  /** 変更があるかどうか */
-  hasChanges: boolean;
-  /** 検索結果数（外部から設定） */
-  resultCount: number | undefined;
-  /** 検索結果数の設定 */
-  setResultCount: (count: number | undefined) => void;
-};
+import { parseFiltersFromSearchParams } from '../utils/filter';
 
 /**
- * レシピ検索とフィルタリングの統合フック
+ * レシピ検索・フィルタリング機能を統合管理するフック
  *
- * 検索キーワードとフィルター条件を統合管理し、
- * URLパラメータとの同期を行う。
+ * 検索キーワードとフィルター条件をURLパラメータと連動して管理し、
+ * ユーザーの検索・絞り込み状態を永続化する
  *
- * @example
- * ```tsx
- * const {
- *   searchValue,
- *   pendingSearchValue,
- *   updateSearchValue,
- *   applySearch,
- *   resultCount
- * } = useRecipeSearch();
- *
- * return (
- *   <SearchBox
- *     value={pendingSearchValue}
- *     onChange={updateSearchValue}
- *     resultCount={resultCount}
- *   />
- * );
- * ```
+ * @returns 検索・フィルター状態と操作メソッド
  */
-export function useRecipeSearch(): UseRecipeSearchReturn {
+export interface UseRecipeQueryReturn {
+  // 現在の状態（URLベース）
+  searchValue: string;
+  filters: RecipeFilters;
+
+  // pending状態（確定前）
+  pendingSearchValue: string;
+  pendingFilters: RecipeFilters;
+
+  // 操作メソッド
+  updateSearchValue: (value: string) => void;
+  updateFilter: <K extends keyof RecipeFilters>(key: K, value: RecipeFilters[K]) => void;
+  removeFilter: <K extends keyof RecipeFilters>(key: K, itemToRemove?: string) => void;
+  applyChanges: () => void;
+  resetAll: () => void;
+  clearSearch: () => void;
+
+  // 状態
+  isLoading: boolean;
+  hasChanges: boolean;
+  activeFilterCount: number;
+  resultCount?: number;
+  setResultCount: (count: number | undefined) => void;
+}
+
+/**
+ * 有効な値かどうかを判定する関数（KISS原則に従ったシンプルな実装）
+ */
+const hasValidValue = (value: unknown): boolean => {
+  if (value == null) return false;
+  if (Array.isArray(value)) return value.length > 0;
+  if (typeof value === 'object' && 'min' in value && 'max' in value) {
+    return value.min !== undefined || value.max !== undefined;
+  }
+  return true;
+};
+
+export function useRecipeQuery(): UseRecipeQueryReturn {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
-  const [pendingFilters, setPendingFilters] = useState<RecipeFilters>({});
+  const [pendingFilters, setPendingFilters] = useState<RecipeFilters>(() => ({}));
   const [pendingSearchValue, setPendingSearchValue] = useState('');
   const [resultCount, setResultCount] = useState<number | undefined>(undefined);
 
@@ -82,8 +72,8 @@ export function useRecipeSearch(): UseRecipeSearchReturn {
 
   // 初期化時にpending状態を現在の状態と同期
   useEffect(() => {
-    setPendingFilters((prev) => {
-      return !isEqual(currentFilters, prev) ? currentFilters : prev;
+    setPendingFilters((prev: RecipeFilters) => {
+      return !isEqual(currentFilters, prev) ? { ...currentFilters } : prev;
     });
 
     setPendingSearchValue((prev) => {
@@ -98,26 +88,26 @@ export function useRecipeSearch(): UseRecipeSearchReturn {
     return filtersChanged || searchChanged;
   }, [currentFilters, pendingFilters, currentSearchValue, pendingSearchValue]);
 
+  // アクティブなフィルター数をカウント（page/limitは除外）
+  const activeFilterCount = useMemo(() => {
+    const excludeKeys = ['page', 'limit'];
+    return Object.entries(currentFilters).filter(
+      ([key, value]) => !excludeKeys.includes(key) && hasValidValue(value)
+    ).length;
+  }, [currentFilters]);
+
   // 検索キーワード更新関数
   const updateSearchValue = useCallback((value: string) => {
     setPendingSearchValue(value);
   }, []);
 
-  // フィルター更新関数
+  // フィルター更新関数（pending状態のみ更新）
   const updateFilter = useCallback(
     <K extends keyof RecipeFilters>(key: K, value: RecipeFilters[K]) => {
-      setPendingFilters((prev) => {
+      setPendingFilters((prev: RecipeFilters) => {
         const newFilters = { ...prev };
 
-        if (
-          value == null ||
-          (Array.isArray(value) && value.length === 0) ||
-          (typeof value === 'object' &&
-            'min' in value &&
-            'max' in value &&
-            (value as { min?: unknown; max?: unknown }).min === undefined &&
-            (value as { min?: unknown; max?: unknown }).max === undefined)
-        ) {
+        if (!hasValidValue(value)) {
           // 値が空の場合はフィルターを削除
           delete newFilters[key];
         } else {
@@ -137,7 +127,7 @@ export function useRecipeSearch(): UseRecipeSearchReturn {
   );
 
   // 検索とフィルター適用関数
-  const applySearch = useCallback((): void => {
+  const applyChanges = useCallback((): void => {
     setIsLoading(true);
 
     // 検索キーワードをフィルターに追加
@@ -165,7 +155,7 @@ export function useRecipeSearch(): UseRecipeSearchReturn {
   // フィルター削除関数
   const removeFilter = useCallback(
     <K extends keyof RecipeFilters>(key: K, itemToRemove?: string): void => {
-      setPendingFilters((prev) => {
+      setPendingFilters((prev: RecipeFilters) => {
         const newFilters = { ...prev };
 
         if (itemToRemove && Array.isArray(newFilters[key])) {
@@ -186,23 +176,19 @@ export function useRecipeSearch(): UseRecipeSearchReturn {
         // ページをリセット
         newFilters.page = 1;
 
-        // 更新された状態を即座にURLに反映
-        setIsLoading(true);
-        const queryParams = buildQueryParams(newFilters);
-        const newUrl = queryParams.toString() ? `?${queryParams.toString()}` : '/';
-
-        // 非同期でURLを更新後にローディング状態を解除
-        router.push(newUrl);
-        setTimeout(() => setIsLoading(false), 100);
-
         return newFilters;
       });
+
+      // 変更を即座にURLに反映
+      setTimeout(() => {
+        applyChanges();
+      }, 0);
     },
-    [router]
+    [applyChanges]
   );
 
-  // 検索とフィルターリセット関数
-  const resetSearch = useCallback((): void => {
+  // 全リセット関数
+  const resetAll = useCallback((): void => {
     setPendingFilters({});
     setPendingSearchValue('');
     setResultCount(undefined);
@@ -237,17 +223,18 @@ export function useRecipeSearch(): UseRecipeSearchReturn {
 
   return {
     searchValue: currentSearchValue,
-    pendingSearchValue,
     filters: currentFilters,
+    pendingSearchValue,
     pendingFilters,
     updateSearchValue,
     updateFilter,
     removeFilter,
-    applySearch,
-    resetSearch,
+    applyChanges,
+    resetAll,
     clearSearch,
     isLoading,
     hasChanges,
+    activeFilterCount,
     resultCount,
     setResultCount,
   };

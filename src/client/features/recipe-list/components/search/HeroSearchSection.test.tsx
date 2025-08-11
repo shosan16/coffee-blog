@@ -2,12 +2,12 @@ import { render } from '@testing-library/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useRecipeSearch } from '../../hooks/useRecipeSearch';
+import { useRecipeQuery } from '../../hooks/useRecipeQuery';
 
 import HeroSearchSection from './HeroSearchSection';
 
-vi.mock('../../hooks/useRecipeSearch', () => ({
-  useRecipeSearch: vi.fn(),
+vi.mock('../../hooks/useRecipeQuery', () => ({
+  useRecipeQuery: vi.fn(),
 }));
 
 vi.mock('./IntegratedSearchBar', () => ({
@@ -28,8 +28,8 @@ describe('HeroSearchSection', () => {
 
     (useSearchParams as ReturnType<typeof vi.fn>).mockReturnValue(new URLSearchParams());
 
-    // useRecipeSearch モック
-    (useRecipeSearch as ReturnType<typeof vi.fn>).mockReturnValue({
+    // useRecipeQuery モック
+    (useRecipeQuery as ReturnType<typeof vi.fn>).mockReturnValue({
       resultCount: undefined,
       setResultCount: mockSetResultCount,
     });
@@ -54,7 +54,7 @@ describe('HeroSearchSection', () => {
 
     it('既に結果数が設定されている場合、setResultCountが呼ばれない', () => {
       // Arrange
-      (useRecipeSearch as ReturnType<typeof vi.fn>).mockReturnValue({
+      (useRecipeQuery as ReturnType<typeof vi.fn>).mockReturnValue({
         resultCount: 100,
         setResultCount: mockSetResultCount,
       });

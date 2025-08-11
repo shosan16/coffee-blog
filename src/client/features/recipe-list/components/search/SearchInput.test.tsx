@@ -1,26 +1,26 @@
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useRecipeSearch } from '../../hooks/useRecipeSearch';
+import { useRecipeQuery } from '../../hooks/useRecipeQuery';
 
 import SearchInput from './SearchInput';
 
 // モック設定
-vi.mock('../../hooks/useRecipeSearch', () => ({
-  useRecipeSearch: vi.fn(),
+vi.mock('../../hooks/useRecipeQuery', () => ({
+  useRecipeQuery: vi.fn(),
 }));
 
 describe('SearchInput', () => {
   const mockUpdateSearchValue = vi.fn();
-  const mockApplySearch = vi.fn();
+  const mockApplyChanges = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
 
-    (useRecipeSearch as ReturnType<typeof vi.fn>).mockReturnValue({
+    (useRecipeQuery as ReturnType<typeof vi.fn>).mockReturnValue({
       pendingSearchValue: '',
       updateSearchValue: mockUpdateSearchValue,
-      applySearch: mockApplySearch,
+      applyChanges: mockApplyChanges,
     });
   });
 
@@ -61,10 +61,10 @@ describe('SearchInput', () => {
 
     it('検索値がある場合、クリアボタンが表示される', () => {
       // Arrange
-      (useRecipeSearch as ReturnType<typeof vi.fn>).mockReturnValue({
+      (useRecipeQuery as ReturnType<typeof vi.fn>).mockReturnValue({
         pendingSearchValue: 'エスプレッソ',
         updateSearchValue: mockUpdateSearchValue,
-        applySearch: mockApplySearch,
+        applyChanges: mockApplyChanges,
       });
 
       // Act
@@ -88,7 +88,7 @@ describe('SearchInput', () => {
       expect(mockUpdateSearchValue).toHaveBeenCalledWith('コーヒー');
     });
 
-    it('Enterキー押下時にapplySearchが呼ばれる', () => {
+    it('Enterキー押下時にapplyChangesが呼ばれる', () => {
       // Arrange
       render(<SearchInput />);
       const input = screen.getByLabelText('レシピを検索...');
@@ -97,15 +97,15 @@ describe('SearchInput', () => {
       fireEvent.keyDown(input, { key: 'Enter' });
 
       // Assert
-      expect(mockApplySearch).toHaveBeenCalledTimes(1);
+      expect(mockApplyChanges).toHaveBeenCalledTimes(1);
     });
 
     it('Escapeキー押下時（検索値あり）にupdateSearchValueが空文字で呼ばれる', () => {
       // Arrange
-      (useRecipeSearch as ReturnType<typeof vi.fn>).mockReturnValue({
+      (useRecipeQuery as ReturnType<typeof vi.fn>).mockReturnValue({
         pendingSearchValue: 'ドリップ',
         updateSearchValue: mockUpdateSearchValue,
-        applySearch: mockApplySearch,
+        applyChanges: mockApplyChanges,
       });
       render(<SearchInput />);
       const input = screen.getByLabelText('レシピを検索...');
@@ -133,10 +133,10 @@ describe('SearchInput', () => {
   describe('クリアボタン', () => {
     it('クリアボタンクリック時にupdateSearchValueが空文字で呼ばれる', () => {
       // Arrange
-      (useRecipeSearch as ReturnType<typeof vi.fn>).mockReturnValue({
+      (useRecipeQuery as ReturnType<typeof vi.fn>).mockReturnValue({
         pendingSearchValue: 'フレンチプレス',
         updateSearchValue: mockUpdateSearchValue,
-        applySearch: mockApplySearch,
+        applyChanges: mockApplyChanges,
       });
       render(<SearchInput />);
       const clearButton = screen.getByLabelText('検索をクリア');

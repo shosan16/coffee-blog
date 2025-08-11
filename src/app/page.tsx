@@ -1,7 +1,6 @@
 import { Coffee } from 'lucide-react';
 import type { ReadonlyURLSearchParams } from 'next/navigation';
 
-import LazyRecipeFilter from '@/client/features/recipe-list/components/filter/LazyRecipeFilter';
 import RecipeList from '@/client/features/recipe-list/components/RecipeList';
 import HeroSearchSection from '@/client/features/recipe-list/components/search/HeroSearchSection';
 import SearchResultsHeader from '@/client/features/recipe-list/components/search/SearchResultsHeader';
@@ -43,10 +42,6 @@ export default async function Home({
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <div className="flex flex-col gap-4">
-          <div className="flex justify-end">
-            <LazyRecipeFilter />
-          </div>
-
           <RecipeList initialData={initialData} />
         </div>
       </main>

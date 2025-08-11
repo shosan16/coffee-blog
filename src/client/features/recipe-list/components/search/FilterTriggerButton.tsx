@@ -3,7 +3,7 @@
 import { Filter } from 'lucide-react';
 import * as React from 'react';
 
-import { useRecipeFilter } from '@/client/features/recipe-list/hooks/useRecipeFilter';
+import { useRecipeQuery } from '@/client/features/recipe-list/hooks/useRecipeQuery';
 import { Button } from '@/client/shared/shadcn/button';
 import {
   Sheet,
@@ -15,7 +15,6 @@ import {
 
 import FilterActions from '../filter/FilterActions';
 import FilterContent from '../filter/FilterContent';
-import { useFilterHandlers } from '../filter/FilterHandlers';
 
 type FilterTriggerButtonProps = {
   /** フィルターSheetの開閉状態 */
@@ -31,12 +30,16 @@ type FilterTriggerButtonProps = {
  * アクティブなフィルター数をバッジで表示する。
  */
 const FilterTriggerButton = React.memo<FilterTriggerButtonProps>(({ isOpen, onOpenChange }) => {
-  // フィルターフック
-  const { pendingFilters, applyFilters, resetFilters, isLoading, hasChanges, activeFilterCount } =
-    useRecipeFilter();
-
-  // フィルター更新ハンドラー群を取得
-  const handlers = useFilterHandlers();
+  // レシピクエリフック
+  const {
+    pendingFilters,
+    updateFilter,
+    applyChanges,
+    resetAll,
+    isLoading,
+    hasChanges,
+    activeFilterCount,
+  } = useRecipeQuery();
 
   return (
     <div className="border-input border-l">
@@ -75,13 +78,18 @@ const FilterTriggerButton = React.memo<FilterTriggerButtonProps>(({ isOpen, onOp
             beanWeightRange={pendingFilters.beanWeight ?? {}}
             waterTempRange={pendingFilters.waterTemp ?? {}}
             waterAmountRange={pendingFilters.waterAmount ?? {}}
-            handlers={handlers}
+            onEquipmentChange={(equipment) => updateFilter('equipment', equipment)}
+            onRoastLevelChange={(roastLevel) => updateFilter('roastLevel', roastLevel)}
+            onGrindSizeChange={(grindSize) => updateFilter('grindSize', grindSize)}
+            onBeanWeightChange={(beanWeight) => updateFilter('beanWeight', beanWeight)}
+            onWaterTempChange={(waterTemp) => updateFilter('waterTemp', waterTemp)}
+            onWaterAmountChange={(waterAmount) => updateFilter('waterAmount', waterAmount)}
           />
 
           {/* フィルター操作ボタン */}
           <FilterActions
-            onApply={applyFilters}
-            onReset={resetFilters}
+            onApply={applyChanges}
+            onReset={resetAll}
             isLoading={isLoading}
             hasChanges={hasChanges}
             activeFilterCount={activeFilterCount}

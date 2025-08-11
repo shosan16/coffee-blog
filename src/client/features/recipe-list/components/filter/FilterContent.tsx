@@ -3,7 +3,6 @@ import React from 'react';
 
 import ConditionFilter from './ConditionFilter';
 import EquipmentFilter from './EquipmentFilter';
-import type { FilterHandlers } from './FilterHandlers';
 
 /**
  * フィルター内容コンポーネントのProps
@@ -21,8 +20,18 @@ export type FilterContentProps = {
   waterTempRange: { min?: number; max?: number };
   /** 湯量範囲 */
   waterAmountRange: { min?: number; max?: number };
-  /** フィルター変更ハンドラー群 */
-  handlers: FilterHandlers;
+  /** 器具変更ハンドラー */
+  onEquipmentChange: (equipment: string[]) => void;
+  /** 焙煎度変更ハンドラー */
+  onRoastLevelChange: (roastLevel: RoastLevel[]) => void;
+  /** 挽き目変更ハンドラー */
+  onGrindSizeChange: (grindSize: GrindSize[]) => void;
+  /** 豆重量変更ハンドラー */
+  onBeanWeightChange: (range: { min?: number; max?: number }) => void;
+  /** 湯温変更ハンドラー */
+  onWaterTempChange: (range: { min?: number; max?: number }) => void;
+  /** 湯量変更ハンドラー */
+  onWaterAmountChange: (range: { min?: number; max?: number }) => void;
 };
 
 /**
@@ -50,16 +59,18 @@ export default function FilterContent({
   beanWeightRange,
   waterTempRange,
   waterAmountRange,
-  handlers,
+  onEquipmentChange,
+  onRoastLevelChange,
+  onGrindSizeChange,
+  onBeanWeightChange,
+  onWaterTempChange,
+  onWaterAmountChange,
 }: FilterContentProps) {
   return (
     <div className="mt-6 space-y-6 px-4 sm:px-6">
       {/* 抽出器具フィルター */}
       <div>
-        <EquipmentFilter
-          selectedEquipment={selectedEquipment}
-          onChange={handlers.equipmentChangeHandler}
-        />
+        <EquipmentFilter selectedEquipment={selectedEquipment} onChange={onEquipmentChange} />
       </div>
 
       {/* 抽出条件フィルター */}
@@ -70,11 +81,11 @@ export default function FilterContent({
           beanWeight={beanWeightRange}
           waterTemp={waterTempRange}
           waterAmount={waterAmountRange}
-          onRoastLevelChange={handlers.roastLevelChangeHandler}
-          onGrindSizeChange={handlers.grindSizeChangeHandler}
-          onBeanWeightChange={handlers.beanWeightChangeHandler}
-          onWaterTempChange={handlers.waterTempChangeHandler}
-          onWaterAmountChange={handlers.waterAmountChangeHandler}
+          onRoastLevelChange={onRoastLevelChange}
+          onGrindSizeChange={onGrindSizeChange}
+          onBeanWeightChange={onBeanWeightChange}
+          onWaterTempChange={onWaterTempChange}
+          onWaterAmountChange={onWaterAmountChange}
         />
       </div>
     </div>

@@ -3,7 +3,7 @@
 import { Search } from 'lucide-react';
 import * as React from 'react';
 
-import { useRecipeSearch } from '../../hooks/useRecipeSearch';
+import { useRecipeQuery } from '../../hooks/useRecipeQuery';
 
 type SearchResultsHeaderProps = {
   /** 検索結果数 */
@@ -24,7 +24,7 @@ type SearchResultsHeaderProps = {
  * ```
  */
 const SearchResultsHeader = React.memo<SearchResultsHeaderProps>(({ resultCount, className }) => {
-  const { searchValue } = useRecipeSearch();
+  const { searchValue } = useRecipeQuery();
 
   // 検索結果のテキスト
   const resultText = React.useMemo(() => {

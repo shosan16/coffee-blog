@@ -52,7 +52,9 @@
       "Bash(do echo \"Test run $i:\")",
       "Bash(done)",
       "mcp__serena__think_about_collected_information",
-      "WebFetch(domain:vite.dev)"
+      "WebFetch(domain:vite.dev)",
+      "mcp__playwright__browser_console_messages",
+      "Bash(sed:*)"
     ],
     "deny": []
   }

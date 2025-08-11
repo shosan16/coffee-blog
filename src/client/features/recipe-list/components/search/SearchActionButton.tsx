@@ -2,8 +2,7 @@
 
 import * as React from 'react';
 
-import { useRecipeFilter } from '@/client/features/recipe-list/hooks/useRecipeFilter';
-import { useRecipeSearch } from '@/client/features/recipe-list/hooks/useRecipeSearch';
+import { useRecipeQuery } from '@/client/features/recipe-list/hooks/useRecipeQuery';
 import { Button } from '@/client/shared/shadcn/button';
 
 /**
@@ -13,14 +12,13 @@ import { Button } from '@/client/shared/shadcn/button';
  * ローディング状態を表示して、ユーザーに処理中であることを伝える。
  */
 const SearchActionButton = React.memo(() => {
-  // 検索とフィルターのフック
-  const { applySearch } = useRecipeSearch();
-  const { isLoading } = useRecipeFilter();
+  // レシピクエリフック
+  const { applyChanges, isLoading } = useRecipeQuery();
 
   // 統合検索の実行（検索条件とフィルターを同時に適用）
   const handleIntegratedSearch = React.useCallback(() => {
-    applySearch();
-  }, [applySearch]);
+    applyChanges();
+  }, [applyChanges]);
 
   return (
     <div className="border-input border-l">

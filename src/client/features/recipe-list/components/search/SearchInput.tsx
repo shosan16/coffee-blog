@@ -3,7 +3,7 @@
 import { Search, XIcon } from 'lucide-react';
 import * as React from 'react';
 
-import { useRecipeSearch } from '@/client/features/recipe-list/hooks/useRecipeSearch';
+import { useRecipeQuery } from '@/client/features/recipe-list/hooks/useRecipeQuery';
 
 type SearchInputProps = {
   /** プレースホルダーテキスト */
@@ -20,8 +20,8 @@ type SearchInputProps = {
  */
 const SearchInput = React.memo<SearchInputProps>(
   ({ placeholder = 'レシピを検索...', 'aria-label': ariaLabel }) => {
-    // 検索フック
-    const { pendingSearchValue, updateSearchValue, applySearch } = useRecipeSearch();
+    // レシピクエリフック
+    const { pendingSearchValue, updateSearchValue, applyChanges } = useRecipeQuery();
 
     // 入力値の変更ハンドラー
     const handleInputChange = React.useCallback(
@@ -44,12 +44,12 @@ const SearchInput = React.memo<SearchInputProps>(
     const handleKeyDown = React.useCallback(
       (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-          applySearch();
+          applyChanges();
         } else if (e.key === 'Escape' && pendingSearchValue) {
           updateSearchValue('');
         }
       },
-      [applySearch, updateSearchValue, pendingSearchValue]
+      [applyChanges, updateSearchValue, pendingSearchValue]
     );
 
     return (

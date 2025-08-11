@@ -65,38 +65,28 @@ const ConditionFilter = React.memo(function ConditionFilter({
       .filter((item): item is MultiComboboxItem => item !== undefined);
   }, [grindSizes, grindSizeItems]);
 
-  // 焙煎度選択ハンドラー
-  const handleRoastLevelSelect = useCallback(
+  // 焙煎度トグルハンドラー（選択/削除を一つの関数で処理）
+  const handleRoastLevelToggle = useCallback(
     (item: MultiComboboxItem) => {
       const roastLevel = item.value as RoastLevel;
-      onRoastLevelChange([...roastLevels, roastLevel]);
+      const isSelected = roastLevels.includes(roastLevel);
+      const newLevels = isSelected
+        ? roastLevels.filter((level) => level !== roastLevel)
+        : [...roastLevels, roastLevel];
+      onRoastLevelChange(newLevels);
     },
     [roastLevels, onRoastLevelChange]
   );
 
-  // 焙煎度削除ハンドラー
-  const handleRoastLevelDelete = useCallback(
-    (item: MultiComboboxItem) => {
-      const roastLevel = item.value as RoastLevel;
-      onRoastLevelChange(roastLevels.filter((level) => level !== roastLevel));
-    },
-    [roastLevels, onRoastLevelChange]
-  );
-
-  // 挽き目選択ハンドラー
-  const handleGrindSizeSelect = useCallback(
+  // 挽き目トグルハンドラー（選択/削除を一つの関数で処理）
+  const handleGrindSizeToggle = useCallback(
     (item: MultiComboboxItem) => {
       const grindSize = item.value as GrindSize;
-      onGrindSizeChange([...grindSizes, grindSize]);
-    },
-    [grindSizes, onGrindSizeChange]
-  );
-
-  // 挽き目削除ハンドラー
-  const handleGrindSizeDelete = useCallback(
-    (item: MultiComboboxItem) => {
-      const grindSize = item.value as GrindSize;
-      onGrindSizeChange(grindSizes.filter((size) => size !== grindSize));
+      const isSelected = grindSizes.includes(grindSize);
+      const newSizes = isSelected
+        ? grindSizes.filter((size) => size !== grindSize)
+        : [...grindSizes, grindSize];
+      onGrindSizeChange(newSizes);
     },
     [grindSizes, onGrindSizeChange]
   );
@@ -112,8 +102,8 @@ const ConditionFilter = React.memo(function ConditionFilter({
           <MultiCombobox
             items={roastLevelItems}
             selectedItems={selectedRoastLevels}
-            onSelect={handleRoastLevelSelect}
-            onDelete={handleRoastLevelDelete}
+            onSelect={handleRoastLevelToggle}
+            onDelete={handleRoastLevelToggle}
             placeholder="焙煎度を選択"
             dropdownHelpMessage="焙煎度を選択してください"
           />
@@ -125,8 +115,8 @@ const ConditionFilter = React.memo(function ConditionFilter({
           <MultiCombobox
             items={grindSizeItems}
             selectedItems={selectedGrindSizes}
-            onSelect={handleGrindSizeSelect}
-            onDelete={handleGrindSizeDelete}
+            onSelect={handleGrindSizeToggle}
+            onDelete={handleGrindSizeToggle}
             placeholder="挽き目を選択"
             dropdownHelpMessage="挽き目を選択してください"
           />

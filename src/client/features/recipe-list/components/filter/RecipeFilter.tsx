@@ -4,7 +4,7 @@ import type { RoastLevel, GrindSize } from '@prisma/client';
 import { X, Filter, RotateCcw } from 'lucide-react';
 import React, { useState, useMemo, useCallback } from 'react';
 
-import { useRecipeFilter } from '@/client/features/recipe-list/hooks/useRecipeFilter';
+import { useRecipeQuery } from '@/client/features/recipe-list/hooks/useRecipeQuery';
 import { Button } from '@/client/shared/shadcn/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
 
@@ -16,15 +16,8 @@ type RecipeFilterProps = {
 };
 
 const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: RecipeFilterProps) {
-  const {
-    filters,
-    pendingFilters,
-    updateFilter,
-    applyFilters,
-    resetFilters,
-    isLoading,
-    hasChanges,
-  } = useRecipeFilter();
+  const { filters, pendingFilters, updateFilter, applyChanges, resetAll, isLoading, hasChanges } =
+    useRecipeQuery();
   const [isOpen, setIsOpen] = useState(false);
 
   const activeFilterCount = useMemo(() => {
@@ -148,7 +141,7 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
               <div className="flex gap-3">
                 <Button
                   variant="outline"
-                  onClick={resetFilters}
+                  onClick={resetAll}
                   disabled={isLoading || (activeFilterCount === 0 && pendingFilterCount === 0)}
                   className={`px-6 transition-all duration-200 ${
                     activeFilterCount > 0 || pendingFilterCount > 0
@@ -164,7 +157,7 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
                   リセット
                 </Button>
                 <Button
-                  onClick={applyFilters}
+                  onClick={applyChanges}
                   disabled={isLoading || !hasChanges}
                   variant={hasChanges ? 'default' : 'secondary'}
                   className={`flex-1 transition-all duration-200 ${
