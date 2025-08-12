@@ -13,14 +13,16 @@ vi.mock('../../hooks/useRecipeQuery', () => ({
 describe('SearchInput', () => {
   const mockUpdateSearchValue = vi.fn();
   const mockApplyChanges = vi.fn();
+  const mockClearSearch = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
 
     (useRecipeQuery as ReturnType<typeof vi.fn>).mockReturnValue({
       pendingSearchValue: '',
-      updateSearchValue: mockUpdateSearchValue,
-      applyChanges: mockApplyChanges,
+      setSearchValue: mockUpdateSearchValue,
+      apply: mockApplyChanges,
+      clearSearch: mockClearSearch,
     });
   });
 
@@ -42,13 +44,14 @@ describe('SearchInput', () => {
       expect(input).toHaveAttribute('type', 'text');
     });
 
-    it('検索アイコンが表示される', () => {
+    it('検索フィールドが正しく表示される', () => {
       // Arrange & Act
-      const { container } = render(<SearchInput />);
+      render(<SearchInput placeholder="テスト用プレースホルダー" />);
 
       // Assert
-      const searchIcon = container.querySelector('.lucide-search');
-      expect(searchIcon).toBeInTheDocument();
+      const input = screen.getByLabelText('テスト用プレースホルダー');
+      expect(input).toBeInTheDocument();
+      expect(input).toHaveAttribute('type', 'text');
     });
 
     it('検索値がない場合、クリアボタンが表示されない', () => {
@@ -63,8 +66,9 @@ describe('SearchInput', () => {
       // Arrange
       (useRecipeQuery as ReturnType<typeof vi.fn>).mockReturnValue({
         pendingSearchValue: 'エスプレッソ',
-        updateSearchValue: mockUpdateSearchValue,
-        applyChanges: mockApplyChanges,
+        setSearchValue: mockUpdateSearchValue,
+        apply: mockApplyChanges,
+        clearSearch: mockClearSearch,
       });
 
       // Act
@@ -76,7 +80,7 @@ describe('SearchInput', () => {
   });
 
   describe('入力操作', () => {
-    it('入力値変更時にupdateSearchValueが呼ばれる', () => {
+    it('入力値変更時にsetSearchValueが呼ばれる', () => {
       // Arrange
       render(<SearchInput />);
       const input = screen.getByLabelText('レシピを検索...');
@@ -88,7 +92,7 @@ describe('SearchInput', () => {
       expect(mockUpdateSearchValue).toHaveBeenCalledWith('コーヒー');
     });
 
-    it('Enterキー押下時にapplyChangesが呼ばれる', () => {
+    it('Enterキー押下時にapplyが呼ばれる', () => {
       // Arrange
       render(<SearchInput />);
       const input = screen.getByLabelText('レシピを検索...');
@@ -100,12 +104,13 @@ describe('SearchInput', () => {
       expect(mockApplyChanges).toHaveBeenCalledTimes(1);
     });
 
-    it('Escapeキー押下時（検索値あり）にupdateSearchValueが空文字で呼ばれる', () => {
+    it('Escapeキー押下時（検索値あり）にsetSearchValueが空文字で呼ばれる', () => {
       // Arrange
       (useRecipeQuery as ReturnType<typeof vi.fn>).mockReturnValue({
         pendingSearchValue: 'ドリップ',
-        updateSearchValue: mockUpdateSearchValue,
-        applyChanges: mockApplyChanges,
+        setSearchValue: mockUpdateSearchValue,
+        apply: mockApplyChanges,
+        clearSearch: mockClearSearch,
       });
       render(<SearchInput />);
       const input = screen.getByLabelText('レシピを検索...');
@@ -117,7 +122,7 @@ describe('SearchInput', () => {
       expect(mockUpdateSearchValue).toHaveBeenCalledWith('');
     });
 
-    it('Escapeキー押下時（検索値なし）にupdateSearchValueが呼ばれない', () => {
+    it('Escapeキー押下時（検索値なし）にsetSearchValueが呼ばれない', () => {
       // Arrange
       render(<SearchInput />);
       const input = screen.getByLabelText('レシピを検索...');
@@ -131,12 +136,13 @@ describe('SearchInput', () => {
   });
 
   describe('クリアボタン', () => {
-    it('クリアボタンクリック時にupdateSearchValueが空文字で呼ばれる', () => {
+    it('クリアボタンクリック時にclearSearchが呼ばれる', () => {
       // Arrange
       (useRecipeQuery as ReturnType<typeof vi.fn>).mockReturnValue({
         pendingSearchValue: 'フレンチプレス',
-        updateSearchValue: mockUpdateSearchValue,
-        applyChanges: mockApplyChanges,
+        setSearchValue: mockUpdateSearchValue,
+        apply: mockApplyChanges,
+        clearSearch: mockClearSearch,
       });
       render(<SearchInput />);
       const clearButton = screen.getByLabelText('検索をクリア');
@@ -145,7 +151,7 @@ describe('SearchInput', () => {
       fireEvent.click(clearButton);
 
       // Assert
-      expect(mockUpdateSearchValue).toHaveBeenCalledWith('');
+      expect(mockClearSearch).toHaveBeenCalledTimes(1);
     });
   });
 

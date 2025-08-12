@@ -31,15 +31,8 @@ type FilterTriggerButtonProps = {
  */
 const FilterTriggerButton = React.memo<FilterTriggerButtonProps>(({ isOpen, onOpenChange }) => {
   // レシピクエリフック
-  const {
-    pendingFilters,
-    updateFilter,
-    applyChanges,
-    resetAll,
-    isLoading,
-    hasChanges,
-    activeFilterCount,
-  } = useRecipeQuery();
+  const { pendingFilters, setFilter, apply, reset, isLoading, hasChanges, activeFilterCount } =
+    useRecipeQuery();
 
   return (
     <div className="border-input border-l">
@@ -60,12 +53,14 @@ const FilterTriggerButton = React.memo<FilterTriggerButtonProps>(({ isOpen, onOp
             )}
           </Button>
         </SheetTrigger>
-
         <SheetContent
           side="right"
-          className="w-full sm:max-w-md"
-          onOpenAutoFocus={(e) => e.preventDefault()}
+          className="flex h-auto flex-col bg-white pb-6"
+          aria-describedby="filter-description"
         >
+          <div id="filter-description" className="sr-only">
+            レシピの絞り込み条件を設定できます。難易度、所要時間、器具、豆の種類などで絞り込みが可能です。
+          </div>
           <SheetHeader>
             <SheetTitle>フィルター条件</SheetTitle>
           </SheetHeader>
@@ -78,18 +73,18 @@ const FilterTriggerButton = React.memo<FilterTriggerButtonProps>(({ isOpen, onOp
             beanWeightRange={pendingFilters.beanWeight ?? {}}
             waterTempRange={pendingFilters.waterTemp ?? {}}
             waterAmountRange={pendingFilters.waterAmount ?? {}}
-            onEquipmentChange={(equipment) => updateFilter('equipment', equipment)}
-            onRoastLevelChange={(roastLevel) => updateFilter('roastLevel', roastLevel)}
-            onGrindSizeChange={(grindSize) => updateFilter('grindSize', grindSize)}
-            onBeanWeightChange={(beanWeight) => updateFilter('beanWeight', beanWeight)}
-            onWaterTempChange={(waterTemp) => updateFilter('waterTemp', waterTemp)}
-            onWaterAmountChange={(waterAmount) => updateFilter('waterAmount', waterAmount)}
+            onEquipmentChange={(equipment) => setFilter('equipment', equipment)}
+            onRoastLevelChange={(roastLevel) => setFilter('roastLevel', roastLevel)}
+            onGrindSizeChange={(grindSize) => setFilter('grindSize', grindSize)}
+            onBeanWeightChange={(beanWeight) => setFilter('beanWeight', beanWeight)}
+            onWaterTempChange={(waterTemp) => setFilter('waterTemp', waterTemp)}
+            onWaterAmountChange={(waterAmount) => setFilter('waterAmount', waterAmount)}
           />
 
           {/* フィルター操作ボタン */}
           <FilterActions
-            onApply={applyChanges}
-            onReset={resetAll}
+            onApply={apply}
+            onReset={reset}
             isLoading={isLoading}
             hasChanges={hasChanges}
             activeFilterCount={activeFilterCount}

@@ -54,7 +54,13 @@
       "mcp__serena__think_about_collected_information",
       "WebFetch(domain:vite.dev)",
       "mcp__playwright__browser_console_messages",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "mcp__playwright__browser_tab_new",
+      "mcp__playwright__browser_close",
+      "mcp__playwright__browser_type",
+      "mcp__serena__think_about_task_adherence",
+      "mcp__playwright__browser_evaluate",
+      "mcp__serena__insert_before_symbol"
     ],
     "deny": []
   }

@@ -14,12 +14,12 @@ import { Button } from '@/client/shared/shadcn/button';
  */
 const SearchActionButton = React.memo(() => {
   // レシピクエリフック
-  const { applyChanges, isLoading } = useRecipeQuery();
+  const { apply, isLoading } = useRecipeQuery();
 
   // 統合検索の実行（検索条件とフィルターを同時に適用）
   const handleIntegratedSearch = React.useCallback(() => {
-    applyChanges();
-  }, [applyChanges]);
+    apply();
+  }, [apply]);
 
   return (
     <div className="border-input border-l">

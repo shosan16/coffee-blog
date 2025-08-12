@@ -50,10 +50,10 @@ export function parseFiltersFromSearchParams(
 
   // 配列パラメータの処理
   const arrayParams = {
-    roastLevel: (level: string) => level as RoastLevel,
-    grindSize: (size: string) => size as GrindSize,
-    equipment: (item: string) => item,
-    equipmentType: (item: string) => item,
+    roastLevel: (level: string): RoastLevel => level as RoastLevel,
+    grindSize: (size: string): GrindSize => size as GrindSize,
+    equipment: (item: string): string => item,
+    equipmentType: (item: string): string => item,
   };
   Object.entries(arrayParams).forEach(([param, converter]) => {
     const value = searchParams.get(param);

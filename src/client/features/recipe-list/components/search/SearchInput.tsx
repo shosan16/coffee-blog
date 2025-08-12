@@ -21,35 +21,35 @@ type SearchInputProps = {
 const SearchInput = React.memo<SearchInputProps>(
   ({ placeholder = 'レシピを検索...', 'aria-label': ariaLabel }) => {
     // レシピクエリフック
-    const { pendingSearchValue, updateSearchValue, applyChanges } = useRecipeQuery();
+    const { pendingSearchValue, setSearchValue, apply } = useRecipeQuery();
 
     // 入力値の変更ハンドラー
     const handleInputChange = React.useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
-        updateSearchValue(e.target.value);
+        setSearchValue(e.target.value);
       },
-      [updateSearchValue]
+      [setSearchValue]
     );
 
     // クリアボタンのクリックハンドラー
     const handleClearClick = React.useCallback(
       (e: React.MouseEvent) => {
         e.stopPropagation();
-        updateSearchValue('');
+        setSearchValue('');
       },
-      [updateSearchValue]
+      [setSearchValue]
     );
 
     // Enterキーの処理
     const handleKeyDown = React.useCallback(
       (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-          applyChanges();
+          apply();
         } else if (e.key === 'Escape' && pendingSearchValue) {
-          updateSearchValue('');
+          setSearchValue('');
         }
       },
-      [applyChanges, updateSearchValue, pendingSearchValue]
+      [pendingSearchValue, apply, setSearchValue]
     );
 
     return (
