@@ -21,7 +21,7 @@ type SearchInputProps = {
 const SearchInput = React.memo<SearchInputProps>(
   ({ placeholder = 'レシピを検索...', 'aria-label': ariaLabel }) => {
     // レシピクエリフック
-    const { pendingSearchValue, setSearchValue, apply } = useRecipeQuery();
+    const { pendingSearchValue, setSearchValue, apply, clearSearch } = useRecipeQuery();
 
     // 入力値の変更ハンドラー
     const handleInputChange = React.useCallback(
@@ -35,9 +35,9 @@ const SearchInput = React.memo<SearchInputProps>(
     const handleClearClick = React.useCallback(
       (e: React.MouseEvent) => {
         e.stopPropagation();
-        setSearchValue('');
+        clearSearch();
       },
-      [setSearchValue]
+      [clearSearch]
     );
 
     // Enterキーの処理
