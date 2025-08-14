@@ -17,17 +17,21 @@ import FilterActions from '../filter/FilterActions';
 import FilterContent from '../filter/FilterContent';
 
 type FilterTriggerButtonProps = {
-  /** フィルターSheetの開閉状態 */
+  /** フィルターパネルの表示状態 */
   readonly isOpen: boolean;
-  /** フィルターSheetの開閉状態変更ハンドラー */
+  /** フィルターパネルの開閉制御ハンドラー */
   readonly onOpenChange: (open: boolean) => void;
 };
 
 /**
  * フィルタートリガーボタンコンポーネント
  *
- * フィルター条件の設定を行うSheetを開くボタン。
- * アクティブなフィルター数をバッジで表示する。
+ * ユーザーが好みのコーヒーレシピを効率的に見つけるための詳細条件設定を提供。
+ * 器具、焙煎度、豆の重量など専門的な条件で絞り込み可能。
+ * アクティブなフィルター数を視覚的に表示し、現在の絞り込み状況を把握できる。
+ *
+ * @param isOpen - フィルターパネルの表示状態
+ * @param onOpenChange - フィルターパネルの開閉制御ハンドラー
  */
 const FilterTriggerButton = React.memo<FilterTriggerButtonProps>(({ isOpen, onOpenChange }) => {
   // レシピクエリフック

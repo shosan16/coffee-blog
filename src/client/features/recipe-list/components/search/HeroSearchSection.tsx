@@ -3,7 +3,11 @@
 import { Coffee } from 'lucide-react';
 import * as React from 'react';
 
-import IntegratedSearchBar from './IntegratedSearchBar';
+import { cn } from '@/client/lib/tailwind';
+
+import FilterTriggerButton from './FilterTriggerButton';
+import SearchActionButton from './SearchActionButton';
+import SearchInput from './SearchInput';
 
 type HeroSearchSectionProps = {
   /** 初期の検索結果数 */
@@ -13,8 +17,11 @@ type HeroSearchSectionProps = {
 /**
  * ヒーローセクション用の検索コンポーネント
  *
- * メインビジュアルと統合検索機能を提供し、
- * 食べログ風の統合検索体験を実現する。
+ * サイト訪問者の最初のタッチポイントとなるメインビジュアルと検索機能を統合。
+ * ユーザーが求めるコーヒーレシピに素早くリーチできるよう、
+ * キーワード検索と詳細フィルターを一体化した直感的なインターフェースを提供。
+ *
+ * @param initialResultCount - 初期表示される検索結果数（表示用、機能には影響しない）
  *
  * @example
  * ```tsx
@@ -23,7 +30,18 @@ type HeroSearchSectionProps = {
  */
 const HeroSearchSection = React.memo<HeroSearchSectionProps>(
   ({ initialResultCount: _initialResultCount }) => {
-    // resultCountとsetResultCountは削除されたため、初期値の設定は不要
+    const [isFilterOpen, setIsFilterOpen] = React.useState(false);
+
+    const searchBarClassName = React.useMemo(
+      () =>
+        cn(
+          'flex items-center bg-background border border-input rounded-md shadow-sm overflow-hidden',
+          'focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]',
+          'transition-colors',
+          'h-14 text-lg shadow-2xl'
+        ),
+      []
+    );
 
     return (
       <div className="bg-primary text-primary-foreground relative overflow-hidden py-20">
@@ -41,11 +59,19 @@ const HeroSearchSection = React.memo<HeroSearchSectionProps>(
 
             {/* 統合検索バー */}
             <div className="w-full max-w-3xl">
-              <IntegratedSearchBar
-                placeholder="キーワード  [例: バリスタ・レシピ・コーヒー豆]"
-                className="h-14 text-lg shadow-2xl"
-                aria-label="コーヒーレシピを検索"
-              />
+              <div className={searchBarClassName}>
+                {/* 検索入力フィールド */}
+                <SearchInput
+                  placeholder="キーワード  [例: バリスタ・レシピ・コーヒー豆]"
+                  aria-label="コーヒーレシピを検索"
+                />
+
+                {/* フィルターボタン */}
+                <FilterTriggerButton isOpen={isFilterOpen} onOpenChange={setIsFilterOpen} />
+
+                {/* 検索ボタン */}
+                <SearchActionButton />
+              </div>
             </div>
           </div>
         </div>

@@ -9,14 +9,14 @@ import { Button } from '@/client/shared/shadcn/button';
 /**
  * 検索実行ボタンコンポーネント
  *
- * 検索条件とフィルター条件を統合して検索を実行する。
- * ローディング状態を表示して、ユーザーに処理中であることを伝える。
+ * ユーザーが設定した全ての検索条件（キーワード・フィルター）を
+ * 一度に適用してレシピ検索を実行。
+ * 検索処理中は操作を無効化し、重複実行によるパフォーマンス問題を防止。
  */
 const SearchActionButton = React.memo(() => {
   // レシピクエリフック
   const { apply, isLoading } = useRecipeQuery();
 
-  // 統合検索の実行（検索条件とフィルターを同時に適用）
   const handleIntegratedSearch = React.useCallback(() => {
     apply();
   }, [apply]);

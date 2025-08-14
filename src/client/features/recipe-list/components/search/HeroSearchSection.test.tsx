@@ -5,11 +5,28 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import HeroSearchSection from './HeroSearchSection';
 
 vi.mock('../../hooks/useRecipeQuery', () => ({
-  useRecipeQuery: vi.fn(),
+  useRecipeQuery: vi.fn().mockReturnValue({
+    pendingSearchValue: '',
+    pendingFilters: {},
+    updateSearchValue: vi.fn(),
+    updateFilters: vi.fn(),
+    executeSearch: vi.fn(),
+    isSearching: false,
+    hasActiveFilters: false,
+    clearFilters: vi.fn(),
+  }),
 }));
 
-vi.mock('./IntegratedSearchBar', () => ({
-  default: vi.fn(() => <div data-testid="integrated-search-bar">IntegratedSearchBar</div>),
+vi.mock('./SearchInput', () => ({
+  default: vi.fn(() => <input data-testid="search-input" />),
+}));
+
+vi.mock('./FilterTriggerButton', () => ({
+  default: vi.fn(() => <button data-testid="filter-trigger-button">フィルター</button>),
+}));
+
+vi.mock('./SearchActionButton', () => ({
+  default: vi.fn(() => <button data-testid="search-action-button">検索</button>),
 }));
 
 describe('HeroSearchSection', () => {
@@ -31,9 +48,11 @@ describe('HeroSearchSection', () => {
       // Arrange & Act
       render(<HeroSearchSection />);
 
-      // Assert - タイトルとIntegratedSearchBarの存在を確認
+      // Assert - タイトルと統合検索バーの構成要素の存在を確認
       expect(document.querySelector('h1')).toHaveTextContent('Coffee Recipe Collection');
-      expect(document.querySelector('[data-testid="integrated-search-bar"]')).toBeInTheDocument();
+      expect(document.querySelector('[data-testid="search-input"]')).toBeInTheDocument();
+      expect(document.querySelector('[data-testid="filter-trigger-button"]')).toBeInTheDocument();
+      expect(document.querySelector('[data-testid="search-action-button"]')).toBeInTheDocument();
     });
 
     it('initialResultCountプロパティが設定されても問題なく動作する', () => {

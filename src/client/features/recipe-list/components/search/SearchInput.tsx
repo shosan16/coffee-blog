@@ -6,17 +6,21 @@ import * as React from 'react';
 import { useRecipeQuery } from '@/client/features/recipe-list/hooks/useRecipeQuery';
 
 type SearchInputProps = {
-  /** プレースホルダーテキスト */
+  /** 入力例を示すプレースホルダーテキスト */
   readonly placeholder?: string;
-  /** aria-label */
+  /** スクリーンリーダー向けの説明ラベル */
   readonly 'aria-label'?: string;
 };
 
 /**
  * 検索入力フィールドコンポーネント
  *
- * キーワード検索の入力とクリア機能を提供する。
- * Enterキーでの検索実行とEscapeキーでのクリアに対応。
+ * ユーザーが直感的にコーヒーレシピを検索できるテキスト入力インターフェース。
+ * レシピ名、器具名、技法名など自由なキーワードでの部分一致検索をサポート。
+ * 素早い検索実行とリセットにより、試行錯誤的な検索体験を最適化。
+ *
+ * @param placeholder - 入力例を示すプレースホルダーテキスト
+ * @param aria-label - スクリーンリーダー向けの説明ラベル
  */
 const SearchInput = React.memo<SearchInputProps>(
   ({ placeholder = 'レシピを検索...', 'aria-label': ariaLabel }) => {
