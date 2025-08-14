@@ -1,6 +1,6 @@
 'use client';
 
-import { SlidersHorizontal } from 'lucide-react';
+import { Filter, RotateCcw, SlidersHorizontal } from 'lucide-react';
 import * as React from 'react';
 
 import { useRecipeQuery } from '@/client/features/recipe-list/hooks/useRecipeQuery';
@@ -13,8 +13,8 @@ import {
   SheetTrigger,
 } from '@/client/shared/shadcn/sheet';
 
-import FilterActions from '../filter/FilterActions';
-import FilterContent from '../filter/FilterContent';
+import ConditionFilter from '../filter/ConditionFilter';
+import EquipmentFilter from '../filter/EquipmentFilter';
 
 type FilterTriggerButtonProps = {
   /** フィルターパネルの表示状態 */
@@ -70,29 +70,70 @@ const FilterTriggerButton = React.memo<FilterTriggerButtonProps>(({ isOpen, onOp
           </SheetHeader>
 
           {/* フィルター条件の入力フォーム */}
-          <FilterContent
-            selectedEquipment={pendingFilters.equipment ?? []}
-            selectedRoastLevels={pendingFilters.roastLevel ?? []}
-            selectedGrindSizes={pendingFilters.grindSize ?? []}
-            beanWeightRange={pendingFilters.beanWeight ?? {}}
-            waterTempRange={pendingFilters.waterTemp ?? {}}
-            waterAmountRange={pendingFilters.waterAmount ?? {}}
-            onEquipmentChange={(equipment) => setFilter('equipment', equipment)}
-            onRoastLevelChange={(roastLevel) => setFilter('roastLevel', roastLevel)}
-            onGrindSizeChange={(grindSize) => setFilter('grindSize', grindSize)}
-            onBeanWeightChange={(beanWeight) => setFilter('beanWeight', beanWeight)}
-            onWaterTempChange={(waterTemp) => setFilter('waterTemp', waterTemp)}
-            onWaterAmountChange={(waterAmount) => setFilter('waterAmount', waterAmount)}
-          />
+          <div className="mt-6 space-y-6 px-4 sm:px-6">
+            {/* 抽出器具フィルター */}
+            <div>
+              <EquipmentFilter
+                selectedEquipment={pendingFilters.equipment ?? []}
+                onChange={(equipment) => setFilter('equipment', equipment)}
+              />
+            </div>
+
+            {/* 抽出条件フィルター */}
+            <div>
+              <ConditionFilter
+                roastLevels={pendingFilters.roastLevel ?? []}
+                grindSizes={pendingFilters.grindSize ?? []}
+                beanWeight={pendingFilters.beanWeight ?? {}}
+                waterTemp={pendingFilters.waterTemp ?? {}}
+                waterAmount={pendingFilters.waterAmount ?? {}}
+                onRoastLevelChange={(roastLevel) => setFilter('roastLevel', roastLevel)}
+                onGrindSizeChange={(grindSize) => setFilter('grindSize', grindSize)}
+                onBeanWeightChange={(beanWeight) => setFilter('beanWeight', beanWeight)}
+                onWaterTempChange={(waterTemp) => setFilter('waterTemp', waterTemp)}
+                onWaterAmountChange={(waterAmount) => setFilter('waterAmount', waterAmount)}
+              />
+            </div>
+          </div>
 
           {/* フィルター操作ボタン */}
-          <FilterActions
-            onApply={apply}
-            onReset={reset}
-            isLoading={isLoading}
-            hasChanges={hasChanges}
-            activeFilterCount={activeFilterCount}
-          />
+          <div className="space-y-3 border-t px-4 pt-4 sm:px-6">
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={reset}
+                disabled={isLoading || activeFilterCount === 0}
+                className="flex-1"
+                type="button"
+                aria-label={`フィルターをリセット（現在 ${activeFilterCount} 件設定中）`}
+              >
+                <RotateCcw className="mr-2 h-4 w-4" />
+                リセット
+              </Button>
+
+              <Button
+                onClick={apply}
+                disabled={isLoading || !hasChanges}
+                className="flex-1"
+                type="button"
+                aria-label={hasChanges ? 'フィルター変更を適用' : 'フィルター変更なし'}
+              >
+                <Filter className="mr-2 h-4 w-4" />
+                絞り込む
+              </Button>
+            </div>
+
+            {/* 変更状態の表示 */}
+            {hasChanges && (
+              <div
+                className="text-muted-foreground text-center text-sm"
+                role="status"
+                aria-live="polite"
+              >
+                変更があります。絞り込むボタンを押して適用してください。
+              </div>
+            )}
+          </div>
         </SheetContent>
       </Sheet>
     </div>

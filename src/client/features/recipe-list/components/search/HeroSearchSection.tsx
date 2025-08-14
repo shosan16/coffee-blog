@@ -1,12 +1,14 @@
 'use client';
 
-import { Coffee } from 'lucide-react';
+import { Coffee, Search } from 'lucide-react';
 import * as React from 'react';
 
 import { cn } from '@/client/lib/tailwind';
+import { Button } from '@/client/shared/shadcn/button';
+
+import { useRecipeQuery } from '../../hooks/useRecipeQuery';
 
 import FilterTriggerButton from './FilterTriggerButton';
-import SearchActionButton from './SearchActionButton';
 import SearchInput from './SearchInput';
 
 type HeroSearchSectionProps = {
@@ -32,6 +34,8 @@ const HeroSearchSection = React.memo<HeroSearchSectionProps>(
   ({ initialResultCount: _initialResultCount }) => {
     const [isFilterOpen, setIsFilterOpen] = React.useState(false);
 
+    const { apply, isLoading } = useRecipeQuery();
+
     const searchBarClassName = React.useMemo(
       () =>
         cn(
@@ -42,6 +46,10 @@ const HeroSearchSection = React.memo<HeroSearchSectionProps>(
         ),
       []
     );
+
+    const handleSearchClick = React.useCallback(() => {
+      apply();
+    }, [apply]);
 
     return (
       <div className="bg-primary text-primary-foreground relative overflow-hidden py-20">
@@ -70,7 +78,17 @@ const HeroSearchSection = React.memo<HeroSearchSectionProps>(
                 <FilterTriggerButton isOpen={isFilterOpen} onOpenChange={setIsFilterOpen} />
 
                 {/* 検索ボタン */}
-                <SearchActionButton />
+                <div className="border-input border-l">
+                  <Button
+                    onClick={handleSearchClick}
+                    variant="default"
+                    className="h-auto rounded-none px-5 py-5 text-sm font-medium"
+                    disabled={isLoading}
+                  >
+                    <Search className="h-4 w-4" />
+                    検索
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

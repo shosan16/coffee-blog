@@ -25,8 +25,12 @@ vi.mock('./FilterTriggerButton', () => ({
   default: vi.fn(() => <button data-testid="filter-trigger-button">フィルター</button>),
 }));
 
-vi.mock('./SearchActionButton', () => ({
-  default: vi.fn(() => <button data-testid="search-action-button">検索</button>),
+vi.mock('@/client/shared/shadcn/button', () => ({
+  Button: vi.fn(({ children, ...props }) => (
+    <button data-testid="search-action-button" {...props}>
+      {children}
+    </button>
+  )),
 }));
 
 describe('HeroSearchSection', () => {
