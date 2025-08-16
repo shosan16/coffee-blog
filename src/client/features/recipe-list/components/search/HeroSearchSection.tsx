@@ -8,6 +8,7 @@ import { Button } from '@/client/shared/shadcn/button';
 
 import { useRecipeQuery } from '../../hooks/useRecipeQuery';
 
+import FilterSheet from './FilterSheet';
 import FilterTriggerButton from './FilterTriggerButton';
 import SearchInput from './SearchInput';
 
@@ -34,7 +35,8 @@ const HeroSearchSection = React.memo<HeroSearchSectionProps>(
   ({ initialResultCount: _initialResultCount }) => {
     const [isFilterOpen, setIsFilterOpen] = React.useState(false);
 
-    const { apply, isLoading } = useRecipeQuery();
+    const queryResult = useRecipeQuery();
+    const { apply, isLoading, activeFilterCount } = queryResult;
 
     const searchBarClassName = React.useMemo(
       () =>
@@ -50,6 +52,10 @@ const HeroSearchSection = React.memo<HeroSearchSectionProps>(
     const handleSearchClick = React.useCallback(() => {
       apply();
     }, [apply]);
+
+    const handleFilterClick = React.useCallback(() => {
+      setIsFilterOpen(true);
+    }, []);
 
     return (
       <div className="bg-primary text-primary-foreground relative overflow-hidden py-20">
@@ -75,7 +81,11 @@ const HeroSearchSection = React.memo<HeroSearchSectionProps>(
                 />
 
                 {/* フィルターボタン */}
-                <FilterTriggerButton isOpen={isFilterOpen} onOpenChange={setIsFilterOpen} />
+                <FilterTriggerButton
+                  activeFilterCount={activeFilterCount}
+                  onClick={handleFilterClick}
+                  isOpen={isFilterOpen}
+                />
 
                 {/* 検索ボタン */}
                 <div className="border-input border-l">
@@ -93,6 +103,13 @@ const HeroSearchSection = React.memo<HeroSearchSectionProps>(
             </div>
           </div>
         </div>
+
+        {/* フィルターシート */}
+        <FilterSheet
+          isOpen={isFilterOpen}
+          onOpenChange={setIsFilterOpen}
+          queryResult={queryResult}
+        />
       </div>
     );
   }

@@ -63,7 +63,9 @@
       "mcp__serena__insert_before_symbol",
       "Bash(npx shadcn@latest add:*)",
       "Bash(pkill:*)",
-      "Bash(pgrep:*)"
+      "Bash(pgrep:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }

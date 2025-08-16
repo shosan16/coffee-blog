@@ -6,14 +6,13 @@ import HeroSearchSection from './HeroSearchSection';
 
 vi.mock('../../hooks/useRecipeQuery', () => ({
   useRecipeQuery: vi.fn().mockReturnValue({
-    pendingSearchValue: '',
     pendingFilters: {},
-    updateSearchValue: vi.fn(),
-    updateFilters: vi.fn(),
-    executeSearch: vi.fn(),
-    isSearching: false,
-    hasActiveFilters: false,
-    clearFilters: vi.fn(),
+    setFilter: vi.fn(),
+    apply: vi.fn(),
+    reset: vi.fn(),
+    isLoading: false,
+    hasChanges: false,
+    activeFilterCount: 0,
   }),
 }));
 
@@ -23,6 +22,10 @@ vi.mock('./SearchInput', () => ({
 
 vi.mock('./FilterTriggerButton', () => ({
   default: vi.fn(() => <button data-testid="filter-trigger-button">フィルター</button>),
+}));
+
+vi.mock('./FilterSheet', () => ({
+  default: vi.fn(() => <div data-testid="filter-sheet">フィルターシート</div>),
 }));
 
 vi.mock('@/client/shared/shadcn/button', () => ({
@@ -57,6 +60,7 @@ describe('HeroSearchSection', () => {
       expect(document.querySelector('[data-testid="search-input"]')).toBeInTheDocument();
       expect(document.querySelector('[data-testid="filter-trigger-button"]')).toBeInTheDocument();
       expect(document.querySelector('[data-testid="search-action-button"]')).toBeInTheDocument();
+      expect(document.querySelector('[data-testid="filter-sheet"]')).toBeInTheDocument();
     });
 
     it('initialResultCountプロパティが設定されても問題なく動作する', () => {
