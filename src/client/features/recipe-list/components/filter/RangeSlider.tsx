@@ -18,7 +18,7 @@ type RangeSliderProps = {
   className?: string;
 };
 
-const RangeSlider = React.memo(function RangeSlider({
+function RangeSlider({
   label,
   min = 0,
   max = 100,
@@ -28,7 +28,7 @@ const RangeSlider = React.memo(function RangeSlider({
   unit = '',
   onChange,
   className = '',
-}: RangeSliderProps) {
+}: RangeSliderProps): React.JSX.Element {
   const [minValue, setMinValue] = React.useState<number | undefined>(defaultMin);
   const [maxValue, setMaxValue] = React.useState<number | undefined>(defaultMax);
 
@@ -111,6 +111,6 @@ const RangeSlider = React.memo(function RangeSlider({
       </div>
     </div>
   );
-});
+}
 
-export default RangeSlider;
+export default React.memo(RangeSlider);

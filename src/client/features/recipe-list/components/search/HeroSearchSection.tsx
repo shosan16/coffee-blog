@@ -31,90 +31,84 @@ type HeroSearchSectionProps = {
  * <HeroSearchSection initialResultCount={42} />
  * ```
  */
-const HeroSearchSection = React.memo<HeroSearchSectionProps>(
-  ({ initialResultCount: _initialResultCount }) => {
-    const [isFilterOpen, setIsFilterOpen] = React.useState(false);
+function HeroSearchSection({
+  initialResultCount: _initialResultCount,
+}: HeroSearchSectionProps): React.JSX.Element {
+  const [isFilterOpen, setIsFilterOpen] = React.useState(false);
 
-    const queryResult = useRecipeQuery();
-    const { apply, isLoading, activeFilterCount } = queryResult;
+  const queryResult = useRecipeQuery();
+  const { apply, isLoading, activeFilterCount } = queryResult;
 
-    const searchBarClassName = React.useMemo(
-      () =>
-        cn(
-          'flex items-center bg-background border border-input rounded-md shadow-sm overflow-hidden',
-          'focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]',
-          'transition-colors',
-          'h-14 text-lg shadow-2xl'
-        ),
-      []
-    );
+  const searchBarClassName = React.useMemo(
+    () =>
+      cn(
+        'flex items-center bg-background border border-input rounded-md shadow-sm overflow-hidden',
+        'focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]',
+        'transition-colors',
+        'h-14 text-lg shadow-2xl'
+      ),
+    []
+  );
 
-    const handleSearchClick = React.useCallback(() => {
-      apply();
-    }, [apply]);
+  const handleSearchClick = React.useCallback(() => {
+    apply();
+  }, [apply]);
 
-    const handleFilterClick = React.useCallback(() => {
-      setIsFilterOpen(true);
-    }, []);
+  const handleFilterClick = React.useCallback(() => {
+    setIsFilterOpen(true);
+  }, []);
 
-    return (
-      <div className="bg-primary text-primary-foreground relative overflow-hidden py-20">
-        <div className="bg-primary/10 absolute inset-0" />
-        <div className="relative container mx-auto px-4">
-          <div className="flex flex-col items-center text-center">
-            {/* メインタイトル */}
-            <Coffee className="text-primary-foreground mb-6 h-16 w-16" />
-            <h1 className="mb-4 text-5xl font-bold tracking-tight">Coffee Recipe Collection</h1>
-            <p className="text-primary-foreground mb-8 max-w-2xl text-xl">
-              プロのバリスタが考案した最高のコーヒーレシピで
-              <br />
-              おうちカフェを極上の体験に
-            </p>
+  return (
+    <div className="bg-primary text-primary-foreground relative overflow-hidden py-20">
+      <div className="bg-primary/10 absolute inset-0" />
+      <div className="relative container mx-auto px-4">
+        <div className="flex flex-col items-center text-center">
+          {/* メインタイトル */}
+          <Coffee className="text-primary-foreground mb-6 h-16 w-16" />
+          <h1 className="mb-4 text-5xl font-bold tracking-tight">Coffee Recipe Collection</h1>
+          <p className="text-primary-foreground mb-8 max-w-2xl text-xl">
+            プロのバリスタが考案した最高のコーヒーレシピで
+            <br />
+            おうちカフェを極上の体験に
+          </p>
 
-            {/* 統合検索バー */}
-            <div className="w-full max-w-3xl">
-              <div className={searchBarClassName}>
-                {/* 検索入力フィールド */}
-                <SearchInput
-                  placeholder="キーワード  [例: バリスタ・レシピ・コーヒー豆]"
-                  aria-label="コーヒーレシピを検索"
-                />
+          {/* 統合検索バー */}
+          <div className="w-full max-w-3xl">
+            <div className={searchBarClassName}>
+              {/* 検索入力フィールド */}
+              <SearchInput
+                placeholder="キーワード  [例: バリスタ・レシピ・コーヒー豆]"
+                aria-label="コーヒーレシピを検索"
+              />
 
-                {/* フィルターボタン */}
-                <FilterTriggerButton
-                  activeFilterCount={activeFilterCount}
-                  onClick={handleFilterClick}
-                  isOpen={isFilterOpen}
-                />
+              {/* フィルターボタン */}
+              <FilterTriggerButton
+                activeFilterCount={activeFilterCount}
+                onClick={handleFilterClick}
+                isOpen={isFilterOpen}
+              />
 
-                {/* 検索ボタン */}
-                <div className="border-input border-l">
-                  <Button
-                    onClick={handleSearchClick}
-                    variant="default"
-                    className="h-auto rounded-none px-5 py-5 text-sm font-medium"
-                    disabled={isLoading}
-                  >
-                    <Search className="h-4 w-4" />
-                    検索
-                  </Button>
-                </div>
+              {/* 検索ボタン */}
+              <div className="border-input border-l">
+                <Button
+                  onClick={handleSearchClick}
+                  variant="default"
+                  className="h-auto rounded-none px-5 py-5 text-sm font-medium"
+                  disabled={isLoading}
+                >
+                  <Search className="h-4 w-4" />
+                  検索
+                </Button>
               </div>
             </div>
           </div>
         </div>
-
-        {/* フィルターシート */}
-        <FilterSheet
-          isOpen={isFilterOpen}
-          onOpenChange={setIsFilterOpen}
-          queryResult={queryResult}
-        />
       </div>
-    );
-  }
-);
 
-HeroSearchSection.displayName = 'HeroSearchSection';
+      {/* フィルターシート */}
+      <FilterSheet isOpen={isFilterOpen} onOpenChange={setIsFilterOpen} queryResult={queryResult} />
+    </div>
+  );
+}
 
-export default HeroSearchSection;
+export default React.memo(HeroSearchSection);

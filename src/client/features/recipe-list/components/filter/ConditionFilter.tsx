@@ -24,7 +24,7 @@ type ConditionFilterProps = {
   className?: string;
 };
 
-const ConditionFilter = React.memo(function ConditionFilter({
+function ConditionFilter({
   roastLevels,
   grindSizes,
   beanWeight,
@@ -36,7 +36,7 @@ const ConditionFilter = React.memo(function ConditionFilter({
   onWaterTempChange,
   onWaterAmountChange,
   className = '',
-}: ConditionFilterProps) {
+}: ConditionFilterProps): React.JSX.Element {
   // OptionItemをMultiComboboxItem形式に変換するヘルパー関数
   const convertToMultiComboboxItems = (items: OptionItem[]): MultiComboboxItem[] => {
     return items.map((item) => ({
@@ -160,6 +160,6 @@ const ConditionFilter = React.memo(function ConditionFilter({
       </div>
     </div>
   );
-});
+}
 
-export default ConditionFilter;
+export default React.memo(ConditionFilter);

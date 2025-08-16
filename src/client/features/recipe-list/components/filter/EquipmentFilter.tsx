@@ -26,11 +26,11 @@ type EquipmentFilterProps = {
   className?: string;
 };
 
-const EquipmentFilter = React.memo(function EquipmentFilter({
+function EquipmentFilter({
   selectedEquipment,
   onChange,
   className = '',
-}: EquipmentFilterProps) {
+}: EquipmentFilterProps): React.JSX.Element {
   // 器具データを取得
   const {
     equipment: equipmentData,
@@ -155,6 +155,6 @@ const EquipmentFilter = React.memo(function EquipmentFilter({
       })}
     </div>
   );
-});
+}
 
-export default EquipmentFilter;
+export default React.memo(EquipmentFilter);

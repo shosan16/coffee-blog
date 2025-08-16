@@ -23,7 +23,10 @@ type SearchResultsHeaderProps = {
  * <SearchResultsHeader resultCount={42} />
  * ```
  */
-const SearchResultsHeader = React.memo<SearchResultsHeaderProps>(({ resultCount, className }) => {
+function SearchResultsHeader({
+  resultCount,
+  className,
+}: SearchResultsHeaderProps): React.JSX.Element {
   const { searchValue } = useRecipeQuery();
 
   // 検索結果のテキスト
@@ -60,8 +63,6 @@ const SearchResultsHeader = React.memo<SearchResultsHeaderProps>(({ resultCount,
       </div>
     </div>
   );
-});
+}
 
-SearchResultsHeader.displayName = 'SearchResultsHeader';
-
-export default SearchResultsHeader;
+export default React.memo(SearchResultsHeader);

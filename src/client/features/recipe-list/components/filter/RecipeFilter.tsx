@@ -15,7 +15,7 @@ type RecipeFilterProps = {
   className?: string;
 };
 
-const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: RecipeFilterProps) {
+function RecipeFilter({ className = '' }: RecipeFilterProps): React.JSX.Element {
   const { filters, pendingFilters, setFilter, apply, reset, isLoading, hasChanges } =
     useRecipeQuery();
   const [isOpen, setIsOpen] = useState(false);
@@ -199,6 +199,6 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
       </div>
     </div>
   );
-});
+}
 
-export default RecipeFilter;
+export default React.memo(RecipeFilter);

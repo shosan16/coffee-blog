@@ -37,107 +37,103 @@ type SearchBoxProps = {
  * />
  * ```
  */
-const SearchBox = React.memo<SearchBoxProps>(
-  ({
-    value,
-    placeholder = 'レシピを検索...',
-    onChange,
-    clearable = true,
-    disabled = false,
-    error = false,
-    className,
-    'aria-label': ariaLabel,
-  }) => {
-    // 入力値の変更ハンドラー
-    const handleInputChange = React.useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) => {
-        onChange(e.target.value);
-      },
-      [onChange]
-    );
+function SearchBox({
+  value,
+  placeholder = 'レシピを検索...',
+  onChange,
+  clearable = true,
+  disabled = false,
+  error = false,
+  className,
+  'aria-label': ariaLabel,
+}: SearchBoxProps): React.JSX.Element {
+  // 入力値の変更ハンドラー
+  const handleInputChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onChange(e.target.value);
+    },
+    [onChange]
+  );
 
-    // クリアボタンのクリックハンドラー
-    const handleClearClick = React.useCallback(
-      (e: React.MouseEvent) => {
-        e.stopPropagation();
+  // クリアボタンのクリックハンドラー
+  const handleClearClick = React.useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      onChange('');
+    },
+    [onChange]
+  );
+
+  // Enterキーの処理
+  const handleKeyDown = React.useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Escape' && clearable) {
         onChange('');
-      },
-      [onChange]
-    );
+      }
+    },
+    [onChange, clearable]
+  );
 
-    // Enterキーの処理
-    const handleKeyDown = React.useCallback(
-      (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Escape' && clearable) {
-          onChange('');
-        }
-      },
-      [onChange, clearable]
-    );
+  // コンテナのスタイルクラス
+  const containerClassName = React.useMemo(
+    () =>
+      cn(
+        'relative flex items-center border rounded-md bg-background transition-colors',
+        'border-input shadow-xs',
+        'focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]',
+        error && 'border-destructive ring-destructive/20',
+        disabled && 'opacity-50 cursor-not-allowed',
+        !disabled && 'cursor-text',
+        className ?? ''
+      ),
+    [error, disabled, className]
+  );
 
-    // コンテナのスタイルクラス
-    const containerClassName = React.useMemo(
-      () =>
-        cn(
-          'relative flex items-center border rounded-md bg-background transition-colors',
-          'border-input shadow-xs',
-          'focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]',
-          error && 'border-destructive ring-destructive/20',
-          disabled && 'opacity-50 cursor-not-allowed',
-          !disabled && 'cursor-text',
-          className ?? ''
-        ),
-      [error, disabled, className]
-    );
+  // 入力フィールドのスタイルクラス
+  const inputClassName = React.useMemo(
+    () =>
+      cn(
+        'flex-1 bg-transparent px-3 py-2.5 text-sm outline-none text-foreground',
+        'placeholder:text-muted-foreground',
+        disabled && 'cursor-not-allowed'
+      ),
+    [disabled]
+  );
 
-    // 入力フィールドのスタイルクラス
-    const inputClassName = React.useMemo(
-      () =>
-        cn(
-          'flex-1 bg-transparent px-3 py-2.5 text-sm outline-none text-foreground',
-          'placeholder:text-muted-foreground',
-          disabled && 'cursor-not-allowed'
-        ),
-      [disabled]
-    );
-
-    return (
-      <div className={containerClassName}>
-        {/* 検索アイコン */}
-        <div className="flex items-center pl-3">
-          <SearchIcon className="text-muted-foreground size-4" />
-        </div>
-
-        {/* 入力フィールド */}
-        <input
-          type="text"
-          className={inputClassName}
-          placeholder={placeholder}
-          value={value}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          disabled={disabled}
-          aria-label={ariaLabel ?? placeholder}
-        />
-
-        {/* クリアボタン */}
-        {clearable && value && !disabled && (
-          <div className="flex items-center pr-3">
-            <button
-              type="button"
-              onClick={handleClearClick}
-              className="text-muted-foreground hover:text-foreground p-1 transition-colors"
-              aria-label="検索をクリア"
-            >
-              <XIcon className="size-4" />
-            </button>
-          </div>
-        )}
+  return (
+    <div className={containerClassName}>
+      {/* 検索アイコン */}
+      <div className="flex items-center pl-3">
+        <SearchIcon className="text-muted-foreground size-4" />
       </div>
-    );
-  }
-);
 
-SearchBox.displayName = 'SearchBox';
+      {/* 入力フィールド */}
+      <input
+        type="text"
+        className={inputClassName}
+        placeholder={placeholder}
+        value={value}
+        onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
+        disabled={disabled}
+        aria-label={ariaLabel ?? placeholder}
+      />
 
-export default SearchBox;
+      {/* クリアボタン */}
+      {clearable && value && !disabled && (
+        <div className="flex items-center pr-3">
+          <button
+            type="button"
+            onClick={handleClearClick}
+            className="text-muted-foreground hover:text-foreground p-1 transition-colors"
+            aria-label="検索をクリア"
+          >
+            <XIcon className="size-4" />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default React.memo(SearchBox);
