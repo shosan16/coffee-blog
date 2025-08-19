@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 
 import type { ComboboxOptionType, UseComboboxReturn } from '../types';
 
@@ -17,17 +17,17 @@ export const useCombobox = ({
   onValueChange,
   onInputChange,
 }: UseComboboxProps): UseComboboxReturn => {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [searchValue, setSearchValue] = React.useState('');
-  const [focusedIndex, setFocusedIndex] = React.useState(INITIAL_FOCUSED_INDEX);
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+  const [focusedIndex, setFocusedIndex] = useState(INITIAL_FOCUSED_INDEX);
 
   // 選択されたオプションを取得
-  const selectedOption = React.useMemo(() => {
+  const selectedOption = useMemo(() => {
     return options.find((option) => option.value === value);
   }, [options, value]);
 
   // フィルタリングされたオプション
-  const filteredOptions = React.useMemo(() => {
+  const filteredOptions = useMemo(() => {
     if (!searchValue.trim()) return options;
 
     const searchTerm = searchValue.toLowerCase().trim();
@@ -35,22 +35,22 @@ export const useCombobox = ({
   }, [options, searchValue]);
 
   // 検索値の変更を親に通知
-  React.useEffect(() => {
+  useEffect(() => {
     onInputChange?.(searchValue);
   }, [searchValue, onInputChange]);
 
   // アクション関数群
-  const handleOpen = React.useCallback((): void => {
+  const handleOpen = useCallback((): void => {
     setIsOpen(true);
   }, []);
 
-  const handleClose = React.useCallback((): void => {
+  const handleClose = useCallback((): void => {
     setIsOpen(false);
     setSearchValue('');
     setFocusedIndex(INITIAL_FOCUSED_INDEX);
   }, []);
 
-  const handleSelectOption = React.useCallback(
+  const handleSelectOption = useCallback(
     (option: ComboboxOptionType): void => {
       if (option.disabled) return;
 
@@ -62,24 +62,24 @@ export const useCombobox = ({
     [onValueChange]
   );
 
-  const handleSetSearchValue = React.useCallback((newValue: string): void => {
+  const handleSetSearchValue = useCallback((newValue: string): void => {
     setSearchValue(newValue);
     // 検索時にフォーカスをリセット
     setFocusedIndex(INITIAL_FOCUSED_INDEX);
   }, []);
 
-  const handleSetFocusedIndex = React.useCallback((index: number): void => {
+  const handleSetFocusedIndex = useCallback((index: number): void => {
     setFocusedIndex(index);
   }, []);
 
-  const handleClear = React.useCallback((): void => {
+  const handleClear = useCallback((): void => {
     onValueChange?.('');
     setSearchValue('');
     setFocusedIndex(INITIAL_FOCUSED_INDEX);
   }, [onValueChange]);
 
   // アクションオブジェクト
-  const actions = React.useMemo(
+  const actions = useMemo(
     () => ({
       open: handleOpen,
       close: handleClose,

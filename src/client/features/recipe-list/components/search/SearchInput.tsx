@@ -1,7 +1,7 @@
 'use client';
 
 import { XIcon } from 'lucide-react';
-import * as React from 'react';
+import { useCallback, memo } from 'react';
 
 import { useRecipeQuery } from '@/client/features/recipe-list/hooks/useRecipeQuery';
 
@@ -30,7 +30,7 @@ function SearchInput({
   const { pendingSearchValue, setSearchValue, apply, clearSearch } = useRecipeQuery();
 
   // 入力値の変更ハンドラー
-  const handleInputChange = React.useCallback(
+  const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setSearchValue(e.target.value);
     },
@@ -38,7 +38,7 @@ function SearchInput({
   );
 
   // クリアボタンのクリックハンドラー
-  const handleClearClick = React.useCallback(
+  const handleClearClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
       clearSearch();
@@ -47,7 +47,7 @@ function SearchInput({
   );
 
   // Enterキーの処理
-  const handleKeyDown = React.useCallback(
+  const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
         apply();
@@ -85,4 +85,4 @@ function SearchInput({
   );
 }
 
-export default React.memo(SearchInput);
+export default memo(SearchInput);

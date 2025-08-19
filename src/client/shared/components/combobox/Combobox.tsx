@@ -1,6 +1,6 @@
 'use client';
 
-import * as React from 'react';
+import { useRef, useEffect, useCallback, useMemo, useImperativeHandle, forwardRef } from 'react';
 
 import { cn } from '@/client/lib/tailwind';
 
@@ -23,7 +23,7 @@ function useScrollIntoView(
   focusedIndex: number,
   listRef: React.RefObject<HTMLUListElement | null>
 ): void {
-  React.useEffect(() => {
+  useEffect(() => {
     if (focusedIndex >= 0 && listRef.current) {
       const focusedElement = listRef.current.children[focusedIndex] as HTMLElement;
       focusedElement.scrollIntoView({
@@ -41,18 +41,18 @@ const useComboboxHandlers = (
   inputRef: React.RefObject<HTMLInputElement | null>,
   disabled: boolean
 ) => {
-  const handleInputClick = React.useCallback(() => {
+  const handleInputClick = useCallback(() => {
     if (!disabled) {
       comboboxState.actions.open();
     }
   }, [disabled, comboboxState.actions]);
 
-  const handleClear = React.useCallback(() => {
+  const handleClear = useCallback(() => {
     comboboxState.actions.clear();
     inputRef.current?.focus();
   }, [comboboxState.actions, inputRef]);
 
-  const handleOptionClick = React.useCallback(
+  const handleOptionClick = useCallback(
     (option: ComboboxOptionType) => {
       comboboxState.actions.selectOption(option);
       inputRef.current?.focus();
@@ -67,7 +67,7 @@ const useComboboxHandlers = (
   };
 };
 
-const Combobox = React.forwardRef<HTMLDivElement, ComboboxProps>(
+const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
   (
     {
       options,
@@ -89,12 +89,12 @@ const Combobox = React.forwardRef<HTMLDivElement, ComboboxProps>(
     },
     ref
   ) => {
-    const comboboxRef = React.useRef<HTMLDivElement>(null);
-    const inputRef = React.useRef<HTMLInputElement>(null);
-    const listRef = React.useRef<HTMLUListElement>(null);
+    const comboboxRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const listRef = useRef<HTMLUListElement>(null);
 
     // Refを統合
-    React.useImperativeHandle(ref, () => comboboxRef.current as HTMLDivElement, []);
+    useImperativeHandle(ref, () => comboboxRef.current as HTMLDivElement, []);
 
     // メインロジック
     const comboboxState = useCombobox({
@@ -127,14 +127,14 @@ const Combobox = React.forwardRef<HTMLDivElement, ComboboxProps>(
     useScrollIntoView(comboboxState.focusedIndex, listRef);
 
     // アクセシビリティ属性
-    const ids = React.useMemo(() => generateComboboxIds(testId), [testId]);
-    const ariaAttributes = React.useMemo(
+    const ids = useMemo(() => generateComboboxIds(testId), [testId]);
+    const ariaAttributes = useMemo(
       () => getAriaAttributes(comboboxState, ids),
       [comboboxState, ids]
     );
 
     // スタイルクラス
-    const containerClassName = React.useMemo(
+    const containerClassName = useMemo(
       () => cn('relative', width === 'full' ? 'w-full' : 'w-auto', className),
       [width, className]
     );

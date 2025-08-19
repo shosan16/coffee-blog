@@ -1,7 +1,7 @@
 'use client';
 
 import { SlidersHorizontal } from 'lucide-react';
-import * as React from 'react';
+import { memo } from 'react';
 
 import { Button } from '@/client/shared/shadcn/button';
 
@@ -50,4 +50,4 @@ function FilterTriggerButton({
   );
 }
 
-export default React.memo(FilterTriggerButton);
+export default memo(FilterTriggerButton);

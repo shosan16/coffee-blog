@@ -1,7 +1,7 @@
 'use client';
 
 import { SearchIcon, XIcon } from 'lucide-react';
-import * as React from 'react';
+import { useCallback, useMemo, memo } from 'react';
 
 import { cn } from '@/client/lib/tailwind';
 
@@ -48,7 +48,7 @@ function SearchBox({
   'aria-label': ariaLabel,
 }: SearchBoxProps): React.JSX.Element {
   // 入力値の変更ハンドラー
-  const handleInputChange = React.useCallback(
+  const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       onChange(e.target.value);
     },
@@ -56,7 +56,7 @@ function SearchBox({
   );
 
   // クリアボタンのクリックハンドラー
-  const handleClearClick = React.useCallback(
+  const handleClearClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
       onChange('');
@@ -65,7 +65,7 @@ function SearchBox({
   );
 
   // Enterキーの処理
-  const handleKeyDown = React.useCallback(
+  const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Escape' && clearable) {
         onChange('');
@@ -75,7 +75,7 @@ function SearchBox({
   );
 
   // コンテナのスタイルクラス
-  const containerClassName = React.useMemo(
+  const containerClassName = useMemo(
     () =>
       cn(
         'relative flex items-center border rounded-md bg-background transition-colors',
@@ -90,7 +90,7 @@ function SearchBox({
   );
 
   // 入力フィールドのスタイルクラス
-  const inputClassName = React.useMemo(
+  const inputClassName = useMemo(
     () =>
       cn(
         'flex-1 bg-transparent px-3 py-2.5 text-sm outline-none text-foreground',
@@ -136,4 +136,4 @@ function SearchBox({
   );
 }
 
-export default React.memo(SearchBox);
+export default memo(SearchBox);

@@ -1,7 +1,7 @@
 'use client';
 
 import { Coffee, Search } from 'lucide-react';
-import * as React from 'react';
+import { useState, useMemo, useCallback, memo } from 'react';
 
 import { cn } from '@/client/lib/tailwind';
 import { Button } from '@/client/shared/shadcn/button';
@@ -34,12 +34,12 @@ type HeroSearchSectionProps = {
 function HeroSearchSection({
   initialResultCount: _initialResultCount,
 }: HeroSearchSectionProps): React.JSX.Element {
-  const [isFilterOpen, setIsFilterOpen] = React.useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const queryResult = useRecipeQuery();
   const { apply, isLoading, activeFilterCount } = queryResult;
 
-  const searchBarClassName = React.useMemo(
+  const searchBarClassName = useMemo(
     () =>
       cn(
         'flex items-center bg-background border border-input rounded-md shadow-sm overflow-hidden',
@@ -50,11 +50,11 @@ function HeroSearchSection({
     []
   );
 
-  const handleSearchClick = React.useCallback(() => {
+  const handleSearchClick = useCallback(() => {
     apply();
   }, [apply]);
 
-  const handleFilterClick = React.useCallback(() => {
+  const handleFilterClick = useCallback(() => {
     setIsFilterOpen(true);
   }, []);
 
@@ -111,4 +111,4 @@ function HeroSearchSection({
   );
 }
 
-export default React.memo(HeroSearchSection);
+export default memo(HeroSearchSection);

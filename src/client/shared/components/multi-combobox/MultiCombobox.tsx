@@ -2,7 +2,6 @@
 
 import * as Popover from '@radix-ui/react-popover';
 import { X, ChevronDown } from 'lucide-react';
-import * as React from 'react';
 
 import { cn } from '@/client/lib/tailwind';
 import { Badge } from '@/client/shared/shadcn/badge';

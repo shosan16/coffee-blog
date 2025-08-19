@@ -1,7 +1,7 @@
 'use client';
 
 import { ChevronDownIcon, XIcon } from 'lucide-react';
-import * as React from 'react';
+import { useCallback, useMemo, memo } from 'react';
 
 import { cn } from '@/client/lib/tailwind';
 
@@ -41,7 +41,7 @@ function ComboboxInput({
   inputRef,
 }: ComboboxInputProps): React.JSX.Element {
   // 入力値の変更ハンドラー
-  const handleInputChange = React.useCallback(
+  const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       onInputChange(e.target.value);
     },
@@ -49,7 +49,7 @@ function ComboboxInput({
   );
 
   // クリアボタンのクリックハンドラー
-  const handleClearClick = React.useCallback(
+  const handleClearClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
       onClear();
@@ -58,17 +58,17 @@ function ComboboxInput({
   );
 
   // 表示する値を計算
-  const displayValue = React.useMemo(() => {
+  const displayValue = useMemo(() => {
     return isOpen ? value : (selectedOption?.label ?? '');
   }, [isOpen, value, selectedOption?.label]);
 
   // 表示するプレースホルダーを計算
-  const displayPlaceholder = React.useMemo(() => {
+  const displayPlaceholder = useMemo(() => {
     return isOpen ? searchPlaceholder : (selectedOption?.label ?? placeholder);
   }, [isOpen, searchPlaceholder, selectedOption?.label, placeholder]);
 
   // コンテナのスタイルクラス
-  const containerClassName = React.useMemo(
+  const containerClassName = useMemo(
     () =>
       cn(
         'relative flex items-center border-2 rounded-md bg-card transition-colors',
@@ -83,7 +83,7 @@ function ComboboxInput({
   );
 
   // 入力フィールドのスタイルクラス
-  const inputClassName = React.useMemo(
+  const inputClassName = useMemo(
     () =>
       cn(
         'flex-1 bg-transparent px-3 py-2 text-sm outline-none',
@@ -94,7 +94,7 @@ function ComboboxInput({
   );
 
   // シェブロンアイコンのスタイルクラス
-  const chevronClassName = React.useMemo(
+  const chevronClassName = useMemo(
     () => cn('size-4 text-muted-foreground transition-transform', isOpen && 'rotate-180'),
     [isOpen]
   );
@@ -130,4 +130,4 @@ function ComboboxInput({
   );
 }
 
-export default React.memo(ComboboxInput);
+export default memo(ComboboxInput);

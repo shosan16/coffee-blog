@@ -1,6 +1,6 @@
 'use client';
 
-import * as React from 'react';
+import { useCallback, useMemo, memo } from 'react';
 
 import { cn } from '@/client/lib/tailwind';
 
@@ -35,7 +35,7 @@ function ComboboxDropdown({
   getOptionAriaAttributes,
 }: ComboboxDropdownProps): React.JSX.Element | null {
   // オプションのマウスエンターハンドラー
-  const createOptionMouseEnterHandler = React.useCallback(
+  const createOptionMouseEnterHandler = useCallback(
     (index: number) => {
       return () => onOptionMouseEnter(index);
     },
@@ -43,7 +43,7 @@ function ComboboxDropdown({
   );
 
   // ドロップダウンのスタイルクラス
-  const dropdownClassName = React.useMemo(
+  const dropdownClassName = useMemo(
     () =>
       cn(
         'absolute top-full left-0 z-50 mt-1 w-full',
@@ -90,4 +90,4 @@ function ComboboxDropdown({
   );
 }
 
-export default React.memo(ComboboxDropdown);
+export default memo(ComboboxDropdown);

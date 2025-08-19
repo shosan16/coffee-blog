@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useId, useCallback } from 'react';
 
 import type { MultiComboboxProps, UseMultiComboboxReturn } from '../types';
 
@@ -32,9 +32,9 @@ export function useMultiCombobox({
   | 'maxItems'
   | 'autoFocus'
 >): UseMultiComboboxReturn {
-  const [open, setOpen] = React.useState(false);
-  const [inputValue, setInputValue] = React.useState('');
-  const listboxId = React.useId();
+  const [open, setOpen] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const listboxId = useId();
 
   // フォーカス管理
   const focusManagement = useFocusManagement({ autoFocus, disabled });
@@ -69,7 +69,7 @@ export function useMultiCombobox({
   });
 
   // ドロップダウン開閉に必要なクリックハンドラーを拡張
-  const handleInputClick = React.useCallback(
+  const handleInputClick = useCallback(
     (e: React.MouseEvent) => {
       if (disabled) return;
 
@@ -79,7 +79,7 @@ export function useMultiCombobox({
     [focusManagement, disabled]
   );
 
-  const handleTriggerClick = React.useCallback(() => {
+  const handleTriggerClick = useCallback(() => {
     if (disabled) return;
 
     focusManagement.handleTriggerClick();

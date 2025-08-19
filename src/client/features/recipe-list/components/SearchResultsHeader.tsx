@@ -1,7 +1,7 @@
 'use client';
 
 import { Search } from 'lucide-react';
-import * as React from 'react';
+import { useMemo, memo } from 'react';
 
 import { useRecipeQuery } from '../hooks/useRecipeQuery';
 
@@ -30,7 +30,7 @@ function SearchResultsHeader({
   const { searchValue } = useRecipeQuery();
 
   // 検索結果のテキスト
-  const resultText = React.useMemo(() => {
+  const resultText = useMemo(() => {
     const baseText = `${resultCount}件のレシピが見つかりました`;
 
     if (resultCount === 0) {
@@ -65,4 +65,4 @@ function SearchResultsHeader({
   );
 }
 
-export default React.memo(SearchResultsHeader);
+export default memo(SearchResultsHeader);
