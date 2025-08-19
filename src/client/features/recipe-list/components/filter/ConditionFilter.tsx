@@ -37,7 +37,6 @@ function ConditionFilter({
   onWaterAmountChange,
   className = '',
 }: ConditionFilterProps): React.JSX.Element {
-  // OptionItemをMultiComboboxItem形式に変換するヘルパー関数
   const convertToMultiComboboxItems = (items: OptionItem[]): MultiComboboxItem[] => {
     return items.map((item) => ({
       id: item.id,
@@ -106,6 +105,7 @@ function ConditionFilter({
             onDelete={handleRoastLevelToggle}
             placeholder="焙煎度を選択"
             dropdownHelpMessage="焙煎度を選択してください"
+            autoFocus={false}
           />
         </div>
 
@@ -119,6 +119,7 @@ function ConditionFilter({
             onDelete={handleGrindSizeToggle}
             placeholder="挽き目を選択"
             dropdownHelpMessage="挽き目を選択してください"
+            autoFocus={false}
           />
         </div>
       </div>

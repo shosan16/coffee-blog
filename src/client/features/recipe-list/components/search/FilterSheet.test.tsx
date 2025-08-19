@@ -283,4 +283,38 @@ describe('FilterSheet', () => {
       expect(screen.getByText('フィルター条件')).toBeInTheDocument();
     });
   });
+
+  describe('フォーカス管理', () => {
+    it('シートが開いた時、フォーカス管理用のラッパーdivにtabIndex=-1が設定されていること', () => {
+      // Arrange - シートを開いた状態でレンダリング
+      render(
+        <FilterSheet isOpen={true} onOpenChange={vi.fn()} queryResult={createMockQueryResult()} />
+      );
+
+      // Act - フォーカス管理用のラッパーdivを取得
+      const focusWrapper = document.querySelector('.outline-none[tabindex="-1"]');
+
+      // Assert - tabIndex=-1が設定されていることを確認
+      // これにより、プログラム的にフォーカス可能だが、タブ順序には含まれない
+      expect(focusWrapper).toBeInTheDocument();
+      expect(focusWrapper).toHaveAttribute('tabIndex', '-1');
+      expect(focusWrapper).toHaveClass('outline-none');
+    });
+
+    it('aria-describedby属性が適切に設定されていること', () => {
+      // Arrange - シートを開いた状態でレンダリング
+      render(
+        <FilterSheet isOpen={true} onOpenChange={vi.fn()} queryResult={createMockQueryResult()} />
+      );
+
+      // Act - SheetContentとdescription要素を取得
+      const sheetContent = document.querySelector('[data-slot="sheet-content"]');
+      const description = document.getElementById('filter-description');
+
+      // Assert - アクセシビリティ属性が適切に設定されていることを確認
+      expect(sheetContent).toHaveAttribute('aria-describedby', 'filter-description');
+      expect(description).toBeInTheDocument();
+      expect(description).toHaveClass('sr-only');
+    });
+  });
 });
