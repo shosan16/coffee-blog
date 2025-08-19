@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, memo } from 'react';
 
 import { Combobox, type ComboboxOption } from '@/client/shared/components/combobox';
 import { useEquipment } from '@/client/shared/hooks/useEquipment';
@@ -157,4 +157,4 @@ function EquipmentFilter({
   );
 }
 
-export default React.memo(EquipmentFilter);
+export default memo(EquipmentFilter);

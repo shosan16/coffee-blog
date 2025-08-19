@@ -2,7 +2,7 @@
 
 import type { RoastLevel, GrindSize } from '@prisma/client';
 import { X, Filter, RotateCcw } from 'lucide-react';
-import React, { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, memo } from 'react';
 
 import { useRecipeQuery } from '@/client/features/recipe-list/hooks/useRecipeQuery';
 import { Button } from '@/client/shared/shadcn/button';
@@ -201,4 +201,4 @@ function RecipeFilter({ className = '' }: RecipeFilterProps): React.JSX.Element 
   );
 }
 
-export default React.memo(RecipeFilter);
+export default memo(RecipeFilter);

@@ -1,7 +1,7 @@
 'use client';
 
 import type { RoastLevel, GrindSize } from '@prisma/client';
-import React, { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, memo } from 'react';
 
 import MultiCombobox from '@/client/shared/components/multi-combobox/MultiCombobox';
 import type { MultiComboboxItem } from '@/client/shared/components/multi-combobox/types';
@@ -163,4 +163,4 @@ function ConditionFilter({
   );
 }
 
-export default React.memo(ConditionFilter);
+export default memo(ConditionFilter);

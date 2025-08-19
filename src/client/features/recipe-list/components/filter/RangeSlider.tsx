@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import { useState, useCallback, memo } from 'react';
 
 import Input from '@/client/shared/shadcn/input';
 import Label from '@/client/shared/shadcn/label';
@@ -29,8 +29,8 @@ function RangeSlider({
   onChange,
   className = '',
 }: RangeSliderProps): React.JSX.Element {
-  const [minValue, setMinValue] = React.useState<number | undefined>(defaultMin);
-  const [maxValue, setMaxValue] = React.useState<number | undefined>(defaultMax);
+  const [minValue, setMinValue] = useState<number | undefined>(defaultMin);
+  const [maxValue, setMaxValue] = useState<number | undefined>(defaultMax);
 
   const currentMin = minValue ?? min;
   const currentMax = maxValue ?? max;
@@ -113,4 +113,4 @@ function RangeSlider({
   );
 }
 
-export default React.memo(RangeSlider);
+export default memo(RangeSlider);
