@@ -33,7 +33,7 @@ export default function RecipeEquipmentList({ equipment }: RecipeEquipmentListPr
   }
 
   return (
-    <Card className="border-border bg-card shadow-sm transition-all duration-300 hover:shadow-xl">
+    <Card className="border-border bg-card shadow-sm transition-all duration-300">
       {/* コーヒーの染みのような装飾 */}
       <div className="bg-muted/20 absolute -top-6 -left-6 h-32 w-32 rounded-full blur-3xl" />
 

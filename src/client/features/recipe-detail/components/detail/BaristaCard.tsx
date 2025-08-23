@@ -17,7 +17,7 @@ type BaristaCardProps = {
  */
 export default function BaristaCard({ barista }: BaristaCardProps) {
   return (
-    <Card className="border-border bg-card shadow-sm transition-all duration-300 hover:shadow-xl">
+    <Card className="border-border bg-card shadow-sm transition-all duration-300">
       {/* コーヒーの染みのような装飾 */}
       <div className="bg-muted/20 absolute -top-4 -right-4 h-24 w-24 rounded-full blur-2xl" />
 

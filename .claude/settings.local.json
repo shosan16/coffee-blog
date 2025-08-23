@@ -65,7 +65,8 @@
       "Bash(pkill:*)",
       "Bash(pgrep:*)",
       "Bash(npm run type-check:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(npx madge:*)"
     ],
     "deny": []
   }

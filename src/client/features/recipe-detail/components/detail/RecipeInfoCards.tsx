@@ -24,7 +24,7 @@ export default function RecipeInfoCards({ recipe }: RecipeInfoCardsProps) {
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
       {/* 豆情報 */}
-      <Card className="border-border bg-card shadow-sm transition-all duration-300 hover:shadow-xl">
+      <Card className="border-border bg-card shadow-sm transition-all duration-300">
         <CardContent className="p-6">
           <div className="flex items-start gap-4">
             <div className="border-border bg-primary/10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border">
@@ -62,7 +62,7 @@ export default function RecipeInfoCards({ recipe }: RecipeInfoCardsProps) {
       </Card>
 
       {/* 湯温・湯量 */}
-      <Card className="border-border bg-card shadow-sm transition-all duration-300 hover:shadow-xl">
+      <Card className="border-border bg-card shadow-sm transition-all duration-300">
         <CardContent className="p-6">
           <div className="flex items-start gap-4">
             <div className="border-border bg-primary/10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border">
@@ -95,7 +95,7 @@ export default function RecipeInfoCards({ recipe }: RecipeInfoCardsProps) {
 
       {/* 抽出時間 */}
       {recipe.brewingTime && (
-        <Card className="border-border bg-card shadow-sm transition-all duration-300 hover:shadow-xl">
+        <Card className="border-border bg-card shadow-sm transition-all duration-300">
           <CardContent className="p-6">
             <div className="flex items-start gap-4">
               <div className="border-border bg-primary/10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border">
@@ -119,7 +119,7 @@ export default function RecipeInfoCards({ recipe }: RecipeInfoCardsProps) {
       )}
 
       {/* ビュー数 */}
-      <Card className="border-border bg-card shadow-sm transition-all duration-300 hover:shadow-xl">
+      <Card className="border-border bg-card shadow-sm transition-all duration-300">
         <CardContent className="p-6">
           <div className="flex items-start gap-4">
             <div className="border-border bg-primary/10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border">
