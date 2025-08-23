@@ -5,7 +5,6 @@ import RecipeEquipmentList from './RecipeEquipmentList';
 import RecipeHeader from './RecipeHeader';
 import RecipeInfoCards from './RecipeInfoCards';
 import RecipeSteps from './RecipeSteps';
-import RecipeTagList from './RecipeTagList';
 
 type RecipeDetailViewProps = {
   /** レシピ詳細情報 */
@@ -36,7 +35,7 @@ export default function RecipeDetailView({ recipe }: RecipeDetailViewProps) {
               <RecipeInfoCards recipe={recipe} />
 
               {/* 手順 */}
-              <RecipeSteps steps={recipe.steps} />
+              <RecipeSteps steps={recipe.steps} brewingTime={recipe.brewingTime} />
 
               {/* 器具一覧 */}
               <RecipeEquipmentList equipment={recipe.equipment} />
@@ -46,9 +45,6 @@ export default function RecipeDetailView({ recipe }: RecipeDetailViewProps) {
             <aside className="w-full flex-shrink-0 space-y-6 lg:w-80">
               {/* バリスタ情報 */}
               {recipe.barista && <BaristaCard barista={recipe.barista} />}
-
-              {/* タグ */}
-              <RecipeTagList tags={recipe.tags} />
             </aside>
           </div>
         </div>

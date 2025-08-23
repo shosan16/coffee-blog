@@ -1,4 +1,4 @@
-import { Coffee } from 'lucide-react';
+import { Coffee, Tag } from 'lucide-react';
 
 import { Card, CardContent } from '@/client/shared/shadcn/card';
 
@@ -34,6 +34,22 @@ export default function RecipeHeader({ recipe }: RecipeHeaderProps) {
               )}
             </div>
           </div>
+
+          {/* タグ表示 */}
+          {recipe.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {recipe.tags.map((tag) => (
+                <div
+                  key={tag.id}
+                  className="bg-primary/10 text-primary hover:bg-primary/20 inline-flex cursor-pointer items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors"
+                  title={`タグ: ${tag.name}`}
+                >
+                  <Tag className="mr-2 h-3 w-3" />
+                  {tag.name}
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* 備考 */}
           {recipe.remarks && (

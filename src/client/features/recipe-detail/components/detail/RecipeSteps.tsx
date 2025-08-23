@@ -8,6 +8,8 @@ import type { RecipeStepInfo } from '../../types/recipe-detail';
 type RecipeStepsProps = {
   /** レシピ手順リスト */
   steps: RecipeStepInfo[];
+  /** 総抽出時間（秒） */
+  brewingTime?: number;
 };
 
 /**
@@ -16,8 +18,8 @@ type RecipeStepsProps = {
  * タイムライン形式でレシピの手順を表示する。
  * 累積時間も表示して、タイミングを分かりやすくする。
  */
-export default function RecipeSteps({ steps }: RecipeStepsProps) {
-  const { formatSeconds } = useTimeFormat();
+export default function RecipeSteps({ steps, brewingTime }: RecipeStepsProps) {
+  const { formatSeconds, splitMinutesAndSeconds } = useTimeFormat();
   if (steps.length === 0) {
     return (
       <Card className="border-border bg-card shadow-sm">
@@ -41,6 +43,18 @@ export default function RecipeSteps({ steps }: RecipeStepsProps) {
           <CheckCircle className="text-primary h-6 w-6" />
           抽出手順
         </CardTitle>
+        {brewingTime && (
+          <div className="flex items-center gap-2 pt-2">
+            <Clock className="text-muted-foreground h-4 w-4" />
+            <span className="text-muted-foreground text-sm font-medium">
+              総抽出時間:{' '}
+              {(() => {
+                const { minutes, seconds } = splitMinutesAndSeconds(brewingTime);
+                return `${minutes}分${seconds}秒`;
+              })()}
+            </span>
+          </div>
+        )}
       </CardHeader>
 
       <CardContent className="space-y-6">
@@ -88,7 +102,7 @@ export default function RecipeSteps({ steps }: RecipeStepsProps) {
             <CheckCircle className="h-6 w-6" />
           </div>
           <div className="min-w-0 flex-1">
-            <div className="border-border rounded-lg border border-green-200 bg-green-50 p-4">
+            <div className="rounded-lg border border-green-200 bg-green-50 p-4">
               <p className="text-sm font-medium text-green-800">
                 完成！美味しいコーヒーをお楽しみください ☕
               </p>

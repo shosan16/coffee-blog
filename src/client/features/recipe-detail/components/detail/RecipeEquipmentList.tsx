@@ -88,13 +88,6 @@ export default function RecipeEquipmentList({ equipment }: RecipeEquipmentListPr
                     {item.description}
                   </p>
                 )}
-
-                {/* 器具タイプ説明 */}
-                {item.equipmentType.description && (
-                  <p className="text-muted-foreground text-xs italic">
-                    {item.equipmentType.description}
-                  </p>
-                )}
               </div>
             </div>
           </div>
