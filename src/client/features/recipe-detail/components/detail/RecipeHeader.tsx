@@ -17,12 +17,8 @@ type RecipeHeaderProps = {
  */
 export default function RecipeHeader({ recipe }: RecipeHeaderProps) {
   return (
-    <Card className="border-border bg-card shadow-sm transition-all duration-300">
-      {/* コーヒーの染みのような装飾 */}
-      <div className="bg-muted/20 absolute -top-8 -right-8 h-40 w-40 rounded-full blur-3xl" />
-      <div className="bg-muted/20 absolute bottom-8 -left-8 h-32 w-32 rounded-full blur-3xl" />
-
-      <CardContent className="relative p-8">
+    <Card className="border-border bg-card shadow-sm">
+      <CardContent className="p-8">
         <div className="space-y-6 px-3">
           {/* タイトル部分 */}
           <div className="flex items-start gap-4">

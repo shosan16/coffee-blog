@@ -33,7 +33,7 @@ export default function RecipeTagList({ tags }: RecipeTagListProps) {
   }
 
   return (
-    <Card className="border-border bg-card shadow-sm transition-all duration-300">
+    <Card className="border-border bg-card shadow-sm">
       <CardHeader>
         <CardTitle className="text-card-foreground flex items-center gap-3">
           <Tag className="text-primary h-6 w-6" />

@@ -33,11 +33,8 @@ export default function RecipeEquipmentList({ equipment }: RecipeEquipmentListPr
   }
 
   return (
-    <Card className="border-border bg-card shadow-sm transition-all duration-300">
-      {/* コーヒーの染みのような装飾 */}
-      <div className="bg-muted/20 absolute -top-6 -left-6 h-32 w-32 rounded-full blur-3xl" />
-
-      <CardHeader className="relative">
+    <Card className="border-border bg-card shadow-sm">
+      <CardHeader>
         <CardTitle className="text-card-foreground flex items-center gap-3">
           <Settings className="text-primary h-6 w-6" />
           使用器具
