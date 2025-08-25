@@ -1,4 +1,4 @@
-import { Coffee, Tag } from 'lucide-react';
+import { Coffee, Tag, Users, ExternalLink } from 'lucide-react';
 
 import { Card, CardContent } from '@/client/shared/shadcn/card';
 
@@ -16,6 +16,59 @@ type RecipeHeaderProps = {
  * 詳細画面の最上部に配置される。
  */
 export default function RecipeHeader({ recipe }: RecipeHeaderProps) {
+  const renderBaristaSection = () => {
+    if (!recipe.barista) return null;
+
+    return (
+      <div className="space-y-4" data-testid="barista-section">
+        {/* バリスタセクションヘッダー */}
+        <div className="flex items-center gap-3">
+          <div className="border-border bg-primary/10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border">
+            <Users className="text-primary h-5 w-5" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <h3 className="text-card-foreground text-lg font-bold">バリスタ</h3>
+          </div>
+        </div>
+
+        {/* バリスタ基本情報 */}
+        <div className="space-y-1 pl-13">
+          <div className="text-card-foreground text-xl font-semibold" data-testid="barista-name">
+            {recipe.barista.name}
+          </div>
+          {recipe.barista.affiliation && (
+            <div className="text-muted-foreground text-sm" data-testid="barista-affiliation">
+              {recipe.barista.affiliation}
+            </div>
+          )}
+        </div>
+
+        {/* SNSリンク */}
+        {recipe.barista.socialLinks.length > 0 && (
+          <div className="space-y-3 pl-13" data-testid="sns-section">
+            <div className="text-muted-foreground text-sm font-medium">SNS</div>
+            <div className="space-y-2">
+              {recipe.barista.socialLinks.map((link) => (
+                <a
+                  key={link.id}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border-border bg-muted hover:bg-muted/80 group flex items-center justify-between rounded-lg border p-3 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="text-card-foreground text-sm font-medium">{link.platform}</div>
+                  </div>
+                  <ExternalLink className="text-muted-foreground group-hover:text-card-foreground h-4 w-4 transition-colors" />
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <Card className="border-border bg-card shadow-sm">
       <CardContent className="p-8">
@@ -50,6 +103,9 @@ export default function RecipeHeader({ recipe }: RecipeHeaderProps) {
               ))}
             </div>
           )}
+
+          {/* バリスタ情報 */}
+          {renderBaristaSection()}
         </div>
       </CardContent>
     </Card>

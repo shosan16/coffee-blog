@@ -1,6 +1,5 @@
 import type { RecipeDetailInfo } from '../../types/recipe-detail';
 
-import BaristaCard from './BaristaCard';
 import PreparationPointsCard from './PreparationPointsCard';
 import RecipeEquipmentList from './RecipeEquipmentList';
 import RecipeHeader from './RecipeHeader';
@@ -44,12 +43,6 @@ export default function RecipeDetailView({ recipe }: RecipeDetailViewProps) {
               {/* 器具一覧 */}
               <RecipeEquipmentList equipment={recipe.equipment} />
             </div>
-
-            {/* サイドバー */}
-            <aside className="w-full flex-shrink-0 space-y-6 lg:w-80">
-              {/* バリスタ情報 */}
-              {recipe.barista && <BaristaCard barista={recipe.barista} />}
-            </aside>
           </div>
         </div>
       </main>
