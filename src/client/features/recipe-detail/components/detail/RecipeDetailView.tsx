@@ -1,6 +1,7 @@
 import type { RecipeDetailInfo } from '../../types/recipe-detail';
 
 import BaristaCard from './BaristaCard';
+import PreparationPointsCard from './PreparationPointsCard';
 import RecipeEquipmentList from './RecipeEquipmentList';
 import RecipeHeader from './RecipeHeader';
 import RecipeInfoCards from './RecipeInfoCards';
@@ -33,6 +34,9 @@ export default function RecipeDetailView({ recipe }: RecipeDetailViewProps) {
             <div className="min-w-0 flex-1 space-y-8">
               {/* 基本情報カード */}
               <RecipeInfoCards recipe={recipe} />
+
+              {/* 準備ポイント */}
+              <PreparationPointsCard remarks={recipe.remarks} />
 
               {/* 手順 */}
               <RecipeSteps steps={recipe.steps} brewingTime={recipe.brewingTime} />

@@ -50,14 +50,6 @@ export default function RecipeHeader({ recipe }: RecipeHeaderProps) {
               ))}
             </div>
           )}
-
-          {/* 備考 */}
-          {recipe.remarks && (
-            <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
-              <div className="mb-2 text-sm font-medium text-amber-800">💡 ポイント・注意事項</div>
-              <p className="text-sm leading-relaxed text-amber-700">{recipe.remarks}</p>
-            </div>
-          )}
         </div>
       </CardContent>
     </Card>
