@@ -47,18 +47,16 @@ export default function RecipeHeader({ recipe }: RecipeHeaderProps) {
         {recipe.barista.socialLinks.length > 0 && (
           <div className="space-y-3 pl-13" data-testid="sns-section">
             <div className="text-muted-foreground text-sm font-medium">SNS</div>
-            <div className="space-y-2">
+            <div className="flex flex-wrap gap-2">
               {recipe.barista.socialLinks.map((link) => (
                 <a
                   key={link.id}
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="border-border bg-muted hover:bg-muted/80 group flex items-center justify-between rounded-lg border p-3 transition-colors"
+                  className="border-border bg-muted hover:bg-muted/80 group flex items-center gap-2 rounded-lg border px-3 py-2 transition-colors"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="text-card-foreground text-sm font-medium">{link.platform}</div>
-                  </div>
+                  <div className="text-card-foreground text-sm font-medium">{link.platform}</div>
                   <ExternalLink className="text-muted-foreground group-hover:text-card-foreground h-4 w-4 transition-colors" />
                 </a>
               ))}

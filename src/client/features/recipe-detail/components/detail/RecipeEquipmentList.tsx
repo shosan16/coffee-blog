@@ -41,32 +41,25 @@ export default function RecipeEquipmentList({ equipment }: RecipeEquipmentListPr
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="space-y-4">
-        {equipment.map((item) => (
-          <div
-            key={item.id}
-            className="border-border bg-muted hover:bg-muted/80 group rounded-lg border p-4 transition-colors"
-          >
-            <div className="flex items-start gap-4">
-              {/* 器具アイコン */}
-              <div className="border-border bg-card flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border">
-                <Package className="text-primary h-5 w-5" />
-              </div>
-
-              {/* 器具情報 */}
-              <div className="min-w-0 flex-1 space-y-2">
-                {/* 器具名とブランド */}
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1">
-                    <div className="text-card-foreground text-base font-semibold">{item.name}</div>
-                    {item.brand && (
-                      <div className="text-muted-foreground text-sm">{item.brand}</div>
-                    )}
-                    <div className="bg-primary/10 text-primary inline-flex items-center rounded-md px-2 py-1 text-xs font-medium">
-                      {item.equipmentType.name}
-                    </div>
+      <CardContent>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {equipment.map((item) => (
+            <div
+              key={item.id}
+              className="border-border bg-muted hover:bg-muted/80 group rounded-lg border p-4 transition-colors"
+            >
+              <div className="flex flex-col gap-3">
+                {/* 器具ヘッダー */}
+                <div className="flex items-start gap-3">
+                  <div className="border-border bg-card flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border">
+                    <Package className="text-primary h-4 w-4" />
                   </div>
-
+                  <div className="min-w-0 flex-1">
+                    <div className="text-card-foreground text-sm font-semibold">{item.name}</div>
+                    {item.brand && (
+                      <div className="text-muted-foreground text-xs">{item.brand}</div>
+                    )}
+                  </div>
                   {/* アフィリエイトリンク */}
                   {item.affiliateLink && (
                     <a
@@ -76,22 +69,26 @@ export default function RecipeEquipmentList({ equipment }: RecipeEquipmentListPr
                       className="text-muted-foreground hover:text-primary flex items-center gap-1 transition-colors"
                       title="購入リンク"
                     >
-                      <ExternalLink className="h-4 w-4" />
-                      <span className="text-xs">購入</span>
+                      <ExternalLink className="h-3 w-3" />
                     </a>
                   )}
                 </div>
 
+                {/* 器具タイプ */}
+                <div className="bg-primary/10 text-primary inline-flex w-fit items-center rounded-md px-2 py-1 text-xs font-medium">
+                  {item.equipmentType.name}
+                </div>
+
                 {/* 器具説明 */}
                 {item.description && (
-                  <p className="text-muted-foreground text-sm leading-relaxed">
+                  <p className="text-muted-foreground line-clamp-2 text-xs leading-relaxed">
                     {item.description}
                   </p>
                 )}
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </CardContent>
     </Card>
   );
