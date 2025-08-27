@@ -1,5 +1,6 @@
 import type { RecipeDetailInfo } from '../../types/recipe-detail';
 
+import PageHeader from './PageHeader';
 import PreparationPointsCard from './PreparationPointsCard';
 import RecipeEquipmentList from './RecipeEquipmentList';
 import RecipeHeader from './RecipeHeader';
@@ -24,7 +25,10 @@ export default function RecipeDetailView({ recipe }: RecipeDetailViewProps) {
       {/* メインコンテンツ */}
       <main className="container mx-auto px-4 py-8">
         <div className="space-y-8">
-          {/* ヘッダー */}
+          {/* ページヘッダー */}
+          <PageHeader title={recipe.title} recipeId={recipe.id} />
+
+          {/* レシピヘッダー（概要・タグ・バリスタ情報） */}
           <RecipeHeader recipe={recipe} />
 
           {/* レイアウト: デスクトップ2カラム、モバイル1カラム */}

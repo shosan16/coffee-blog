@@ -1,4 +1,4 @@
-import { Coffee, Tag, Users, ExternalLink } from 'lucide-react';
+import { Tag, Users, ExternalLink } from 'lucide-react';
 
 import { Card, CardContent } from '@/client/shared/shadcn/card';
 
@@ -12,8 +12,8 @@ type RecipeHeaderProps = {
 /**
  * レシピヘッダーコンポーネント
  *
- * レシピのタイトル、概要、公開日などの基本情報を表示する。
- * 詳細画面の最上部に配置される。
+ * レシピの概要、タグ、バリスタ情報を表示する。
+ * ページヘッダーでタイトルが表示されるため、こちらではタイトルを除く詳細情報を担当。
  */
 export default function RecipeHeader({ recipe }: RecipeHeaderProps) {
   const renderBaristaSection = () => {
@@ -71,20 +71,10 @@ export default function RecipeHeader({ recipe }: RecipeHeaderProps) {
     <Card className="border-border bg-card shadow-sm">
       <CardContent className="p-8">
         <div className="space-y-6 px-3">
-          {/* タイトル部分 */}
-          <div className="flex items-start gap-4">
-            <div className="border-border bg-primary/10 flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full border">
-              <Coffee className="text-primary h-8 w-8" />
-            </div>
-            <div className="min-w-0 flex-1 space-y-3">
-              <h1 className="text-card-foreground text-3xl leading-tight font-bold">
-                {recipe.title}
-              </h1>
-              {recipe.summary && (
-                <p className="text-muted-foreground text-lg leading-relaxed">{recipe.summary}</p>
-              )}
-            </div>
-          </div>
+          {/* レシピ概要 */}
+          {recipe.summary && (
+            <div className="text-muted-foreground text-lg leading-relaxed">{recipe.summary}</div>
+          )}
 
           {/* タグ表示 */}
           {recipe.tags.length > 0 && (

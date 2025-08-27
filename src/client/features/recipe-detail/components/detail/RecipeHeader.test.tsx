@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import type { RecipeDetailInfo } from '../../types/recipe-detail';
 
@@ -6,7 +6,7 @@ import RecipeHeader from './RecipeHeader';
 
 describe('RecipeHeader', () => {
   describe('基本表示', () => {
-    it('レシピタイトルとバリスタ情報を統合して正しく表示できること', () => {
+    it('レシピ概要とバリスタ情報を正しく表示できること', () => {
       // Arrange - レシピ詳細情報（バリスタ付き）を作成
       const recipe: RecipeDetailInfo = {
         id: '1',
@@ -37,7 +37,10 @@ describe('RecipeHeader', () => {
       // Act - 実行：RecipeHeaderをレンダリング
       render(<RecipeHeader recipe={recipe} />);
 
-      // Assert - 検証：バリスタ情報が表示されることを確認
+      // Assert - 検証：レシピ概要とバリスタ情報が表示されることを確認
+      expect(
+        screen.getByText('華やかな香りと爽やかな酸味が特徴的なコーヒーです。')
+      ).toBeInTheDocument();
       expect(document.querySelector('[data-testid="barista-section"]')).toBeInTheDocument();
       expect(document.querySelector('[data-testid="barista-name"]')).toHaveTextContent('田中太郎');
       expect(document.querySelector('[data-testid="barista-affiliation"]')).toHaveTextContent(
