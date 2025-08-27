@@ -1,18 +1,16 @@
-import { Loader2 } from 'lucide-react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { lazy, Suspense } from 'react';
 
+import PageHeader from '@/client/features/recipe-detail/components/detail/PageHeader';
+import PreparationPointsCard from '@/client/features/recipe-detail/components/detail/PreparationPointsCard';
 import RecipeDetailErrorBoundary from '@/client/features/recipe-detail/components/detail/RecipeDetailErrorBoundary';
+import RecipeEquipmentList from '@/client/features/recipe-detail/components/detail/RecipeEquipmentList';
+import RecipeHeader from '@/client/features/recipe-detail/components/detail/RecipeHeader';
+import RecipeInfoCards from '@/client/features/recipe-detail/components/detail/RecipeInfoCards';
+import RecipeSteps from '@/client/features/recipe-detail/components/detail/RecipeSteps';
 import ServerRecipeDetailError from '@/client/features/recipe-detail/components/detail/ServerRecipeDetailError';
-import { RecipeDetailSkeleton } from '@/client/shared/components/skeleton';
 
 import { getRecipeDetailAction } from './actions';
-
-// 動的インポートでRecipeDetailViewを遅延読み込み
-const RecipeDetailView = lazy(
-  () => import('@/client/features/recipe-detail/components/detail/RecipeDetailView')
-);
 
 type RecipeDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -87,27 +85,6 @@ export async function generateMetadata({ params }: RecipeDetailPageProps): Promi
 }
 
 /**
- * レシピ詳細の動的インポート中にユーザー体験を向上させるローディング表示
- *
- * スケルトンUI + インジケーターの組み合わせで読み込み待機時の不安感を軽減し、
- * 長時間の読み込みでもユーザーが待機し続けられる視覚的フィードバックを提供
- */
-function LoadingFallback() {
-  return (
-    <>
-      <RecipeDetailSkeleton />
-      {/* ローディングインジケーター */}
-      <div className="fixed right-8 bottom-8">
-        <div className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 shadow-lg">
-          <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
-          <span className="text-sm text-gray-600">読み込み中...</span>
-        </div>
-      </div>
-    </>
-  );
-}
-
-/**
  * レシピ詳細ページコンポーネント
  */
 export default async function RecipeDetailPage({ params }: RecipeDetailPageProps) {
@@ -128,9 +105,36 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
         fallbackTitle="表示エラー"
         fallbackMessage="レシピ詳細の読み込み中にエラーが発生しました。"
       >
-        <Suspense fallback={<LoadingFallback />}>
-          <RecipeDetailView recipe={recipe} />
-        </Suspense>
+        <div className="bg-background min-h-screen">
+          {/* メインコンテンツ */}
+          <main className="container mx-auto px-4 py-8">
+            <div className="space-y-8">
+              {/* ページヘッダー */}
+              <PageHeader title={recipe.title} recipeId={recipe.id} />
+
+              {/* レシピヘッダー（概要・タグ・バリスタ情報） */}
+              <RecipeHeader recipe={recipe} />
+
+              {/* レイアウト: デスクトップ2カラム、モバイル1カラム */}
+              <div className="flex flex-col gap-8 lg:flex-row">
+                {/* メインコンテンツ */}
+                <div className="min-w-0 flex-1 space-y-8">
+                  {/* 基本情報カード */}
+                  <RecipeInfoCards recipe={recipe} />
+
+                  {/* 準備ポイント */}
+                  <PreparationPointsCard remarks={recipe.remarks} />
+
+                  {/* 手順 */}
+                  <RecipeSteps steps={recipe.steps} brewingTime={recipe.brewingTime} />
+
+                  {/* 器具一覧 */}
+                  <RecipeEquipmentList equipment={recipe.equipment} />
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
       </RecipeDetailErrorBoundary>
     );
   } catch {
