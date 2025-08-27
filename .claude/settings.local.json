@@ -67,7 +67,11 @@
       "Bash(npm run type-check:*)",
       "Bash(git add:*)",
       "Bash(npx madge:*)",
-      "mcp__serena__think_about_whether_you_are_done"
+      "mcp__serena__think_about_whether_you_are_done",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(npm install:*)",
+      "mcp__playwright__browser_take_screenshot"
     ],
     "deny": []
   }

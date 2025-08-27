@@ -2,6 +2,7 @@
 
 import { ArrowLeft, Share } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 type PageHeaderProps = {
   /** レシピタイトル */
@@ -14,7 +15,6 @@ type PageHeaderProps = {
  * レシピ詳細ページヘッダーコンポーネント
  *
  * 戻るボタン、レシピタイトル、シェアボタンを含むページヘッダー。
- * wip-prompt.mdの要件に従い、固定ヘッダーではない通常配置。
  */
 export default function PageHeader({ title, recipeId }: PageHeaderProps) {
   const router = useRouter();
@@ -29,27 +29,25 @@ export default function PageHeader({ title, recipeId }: PageHeaderProps) {
   };
 
   const handleShare = async () => {
-    // Web Share API対応端末では共有メニューを表示
-    if ('share' in navigator) {
+    // URLをクリップボードにコピー
+    const url = recipeId ? `${window.location.origin}/recipes/${recipeId}` : window.location.href;
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (navigator.clipboard?.writeText) {
       try {
-        await (navigator as Navigator & { share: (data: ShareData) => Promise<void> }).share({
-          title,
-          text: `${title}のレシピをチェックしてみてください！`,
-          url: recipeId ? `${window.location.origin}/recipes/${recipeId}` : window.location.href,
+        await navigator.clipboard.writeText(url);
+        toast('URLをコピーしました', {
+          description: 'レシピのリンクをクリップボードにコピーしました',
         });
       } catch {
-        // シェアがキャンセルされた場合は何もしない
+        toast('コピーに失敗しました', {
+          description: 'URLのコピーに失敗しました。もう一度お試しください。',
+        });
       }
-    } else if ('clipboard' in navigator) {
-      // フォールバック：URLをクリップボードにコピー
-      const url = recipeId ? `${window.location.origin}/recipes/${recipeId}` : window.location.href;
-
-      try {
-        await (navigator as Navigator & { clipboard: Clipboard }).clipboard.writeText(url);
-        // TODO: トースト通知でコピー完了を表示
-      } catch {
-        // クリップボードコピーに失敗した場合は何もしない
-      }
+    } else {
+      toast('クリップボードが利用できません', {
+        description: 'お使いのブラウザではクリップボード機能をサポートしていません。',
+      });
     }
   };
 

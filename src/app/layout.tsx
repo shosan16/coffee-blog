@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Roboto, Noto_Sans_JP } from 'next/font/google';
+
 import './globals.css';
+import Toaster from '@/client/shared/shadcn/ui/sonner';
 
 const roboto = Roboto({
   variable: '--font-sans',
@@ -31,6 +33,7 @@ export default function RootLayout({
     <html lang="ja">
       <body className={`${roboto.variable} ${notoSansJP.variable} font-sans antialiased`}>
         {children}
+        <Toaster />
       </body>
     </html>
   );
