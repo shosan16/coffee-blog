@@ -17,20 +17,14 @@ type RecipeDetailPageProps = {
 };
 
 /**
- * レシピ詳細ページ
- *
- * 指定されたIDのレシピ詳細を表示する。
- * メタデータも動的に設定してSEO対応を行う。
- */
-
-/**
- * ページのメタデータを動的に生成
+ * レシピ詳細ページのメタデータを動的に生成する
+ * @param params URLパラメータ（レシピID）
+ * @returns SEO最適化されたメタデータ（OG、Twitter Cardを含む）
  */
 export async function generateMetadata({ params }: RecipeDetailPageProps): Promise<Metadata> {
   const resolvedParams = await params;
   const recipeId = resolvedParams.id;
 
-  // レシピIDのバリデーション
   if (!recipeId || !/^[1-9][0-9]*$/.test(recipeId)) {
     return {
       title: 'レシピが見つかりません - Coffee Recipe Collection',
@@ -39,11 +33,9 @@ export async function generateMetadata({ params }: RecipeDetailPageProps): Promi
   }
 
   try {
-    // サーバーサイドでレシピ情報を取得してメタデータに使用
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000';
     const response = await fetch(`${baseUrl}/api/recipes/${recipeId}`, {
-      // ISRのためのキャッシュ設定
-      next: { revalidate: 3600 }, // 1時間キャッシュ
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {
@@ -85,19 +77,19 @@ export async function generateMetadata({ params }: RecipeDetailPageProps): Promi
 }
 
 /**
- * レシピ詳細ページコンポーネント
+ * レシピ詳細ページを表示する
+ * @param params URLパラメータ（レシピID）
+ * @returns レシピの詳細情報とレイアウト、または該当しない場合は404/エラー画面
  */
 export default async function RecipeDetailPage({ params }: RecipeDetailPageProps) {
   const resolvedParams = await params;
   const recipeId = resolvedParams.id;
 
-  // レシピIDのバリデーション
   if (!recipeId || !/^[1-9][0-9]*$/.test(recipeId)) {
     notFound();
   }
 
   try {
-    // Server Actionでレシピ詳細を取得
     const recipe = await getRecipeDetailAction(recipeId);
 
     return (
@@ -106,29 +98,15 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
         fallbackMessage="レシピ詳細の読み込み中にエラーが発生しました。"
       >
         <div className="bg-background min-h-screen">
-          {/* メインコンテンツ */}
           <main className="container mx-auto px-4 py-8">
             <div className="space-y-8">
-              {/* ページヘッダー */}
               <PageHeader title={recipe.title} recipeId={recipe.id} />
-
-              {/* レシピヘッダー（概要・タグ・バリスタ情報） */}
               <RecipeHeader recipe={recipe} />
-
-              {/* レイアウト: デスクトップ2カラム、モバイル1カラム */}
               <div className="flex flex-col gap-8 lg:flex-row">
-                {/* メインコンテンツ */}
                 <div className="min-w-0 flex-1 space-y-8">
-                  {/* 基本情報カード */}
                   <RecipeInfoCards recipe={recipe} />
-
-                  {/* 準備ポイント */}
                   <PreparationPointsCard remarks={recipe.remarks} />
-
-                  {/* 手順 */}
                   <RecipeSteps steps={recipe.steps} brewingTime={recipe.brewingTime} />
-
-                  {/* 器具一覧 */}
                   <RecipeEquipmentList equipment={recipe.equipment} />
                 </div>
               </div>
@@ -138,7 +116,6 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
       </RecipeDetailErrorBoundary>
     );
   } catch {
-    // Server ActionでnotFound()が呼ばれなかった場合のエラーハンドリング
     return (
       <ServerRecipeDetailError
         title="サーバーエラー"
@@ -148,17 +125,5 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
   }
 }
 
-/**
- * 動的ルートの静的生成設定
- *
- * 開発時は無効にして、本番環境では有効にする
- */
 export const dynamicParams = true;
-
-/**
- * ページの動的レンダリング設定
- *
- * レシピ詳細は頻繁に更新されないので、
- * ISRを使用してパフォーマンスを向上させる
- */
-export const revalidate = 3600; // 1時間
+export const revalidate = 3600;
