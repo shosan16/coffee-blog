@@ -1,7 +1,7 @@
 import { render, screen, cleanup } from '@testing-library/react';
 import { describe, it, expect, beforeEach } from 'vitest';
 
-import type { DetailedEquipmentInfo } from '../../types/recipe-detail';
+import type { DetailedEquipmentInfo } from '../types/recipe-detail';
 
 import RecipeEquipmentList from './RecipeEquipmentList';
 

@@ -2,8 +2,8 @@ import { Clock, CheckCircle } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
 
-import { useTimeFormat } from '../../hooks/useTimeFormat';
-import type { RecipeStepInfo } from '../../types/recipe-detail';
+import { useTimeFormat } from '../hooks/useTimeFormat';
+import type { RecipeStepInfo } from '../types/recipe-detail';
 
 type RecipeStepsProps = {
   /** レシピ手順リスト */

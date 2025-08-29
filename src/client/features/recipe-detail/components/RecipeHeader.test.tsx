@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 
-import type { RecipeDetailInfo } from '../../types/recipe-detail';
+import type { RecipeDetailInfo } from '../types/recipe-detail';
 
 import RecipeHeader from './RecipeHeader';
 
