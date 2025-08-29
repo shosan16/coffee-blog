@@ -1,9 +1,4 @@
 /**
- * フィルター関連の汎用的な定数定義
- * MultiComboboxやその他のフィルターコンポーネントで使用される選択肢を定義
- */
-
-/**
  * 基本的な選択肢の型定義
  * MultiComboboxItemと互換性を持つ汎用的な型
  */
@@ -19,30 +14,28 @@ export type OptionItem = {
 };
 
 /**
- * 焙煎度の選択肢定数
- * Prismaの RoastLevel enum と対応
+ * 焙煎度の選択肢
  */
 export const ROAST_LEVELS: OptionItem[] = [
-  { id: 'LIGHT', label: 'ライト', value: 'LIGHT' },
-  { id: 'LIGHT_MEDIUM', label: 'ライトミディアム', value: 'LIGHT_MEDIUM' },
-  { id: 'MEDIUM', label: 'ミディアム', value: 'MEDIUM' },
-  { id: 'MEDIUM_DARK', label: 'ミディアムダーク', value: 'MEDIUM_DARK' },
-  { id: 'DARK', label: 'ダーク', value: 'DARK' },
-  { id: 'FRENCH', label: 'フレンチ', value: 'FRENCH' },
+  { id: 'LIGHT', label: '浅煎り', value: 'LIGHT' },
+  { id: 'LIGHT_MEDIUM', label: '中浅煎り', value: 'LIGHT_MEDIUM' },
+  { id: 'MEDIUM', label: '中煎り', value: 'MEDIUM' },
+  { id: 'MEDIUM_DARK', label: '中深煎り', value: 'MEDIUM_DARK' },
+  { id: 'DARK', label: '深煎り', value: 'DARK' },
+  { id: 'FRENCH', label: '極深煎り', value: 'FRENCH' },
 ];
 
 /**
- * 挽き目の選択肢定数
- * Prismaの GrindSize enum と対応
+ * 挽き目の選択肢
  */
 export const GRIND_SIZES: OptionItem[] = [
-  { id: 'EXTRA_FINE', label: 'エクストラファイン', value: 'EXTRA_FINE' },
-  { id: 'FINE', label: 'ファイン', value: 'FINE' },
-  { id: 'MEDIUM_FINE', label: 'ミディアムファイン', value: 'MEDIUM_FINE' },
-  { id: 'MEDIUM', label: 'ミディアム', value: 'MEDIUM' },
-  { id: 'MEDIUM_COARSE', label: 'ミディアムコース', value: 'MEDIUM_COARSE' },
-  { id: 'COARSE', label: 'コース', value: 'COARSE' },
-  { id: 'EXTRA_COARSE', label: 'エクストラコース', value: 'EXTRA_COARSE' },
+  { id: 'EXTRA_FINE', label: '極細挽き', value: 'EXTRA_FINE' },
+  { id: 'FINE', label: '細挽き', value: 'FINE' },
+  { id: 'MEDIUM_FINE', label: '中細挽き', value: 'MEDIUM_FINE' },
+  { id: 'MEDIUM', label: '中挽き', value: 'MEDIUM' },
+  { id: 'MEDIUM_COARSE', label: '中粗挽き', value: 'MEDIUM_COARSE' },
+  { id: 'COARSE', label: '粗挽き', value: 'COARSE' },
+  { id: 'EXTRA_COARSE', label: '極粗挽き', value: 'EXTRA_COARSE' },
 ];
 
 /**
