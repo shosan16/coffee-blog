@@ -1,9 +1,8 @@
 import { render } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 
+import RecipeCard from '@/client/features/recipe-list/components/RecipeCard';
 import type { Recipe } from '@/client/features/recipe-list/types/recipe';
-
-import RecipeCard from './RecipeCard';
 
 const createMockRecipe = (id: string, title: string): Recipe => ({
   id,

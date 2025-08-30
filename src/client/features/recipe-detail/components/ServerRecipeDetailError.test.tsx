@@ -1,7 +1,7 @@
 import { render, screen, cleanup } from '@testing-library/react';
 import { describe, it, expect, beforeEach } from 'vitest';
 
-import ServerRecipeDetailError from './ServerRecipeDetailError';
+import ServerRecipeDetailError from '@/client/features/recipe-detail/components/ServerRecipeDetailError';
 
 describe('ServerRecipeDetailError', () => {
   beforeEach(() => {

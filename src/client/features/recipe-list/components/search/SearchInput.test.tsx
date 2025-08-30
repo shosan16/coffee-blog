@@ -1,12 +1,11 @@
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useRecipeQuery } from '../../hooks/useRecipeQuery';
-
-import SearchInput from './SearchInput';
+import SearchInput from '@/client/features/recipe-list/components/search/SearchInput';
+import { useRecipeQuery } from '@/client/features/recipe-list/hooks/useRecipeQuery';
 
 // モック設定
-vi.mock('../../hooks/useRecipeQuery', () => ({
+vi.mock('@/client/features/recipe-list/hooks/useRecipeQuery', () => ({
   useRecipeQuery: vi.fn(),
 }));
 

@@ -4,12 +4,11 @@ import type { RoastLevel, GrindSize } from '@prisma/client';
 import { X, Filter, RotateCcw } from 'lucide-react';
 import { useState, useMemo, useCallback, memo } from 'react';
 
+import ConditionFilter from '@/client/features/recipe-list/components/filter/ConditionFilter';
+import EquipmentFilter from '@/client/features/recipe-list/components/filter/EquipmentFilter';
 import { useRecipeQuery } from '@/client/features/recipe-list/hooks/useRecipeQuery';
 import { Button } from '@/client/shared/shadcn/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
-
-import ConditionFilter from './ConditionFilter';
-import EquipmentFilter from './EquipmentFilter';
 
 type RecipeFilterProps = {
   className?: string;

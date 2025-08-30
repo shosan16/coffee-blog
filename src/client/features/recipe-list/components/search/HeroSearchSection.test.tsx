@@ -2,9 +2,9 @@ import { render } from '@testing-library/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import HeroSearchSection from './HeroSearchSection';
+import HeroSearchSection from '@/client/features/recipe-list/components/search/HeroSearchSection';
 
-vi.mock('../../hooks/useRecipeQuery', () => ({
+vi.mock('@/client/features/recipe-list/hooks/useRecipeQuery', () => ({
   useRecipeQuery: vi.fn().mockReturnValue({
     pendingFilters: {},
     setFilter: vi.fn(),

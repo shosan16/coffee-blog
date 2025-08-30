@@ -3,7 +3,7 @@
 import { Search } from 'lucide-react';
 import { useMemo, memo } from 'react';
 
-import { useRecipeQuery } from '../hooks/useRecipeQuery';
+import { useRecipeQuery } from '@/client/features/recipe-list/hooks/useRecipeQuery';
 
 type SearchResultsHeaderProps = {
   /** 検索結果数 */

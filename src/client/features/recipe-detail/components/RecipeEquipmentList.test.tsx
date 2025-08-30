@@ -1,9 +1,8 @@
 import { render, screen, cleanup } from '@testing-library/react';
 import { describe, it, expect, beforeEach } from 'vitest';
 
-import type { DetailedEquipmentInfo } from '../types/recipe-detail';
-
-import RecipeEquipmentList from './RecipeEquipmentList';
+import RecipeEquipmentList from '@/client/features/recipe-detail/components/RecipeEquipmentList';
+import type { DetailedEquipmentInfo } from '@/client/features/recipe-detail/types/recipe-detail';
 
 describe('RecipeEquipmentList', () => {
   beforeEach(() => {

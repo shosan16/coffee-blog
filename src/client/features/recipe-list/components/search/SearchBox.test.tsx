@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import SearchBox from './SearchBox';
+import SearchBox from '@/client/features/recipe-list/components/search/SearchBox';
 
 describe('SearchBox', () => {
   const defaultProps = {

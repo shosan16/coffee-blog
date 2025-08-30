@@ -1,7 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 
-import PreparationPointsCard, { type PreparationPointsCardProps } from './PreparationPointsCard';
+import PreparationPointsCard, {
+  type PreparationPointsCardProps,
+} from '@/client/features/recipe-detail/components/PreparationPointsCard';
 
 describe('PreparationPointsCard', () => {
   const mockRemarks =

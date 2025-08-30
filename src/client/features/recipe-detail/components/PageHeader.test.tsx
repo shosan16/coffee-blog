@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { vi, beforeEach, afterEach } from 'vitest';
 
-import PageHeader from './PageHeader';
+import PageHeader from '@/client/features/recipe-detail/components/PageHeader';
 
 // Next.jsのuseRouterをモック
 vi.mock('next/navigation', () => ({

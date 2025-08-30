@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 
-import { useNumberFormat } from './useNumberFormat';
+import { useNumberFormat } from '@/client/features/recipe-detail/hooks/useNumberFormat';
 
 describe('useNumberFormat', () => {
   describe('formatWithCommas', () => {

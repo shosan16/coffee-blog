@@ -2,7 +2,7 @@ import { render, screen, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 
-import FilterTriggerButton from './FilterTriggerButton';
+import FilterTriggerButton from '@/client/features/recipe-list/components/search/FilterTriggerButton';
 
 describe('FilterTriggerButton', () => {
   beforeEach(() => {

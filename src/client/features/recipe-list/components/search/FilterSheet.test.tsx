@@ -2,9 +2,8 @@ import { render, screen, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 
-import type { UseRecipeQueryReturn } from '../../hooks/useRecipeQuery';
-
-import FilterSheet from './FilterSheet';
+import FilterSheet from '@/client/features/recipe-list/components/search/FilterSheet';
+import type { UseRecipeQueryReturn } from '@/client/features/recipe-list/hooks/useRecipeQuery';
 
 // モックデータの作成
 const createMockQueryResult = (

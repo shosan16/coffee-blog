@@ -3,12 +3,11 @@
 import { Filter, RotateCcw } from 'lucide-react';
 import { memo, useEffect, useRef, type JSX } from 'react';
 
+import ConditionFilter from '@/client/features/recipe-list/components/filter/ConditionFilter';
+import EquipmentFilter from '@/client/features/recipe-list/components/filter/EquipmentFilter';
+import type { UseRecipeQueryReturn } from '@/client/features/recipe-list/hooks/useRecipeQuery';
 import { Button } from '@/client/shared/shadcn/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/client/shared/shadcn/sheet';
-
-import type { UseRecipeQueryReturn } from '../../hooks/useRecipeQuery';
-import ConditionFilter from '../filter/ConditionFilter';
-import EquipmentFilter from '../filter/EquipmentFilter';
 
 type FilterSheetProps = {
   /** フィルターパネルの表示状態 */

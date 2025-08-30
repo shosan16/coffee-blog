@@ -2,7 +2,7 @@ import { renderHook, act } from '@testing-library/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 
-import { useRecipeQuery } from './useRecipeQuery';
+import { useRecipeQuery } from '@/client/features/recipe-list/hooks/useRecipeQuery';
 
 // モック設定
 vi.mock('next/navigation', () => ({

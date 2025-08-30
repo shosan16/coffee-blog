@@ -1,10 +1,9 @@
 import { Bean, Droplet } from 'lucide-react';
 
+import { useNumberFormat } from '@/client/features/recipe-detail/hooks/useNumberFormat';
+import type { RecipeDetailInfo } from '@/client/features/recipe-detail/types/recipe-detail';
 import { getRoastLevelLabel, getGrindSizeLabel } from '@/client/shared/constants/filters';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
-
-import { useNumberFormat } from '../hooks/useNumberFormat';
-import type { RecipeDetailInfo } from '../types/recipe-detail';
 
 type RecipeInfoCardsProps = {
   /** レシピ詳細情報 */

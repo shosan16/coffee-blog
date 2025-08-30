@@ -40,7 +40,7 @@ vi.mock('./RecipeFilter', () => ({
   ),
 }));
 
-import RecipeFilter from './RecipeFilter';
+import RecipeFilter from '@/client/features/recipe-list/components/filter/RecipeFilter';
 
 const mockPush = vi.fn();
 let mockSearchParams = new URLSearchParams();

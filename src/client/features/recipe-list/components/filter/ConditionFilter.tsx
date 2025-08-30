@@ -3,12 +3,11 @@
 import type { RoastLevel, GrindSize } from '@prisma/client';
 import { useMemo, useCallback, memo } from 'react';
 
+import RangeSlider from '@/client/features/recipe-list/components/filter/RangeSlider';
 import MultiCombobox from '@/client/shared/components/multi-combobox/MultiCombobox';
 import type { MultiComboboxItem } from '@/client/shared/components/multi-combobox/types';
 import { ROAST_LEVELS, GRIND_SIZES, type OptionItem } from '@/client/shared/constants/filters';
 import Label from '@/client/shared/shadcn/label';
-
-import RangeSlider from './RangeSlider';
 
 type ConditionFilterProps = {
   roastLevels: RoastLevel[];

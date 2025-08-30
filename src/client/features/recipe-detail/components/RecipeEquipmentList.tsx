@@ -1,8 +1,7 @@
 import { Settings, ExternalLink, Package } from 'lucide-react';
 
+import type { DetailedEquipmentInfo } from '@/client/features/recipe-detail/types/recipe-detail';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
-
-import type { DetailedEquipmentInfo } from '../types/recipe-detail';
 
 type RecipeEquipmentListProps = {
   /** 器具詳細リスト */
