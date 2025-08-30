@@ -6,7 +6,7 @@ import { useMemo, useCallback, memo } from 'react';
 import RangeSlider from '@/client/features/recipe-list/components/filter/RangeSlider';
 import MultiCombobox from '@/client/shared/components/multi-combobox/MultiCombobox';
 import type { MultiComboboxItem } from '@/client/shared/components/multi-combobox/types';
-import { ROAST_LEVELS, GRIND_SIZES } from '@/client/shared/constants/filters';
+import { ROAST_LEVELS, GRIND_SIZES } from '@/client/shared/constants/coffee-beans';
 import Label from '@/client/shared/shadcn/label';
 
 type ConditionFilterProps = {
