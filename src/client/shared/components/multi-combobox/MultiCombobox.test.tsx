@@ -1,6 +1,5 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 import MultiCombobox from './MultiCombobox';
 import type { MultiComboboxItem } from './types';
@@ -16,6 +15,14 @@ const defaultProps = {
   selectedItems: [],
   placeholder: 'テスト用プレースホルダー',
 };
+
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+
+afterEach(() => {
+  cleanup();
+});
 
 describe('MultiCombobox', () => {
   describe('初回クリック動作', () => {
@@ -78,18 +85,68 @@ describe('MultiCombobox', () => {
       expect(screen.getByText('ライト')).toBeInTheDocument();
     });
 
-    it('初回フォーカス時の選択肢表示が適切に動作する', async () => {
+    it('フォーカス時に自動オープンしない - モーダル表示時の意図しない開閉を防止', async () => {
       const onSelect = vi.fn();
       const { container } = render(<MultiCombobox {...defaultProps} onSelect={onSelect} />);
 
       const input = container.querySelector('input[type="text"]');
 
-      // 入力フィールドにフォーカス（タブキーなどのキーボード操作をシミュレート）
+      // Arrange - モーダル内での自動フォーカスをシミュレート
+      // ビジネス要件: フィルタリングUIでのシート表示時、
+      // 自動フォーカスによるドロップダウン開閉がUXを阻害する問題を再現
       if (input) {
         fireEvent.focus(input);
       }
 
-      // 選択肢が表示されることを確認
+      // Act - 少し待って状態を確認
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Assert - モーダル環境での意図しない自動開閉が発生しないことを検証
+      expect(screen.queryByText('ライト')).not.toBeInTheDocument();
+      expect(screen.queryByText('ミディアム')).not.toBeInTheDocument();
+      expect(screen.queryByText('ダーク')).not.toBeInTheDocument();
+      expect(container.querySelector('[role="listbox"]')).not.toBeInTheDocument();
+    });
+
+    it('ArrowDownキーでドロップダウンが開く - アクセシビリティ要件に基づくキーボード操作サポート', async () => {
+      const { container } = render(<MultiCombobox {...defaultProps} />);
+
+      const input = container.querySelector('input[type="text"]');
+
+      // Arrange - 入力フィールドにフォーカス
+      if (input) {
+        fireEvent.focus(input);
+      }
+
+      // Act - ArrowDownキーを押下
+      if (input) {
+        fireEvent.keyDown(input, { key: 'ArrowDown' });
+      }
+
+      // Assert - ドロップダウンが開くことを検証
+      await waitFor(() => {
+        expect(screen.getByText('ライト')).toBeInTheDocument();
+        expect(screen.getByText('ミディアム')).toBeInTheDocument();
+        expect(screen.getByText('ダーク')).toBeInTheDocument();
+      });
+    });
+
+    it('ArrowUpキーでドロップダウンが開く - アクセシビリティ要件に基づくキーボード操作サポート', async () => {
+      const { container } = render(<MultiCombobox {...defaultProps} />);
+
+      const input = container.querySelector('input[type="text"]');
+
+      // Arrange - 入力フィールドにフォーカス
+      if (input) {
+        fireEvent.focus(input);
+      }
+
+      // Act - ArrowUpキーを押下
+      if (input) {
+        fireEvent.keyDown(input, { key: 'ArrowUp' });
+      }
+
+      // Assert - ドロップダウンが開くことを検証
       await waitFor(() => {
         expect(screen.getByText('ライト')).toBeInTheDocument();
         expect(screen.getByText('ミディアム')).toBeInTheDocument();
@@ -193,9 +250,9 @@ describe('MultiCombobox', () => {
 
       const input = container.querySelector('input[type="text"]');
 
-      // ドロップダウンを開く
+      // ドロップダウンを開く（クリックを使用）
       if (input) {
-        fireEvent.focus(input);
+        fireEvent.click(input);
       }
 
       await waitFor(() => {

@@ -2,18 +2,9 @@ import { render, screen, cleanup } from '@testing-library/react';
 import { useSearchParams } from 'next/navigation';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
+import RecipeList from '@/client/features/recipe-list/components/RecipeList';
 import { useRecipes } from '@/client/features/recipe-list/hooks/useRecipes';
 import type { RecipeListResponse } from '@/client/features/recipe-list/types/api';
-
-import RecipeList from './RecipeList';
-
-// モック設定
-vi.mock('next/navigation', () => ({
-  useSearchParams: vi.fn(),
-  useRouter: vi.fn(() => ({
-    push: vi.fn(),
-  })),
-}));
 
 vi.mock('@/client/features/recipe-list/hooks/useRecipes', () => ({
   useRecipes: vi.fn(),

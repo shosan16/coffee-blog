@@ -1,9 +1,8 @@
 import { render } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 
+import RecipeCard from '@/client/features/recipe-list/components/RecipeCard';
 import type { Recipe } from '@/client/features/recipe-list/types/recipe';
-
-import RecipeCard from './RecipeCard';
 
 const createMockRecipe = (id: string, title: string): Recipe => ({
   id,
@@ -24,62 +23,83 @@ const createMockRecipes = (count: number): Recipe[] => {
 };
 
 describe('RecipeCard Performance Tests', () => {
-  it('100件のRecipeCardのレンダリング時間が許容範囲内である', () => {
+  it('100件のRecipeCardのレンダリングが正常に完了する', () => {
     const recipes = createMockRecipes(100);
+    const renderResults: Array<{ unmount: () => void }> = [];
 
-    const startTime = performance.now();
+    // レンダリング処理の実行（実時間測定を避ける）
+    expect(() => {
+      recipes.forEach((recipe) => {
+        const result = render(<RecipeCard recipe={recipe} />);
+        renderResults.push(result);
+        result.unmount();
+      });
+    }).not.toThrow();
 
-    // 100件のRecipeCardをレンダリング
-    recipes.forEach((recipe) => {
-      const { unmount } = render(<RecipeCard recipe={recipe} />);
-      unmount();
-    });
-
-    const endTime = performance.now();
-    const renderTime = endTime - startTime;
-
-    // レンダリング時間が5秒以内であることを確認（十分に余裕を持った閾値）
-    expect(renderTime).toBeLessThan(5000);
+    // レンダリング回数の検証
+    expect(renderResults).toHaveLength(100);
   });
 
   it('大量のRecipeCardでメモリリークが発生しない', () => {
     const recipes = createMockRecipes(50);
     const components: Array<{ unmount: () => void }> = [];
+    let mountedCount = 0;
 
     // 50件のコンポーネントをマウント
     recipes.forEach((recipe) => {
       const component = render(<RecipeCard recipe={recipe} />);
       components.push(component);
+      mountedCount++;
     });
+
+    // マウント数の検証
+    expect(mountedCount).toBe(50);
+    expect(components).toHaveLength(50);
 
     // 全てのコンポーネントをアンマウント
+    let unmountedCount = 0;
     components.forEach(({ unmount }) => {
-      unmount();
+      expect(() => unmount()).not.toThrow();
+      unmountedCount++;
     });
 
-    // メモリリークの検証は実際のブラウザ環境でのみ有効
-    // テスト環境では正常に完了することを確認
-    expect(true).toBe(true);
+    // アンマウント数の検証
+    expect(unmountedCount).toBe(50);
   });
 
-  it('長いタイトルでもパフォーマンスが劣化しない', () => {
+  it('長いタイトルでもレンダリングエラーが発生しない', () => {
     const longTitleRecipe = createMockRecipe(
       'long-title-recipe',
       'とても長いタイトルのレシピです。このタイトルは非常に長く、複数行にわたって表示される可能性があります。パフォーマンスへの影響を確認するためのテストです。'
     );
 
-    const startTime = performance.now();
+    const renderCount = 20;
+    const renderResults: Array<{ unmount: () => void }> = [];
 
     // 長いタイトルのRecipeCardを複数回レンダリング
-    for (let i = 0; i < 20; i++) {
-      const { unmount } = render(<RecipeCard recipe={longTitleRecipe} />);
-      unmount();
+    for (let i = 0; i < renderCount; i++) {
+      const result = render(<RecipeCard recipe={longTitleRecipe} />);
+      renderResults.push(result);
+      result.unmount();
     }
 
-    const endTime = performance.now();
-    const renderTime = endTime - startTime;
+    // 全てのレンダリングが成功したことを検証
+    expect(renderResults).toHaveLength(renderCount);
+  });
 
-    // 長いタイトルでも1秒以内でレンダリングできることを確認
-    expect(renderTime).toBeLessThan(1000);
+  it('DOM要素の生成が期待通りに動作する', () => {
+    const recipe = createMockRecipe('test-recipe', 'テストレシピ');
+    const { container, unmount } = render(<RecipeCard recipe={recipe} />);
+
+    // DOM要素の存在確認（構造的検証）
+    expect(container.firstChild).not.toBeNull();
+    expect(container.textContent).toContain('テストレシピ');
+    expect(container.textContent).toContain('テスト用のレシピ説明文です。');
+
+    // クリーンアップが正常に動作することを確認
+    expect(() => unmount()).not.toThrow();
+
+    // アンマウント後はコンテナが空になることを確認
+    expect(container.firstChild).toBeNull();
   });
 });

@@ -18,6 +18,10 @@ vi.mock('@/server/shared/database/prisma', () => ({
       count: vi.fn(),
       findMany: vi.fn(),
     },
+    equipment: {
+      findMany: vi.fn(),
+      findUnique: vi.fn(),
+    },
   },
 }));
 
@@ -28,6 +32,10 @@ type MockPrisma = {
   post: {
     count: ReturnType<typeof vi.fn>;
     findMany: ReturnType<typeof vi.fn>;
+  };
+  equipment: {
+    findMany: ReturnType<typeof vi.fn>;
+    findUnique: ReturnType<typeof vi.fn>;
   };
 };
 
@@ -54,6 +62,8 @@ describe('SearchRecipesService', () => {
       const mockRecipes = createMockPrismaRecipes(5);
       mockPrisma.post.count.mockResolvedValue(5);
       mockPrisma.post.findMany.mockResolvedValue(mockRecipes);
+      // 器具データのモック追加
+      mockPrisma.equipment.findMany.mockResolvedValue([]);
 
       // Act - 実行： レシピ検索を実行
       const result = await service.searchRecipes(searchParams);

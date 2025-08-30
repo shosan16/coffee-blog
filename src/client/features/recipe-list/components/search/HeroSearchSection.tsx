@@ -1,11 +1,14 @@
 'use client';
 
-import { Coffee } from 'lucide-react';
-import * as React from 'react';
+import { Coffee, Search } from 'lucide-react';
+import { useState, useMemo, useCallback, memo } from 'react';
 
-import { useRecipeSearch } from '../../hooks/useRecipeSearch';
-
-import SearchBox from './SearchBox';
+import FilterSheet from '@/client/features/recipe-list/components/search/FilterSheet';
+import FilterTriggerButton from '@/client/features/recipe-list/components/search/FilterTriggerButton';
+import SearchInput from '@/client/features/recipe-list/components/search/SearchInput';
+import { useRecipeQuery } from '@/client/features/recipe-list/hooks/useRecipeQuery';
+import { cn } from '@/client/lib/tailwind';
+import { Button } from '@/client/shared/shadcn/button';
 
 type HeroSearchSectionProps = {
   /** 初期の検索結果数 */
@@ -15,42 +18,43 @@ type HeroSearchSectionProps = {
 /**
  * ヒーローセクション用の検索コンポーネント
  *
- * メインビジュアルと検索機能を統合し、
- * インタラクティブな検索体験を提供する。
+ * サイト訪問者の最初のタッチポイントとなるメインビジュアルと検索機能を統合。
+ * ユーザーが求めるコーヒーレシピに素早くリーチできるよう、
+ * キーワード検索と詳細フィルターを一体化した直感的なインターフェースを提供。
+ *
+ * @param initialResultCount - 初期表示される検索結果数（表示用、機能には影響しない）
  *
  * @example
  * ```tsx
  * <HeroSearchSection initialResultCount={42} />
  * ```
  */
-const HeroSearchSection = React.memo<HeroSearchSectionProps>(({ initialResultCount }) => {
-  const { pendingSearchValue, updateSearchValue, applySearch, resultCount, setResultCount } =
-    useRecipeSearch();
+function HeroSearchSection({
+  initialResultCount: _initialResultCount,
+}: HeroSearchSectionProps): React.JSX.Element {
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  // 初期結果数の設定
-  React.useEffect(() => {
-    if (typeof initialResultCount === 'number' && resultCount === undefined) {
-      setResultCount(initialResultCount);
-    }
-  }, [initialResultCount, resultCount, setResultCount]);
+  const queryResult = useRecipeQuery();
+  const { apply, isLoading, activeFilterCount } = queryResult;
 
-  // 検索キーワードの変更ハンドラー
-  const handleSearchChange = React.useCallback(
-    (value: string) => {
-      updateSearchValue(value);
-    },
-    [updateSearchValue]
+  const searchBarClassName = useMemo(
+    () =>
+      cn(
+        'flex items-center bg-background border border-input rounded-md shadow-sm overflow-hidden',
+        'focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]',
+        'transition-colors',
+        'h-14 text-lg shadow-2xl'
+      ),
+    []
   );
 
-  // Enterキーで検索実行
-  const handleKeyDown = React.useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter') {
-        applySearch();
-      }
-    },
-    [applySearch]
-  );
+  const handleSearchClick = useCallback(() => {
+    apply();
+  }, [apply]);
+
+  const handleFilterClick = useCallback(() => {
+    setIsFilterOpen(true);
+  }, []);
 
   return (
     <div className="bg-primary text-primary-foreground relative overflow-hidden py-20">
@@ -66,35 +70,43 @@ const HeroSearchSection = React.memo<HeroSearchSectionProps>(({ initialResultCou
             おうちカフェを極上の体験に
           </p>
 
-          {/* 検索ボックス */}
-          <div className="w-full max-w-2xl space-y-4">
-            <div onKeyDown={handleKeyDown}>
-              <SearchBox
-                value={pendingSearchValue}
-                onChange={handleSearchChange}
-                placeholder="レシピを検索... （例：エスプレッソ、ドリップ）"
-                className="bg-card text-card-foreground h-14 border-0 text-lg shadow-2xl"
+          {/* 統合検索バー */}
+          <div className="w-full max-w-3xl">
+            <div className={searchBarClassName}>
+              {/* 検索入力フィールド */}
+              <SearchInput
+                placeholder="キーワード  [例: バリスタ・レシピ・コーヒー豆]"
                 aria-label="コーヒーレシピを検索"
               />
-            </div>
 
-            {/* 検索ボタン */}
-            <div className="hidden sm:block">
-              <button
-                type="button"
-                onClick={applySearch}
-                className="bg-card text-card-foreground hover:bg-card/90 focus:ring-ring focus:ring-offset-primary rounded-lg px-8 py-3 font-semibold transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none"
-              >
-                レシピを検索
-              </button>
+              {/* フィルターボタン */}
+              <FilterTriggerButton
+                activeFilterCount={activeFilterCount}
+                onClick={handleFilterClick}
+                isOpen={isFilterOpen}
+              />
+
+              {/* 検索ボタン */}
+              <div className="border-input border-l">
+                <Button
+                  onClick={handleSearchClick}
+                  variant="default"
+                  className="h-auto rounded-none px-5 py-5 text-sm font-medium"
+                  disabled={isLoading}
+                >
+                  <Search className="h-4 w-4" />
+                  検索
+                </Button>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* フィルターシート */}
+      <FilterSheet isOpen={isFilterOpen} onOpenChange={setIsFilterOpen} queryResult={queryResult} />
     </div>
   );
-});
+}
 
-HeroSearchSection.displayName = 'HeroSearchSection';
-
-export default HeroSearchSection;
+export default memo(HeroSearchSection);

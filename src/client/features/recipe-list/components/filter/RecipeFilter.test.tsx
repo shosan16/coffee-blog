@@ -2,12 +2,6 @@ import { render, screen, cleanup } from '@testing-library/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { beforeEach, describe, expect, it, vi, afterEach } from 'vitest';
 
-// 全体的なモック設定
-vi.mock('next/navigation', () => ({
-  useRouter: vi.fn(),
-  useSearchParams: vi.fn(),
-}));
-
 vi.mock('@/client/features/recipes/hooks/useEquipment', () => ({
   useEquipment: vi.fn(() => ({
     equipmentData: {
@@ -46,7 +40,7 @@ vi.mock('./RecipeFilter', () => ({
   ),
 }));
 
-import RecipeFilter from './RecipeFilter';
+import RecipeFilter from '@/client/features/recipe-list/components/filter/RecipeFilter';
 
 const mockPush = vi.fn();
 let mockSearchParams = new URLSearchParams();
@@ -68,7 +62,7 @@ describe('RecipeFilter', () => {
   describe('基本的な表示', () => {
     it('コンポーネントが正しくレンダリングされる', () => {
       render(<RecipeFilter />);
-      expect(screen.getByText('フィルター条件')).toBeInTheDocument();
+      expect(screen.getAllByText('フィルター条件')[0]).toBeInTheDocument();
     });
   });
 });

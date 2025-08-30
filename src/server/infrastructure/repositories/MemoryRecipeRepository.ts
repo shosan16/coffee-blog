@@ -12,8 +12,7 @@ import type {
   RecipeSearchResult,
   PaginationInfo,
 } from '@/server/domain/recipe/repositories/IRecipeRepository';
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
-import { RecipeId } from '@/server/domain/recipe/value-objects/RecipeId';
+import type { RecipeId } from '@/server/domain/recipe/value-objects/RecipeId';
 
 /**
  * インメモリレシピリポジトリの実装

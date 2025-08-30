@@ -17,6 +17,13 @@ import {
   type SearchRecipesInput,
 } from './SearchRecipesUseCase';
 
+const RECIPE_CREATED_AT = new Date('2024-01-01T00:00:00.000Z');
+const RECIPE_UPDATED_AT = new Date('2024-01-01T00:00:00.000Z');
+const RECIPE_CREATED_AT_2 = new Date('2024-01-02T00:00:00.000Z');
+const RECIPE_UPDATED_AT_2 = new Date('2024-01-02T00:00:00.000Z');
+const RECIPE_CREATED_AT_3 = new Date('2024-01-03T00:00:00.000Z');
+const RECIPE_UPDATED_AT_3 = new Date('2024-01-03T00:00:00.000Z');
+
 describe('SearchRecipesUseCase', () => {
   let useCase: SearchRecipesUseCase;
   let repository: MemoryRecipeRepository;
@@ -37,8 +44,8 @@ describe('SearchRecipesUseCase', () => {
         brewingConditions: BrewingConditions.create({ roastLevel: 'MEDIUM' }),
         viewCount: 100,
         isPublished: true,
-        createdAt: new Date('2023-01-01'),
-        updatedAt: new Date('2023-01-01'),
+        createdAt: RECIPE_CREATED_AT,
+        updatedAt: RECIPE_UPDATED_AT,
       });
 
       const publicRecipe2 = Recipe.reconstruct({
@@ -47,8 +54,8 @@ describe('SearchRecipesUseCase', () => {
         brewingConditions: BrewingConditions.create({ roastLevel: 'LIGHT' }),
         viewCount: 50,
         isPublished: true,
-        createdAt: new Date('2023-01-02'),
-        updatedAt: new Date('2023-01-02'),
+        createdAt: RECIPE_CREATED_AT_2,
+        updatedAt: RECIPE_UPDATED_AT_2,
       });
 
       const privateRecipe = Recipe.reconstruct({
@@ -57,8 +64,8 @@ describe('SearchRecipesUseCase', () => {
         brewingConditions: BrewingConditions.create({ roastLevel: 'DARK' }),
         viewCount: 10,
         isPublished: false, // 非公開
-        createdAt: new Date('2023-01-03'),
-        updatedAt: new Date('2023-01-03'),
+        createdAt: RECIPE_CREATED_AT_3,
+        updatedAt: RECIPE_UPDATED_AT_3,
       });
 
       repository.add(publicRecipe1);
@@ -90,8 +97,8 @@ describe('SearchRecipesUseCase', () => {
         brewingConditions: BrewingConditions.create({ roastLevel: 'LIGHT' }),
         viewCount: 200,
         isPublished: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: RECIPE_CREATED_AT,
+        updatedAt: RECIPE_UPDATED_AT,
       });
 
       const espressoRecipe = Recipe.reconstruct({
@@ -101,8 +108,8 @@ describe('SearchRecipesUseCase', () => {
         brewingConditions: BrewingConditions.create({ roastLevel: 'DARK' }),
         viewCount: 150,
         isPublished: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: RECIPE_CREATED_AT,
+        updatedAt: RECIPE_UPDATED_AT,
       });
 
       const teaRecipe = Recipe.reconstruct({
@@ -111,8 +118,8 @@ describe('SearchRecipesUseCase', () => {
         brewingConditions: BrewingConditions.create({ roastLevel: 'LIGHT' }),
         viewCount: 100,
         isPublished: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: RECIPE_CREATED_AT,
+        updatedAt: RECIPE_UPDATED_AT,
       });
 
       repository.add(coffeeRecipe);
@@ -147,8 +154,8 @@ describe('SearchRecipesUseCase', () => {
         }),
         viewCount: 100,
         isPublished: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: RECIPE_CREATED_AT,
+        updatedAt: RECIPE_UPDATED_AT,
       });
 
       const mediumRoast = Recipe.reconstruct({
@@ -162,8 +169,8 @@ describe('SearchRecipesUseCase', () => {
         }),
         viewCount: 150,
         isPublished: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: RECIPE_CREATED_AT,
+        updatedAt: RECIPE_UPDATED_AT,
       });
 
       const darkRoast = Recipe.reconstruct({
@@ -177,8 +184,8 @@ describe('SearchRecipesUseCase', () => {
         }),
         viewCount: 120,
         isPublished: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: RECIPE_CREATED_AT,
+        updatedAt: RECIPE_UPDATED_AT,
       });
 
       repository.add(lightRoast);
@@ -313,8 +320,8 @@ describe('SearchRecipesUseCase', () => {
         equipmentIds: ['drip-01', 'filter-02'],
         viewCount: 100,
         isPublished: true,
-        createdAt: new Date('2023-01-01'),
-        updatedAt: new Date('2023-01-01'),
+        createdAt: RECIPE_CREATED_AT,
+        updatedAt: RECIPE_UPDATED_AT,
       });
 
       repository.add(testRecipe);
@@ -354,8 +361,8 @@ describe('SearchRecipesUseCase', () => {
           brewingConditions: BrewingConditions.create({ roastLevel: 'MEDIUM' }),
           viewCount: i * 10,
           isPublished: true,
-          createdAt: new Date(`2023-01-0${i}`),
-          updatedAt: new Date(`2023-01-0${i}`),
+          createdAt: RECIPE_CREATED_AT,
+          updatedAt: RECIPE_UPDATED_AT,
         });
         repository.add(recipe);
       }
@@ -387,8 +394,8 @@ describe('SearchRecipesUseCase', () => {
           brewingConditions: BrewingConditions.create({ roastLevel: 'MEDIUM' }),
           viewCount: i,
           isPublished: true,
-          createdAt: new Date(`2023-01-${i.toString().padStart(2, '0')}`),
-          updatedAt: new Date(`2023-01-${i.toString().padStart(2, '0')}`),
+          createdAt: RECIPE_CREATED_AT,
+          updatedAt: RECIPE_UPDATED_AT,
         });
         repository.add(recipe);
       }
@@ -455,7 +462,7 @@ describe('SearchRecipesUseCase', () => {
           viewCount: data.viewCount,
           isPublished: true,
           createdAt: new Date(data.createdAt),
-          updatedAt: new Date(data.createdAt),
+          updatedAt: RECIPE_UPDATED_AT,
         });
         repository.add(recipe);
       });

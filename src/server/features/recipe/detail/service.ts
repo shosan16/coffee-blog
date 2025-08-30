@@ -10,10 +10,46 @@ import {
   GetRecipeDetailUseCase,
   RecipeDetailUseCaseError,
 } from '@/server/application/use-cases/GetRecipeDetailUseCase';
+import { RecipeId } from '@/server/domain/recipe/value-objects/RecipeId';
+import type { PrismaRecipeWithRelations } from '@/server/infrastructure/repositories/mappers/RecipeMapper';
 import { PrismaRecipeRepository } from '@/server/infrastructure/repositories/PrismaRecipeRepository';
 import { prisma } from '@/server/shared/database/prisma';
 
 import { RecipeDetailError, type RecipeDetail, type GetRecipeDetailResult } from './types';
+
+/**
+ * 関連データ取得処理を再利用可能な関数として抽出
+ *
+ * @param recipeId - レシピID
+ * @returns Prisma関連データ
+ */
+async function getPrismaRecipeWithRelations(
+  recipeId: RecipeId
+): Promise<PrismaRecipeWithRelations | null> {
+  return prisma.post.findUnique({
+    where: { id: BigInt(recipeId.value) },
+    include: {
+      barista: {
+        include: {
+          socialLinks: true,
+        },
+      },
+      steps: {
+        orderBy: { stepOrder: 'asc' },
+      },
+      equipment: {
+        include: {
+          equipmentType: true,
+        },
+      },
+      tags: {
+        include: {
+          tag: true,
+        },
+      },
+    },
+  });
+}
 
 /**
  * レシピ詳細情報を取得し、ビューカウントを増加する
@@ -28,12 +64,17 @@ export async function getRecipeDetail(id: number): Promise<GetRecipeDetailResult
   const useCase = new GetRecipeDetailUseCase(recipeRepository);
 
   try {
-    // ユースケース実行
-    const result = await useCase.execute(id.toString());
+    // ユースケース実行とPrismaデータ取得を並行実行（パフォーマンス最適化）
+    const recipeId = RecipeId.fromString(id.toString());
+    const [result, prismaData] = await Promise.all([
+      useCase.execute(id.toString()),
+      getPrismaRecipeWithRelations(recipeId),
+    ]);
 
-    // ドメインエンティティをAPIレスポンス形式に変換
+    // ドメインエンティティとPrismaデータをAPIレスポンス形式に変換
     const recipeDetail: RecipeDetail = RecipeDetailResponseMapper.toDto(
-      result.recipe
+      result.recipe,
+      prismaData ?? undefined
     ) as RecipeDetail;
 
     return {

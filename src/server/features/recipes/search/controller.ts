@@ -21,22 +21,110 @@ export class SearchRecipesController {
    * URLパラメータを検索パラメータに変換する
    */
   private parseSearchParams(searchParams: URLSearchParams): Record<string, unknown> {
-    const params = Object.fromEntries(searchParams.entries());
+    // クライアントサイドと同じロジックを使用してパラメータを解析
+    const parseFiltersFromSearchParams = <T extends Record<string, unknown>>(
+      searchParams: URLSearchParams | null,
+      config: {
+        stringParams?: string[];
+        numberParams?: string[];
+        booleanParams?: string[];
+        arrayParams?: Record<string, (value: string) => unknown>;
+        jsonParams?: string[];
+        enumParams?: Record<string, string[]>;
+      }
+    ): Partial<T> => {
+      const filters = {} as Partial<T>;
 
-    return {
-      ...params,
-      roastLevel: params.roastLevel
-        ? params.roastLevel.split(',').map((level) => level as RoastLevel)
-        : undefined,
-      grindSize: params.grindSize
-        ? params.grindSize.split(',').map((size) => size as GrindSize)
-        : undefined,
-      equipment: params.equipment ? params.equipment.split(',') : undefined,
-      equipmentType: params.equipmentType ? params.equipmentType.split(',') : undefined,
-      beanWeight: params.beanWeight ? JSON.parse(params.beanWeight) : undefined,
-      waterTemp: params.waterTemp ? JSON.parse(params.waterTemp) : undefined,
-      waterAmount: params.waterAmount ? JSON.parse(params.waterAmount) : undefined,
+      if (!searchParams) {
+        return filters;
+      }
+
+      // 文字列パラメータの処理
+      config.stringParams?.forEach((param) => {
+        const value = searchParams.get(param);
+        if (value) {
+          (filters as Record<string, unknown>)[param] = value;
+        }
+      });
+
+      // 数値パラメータの処理
+      config.numberParams?.forEach((param) => {
+        const value = searchParams.get(param);
+        if (value) {
+          const parsed = parseInt(value, 10);
+          if (!isNaN(parsed)) {
+            (filters as Record<string, unknown>)[param] = parsed;
+          }
+        }
+      });
+
+      // 真偽値パラメータの処理
+      config.booleanParams?.forEach((param) => {
+        const value = searchParams.get(param);
+        if (value !== null) {
+          (filters as Record<string, unknown>)[param] = value === 'true';
+        }
+      });
+
+      // 配列パラメータの処理
+      if (config.arrayParams) {
+        Object.entries(config.arrayParams).forEach(([param, converter]) => {
+          const value = searchParams.get(param);
+          if (value) {
+            (filters as Record<string, unknown>)[param] = value.split(',').map(converter);
+          }
+        });
+      }
+
+      // JSON形式のパラメータの処理
+      config.jsonParams?.forEach((param) => {
+        const value = searchParams.get(param);
+        if (value) {
+          try {
+            (filters as Record<string, unknown>)[param] = JSON.parse(value);
+          } catch {
+            // JSON解析エラーの場合は無視
+          }
+        }
+      });
+
+      // 列挙型パラメータの処理
+      if (config.enumParams) {
+        Object.entries(config.enumParams).forEach(([param, allowedValues]) => {
+          const value = searchParams.get(param);
+          if (value && allowedValues.includes(value)) {
+            (filters as Record<string, unknown>)[param] = value;
+          }
+        });
+      }
+
+      return filters;
     };
+
+    // クライアントサイドと同じ設定でパラメータを解析
+    return parseFiltersFromSearchParams<Record<string, unknown>>(searchParams, {
+      // 数値パラメータ
+      numberParams: ['page', 'limit'],
+
+      // 文字列パラメータ
+      stringParams: ['search', 'sort'],
+
+      // 列挙型パラメータ
+      enumParams: {
+        order: ['asc', 'desc'],
+      },
+
+      // 配列パラメータ
+      arrayParams: {
+        roastLevel: (level) => level as RoastLevel,
+        grindSize: (size) => size as GrindSize,
+        equipment: (item) => item,
+        equipmentType: (item) => item,
+      },
+
+      // JSON形式パラメータ
+      jsonParams: ['beanWeight', 'waterTemp', 'waterAmount'],
+    });
   }
 
   /**
@@ -60,7 +148,18 @@ export class SearchRecipesController {
       logger.debug({ parsedParams, requestId }, 'Parameters parsed and transformed');
 
       // パラメータのバリデーション
-      const validatedParams = searchRecipesQuerySchema.parse(parsedParams);
+      const validationResult = searchRecipesQuerySchema.safeParse(parsedParams);
+      if (!validationResult.success) {
+        logger.warn(
+          {
+            validationErrors: validationResult.error.errors,
+            requestId,
+          },
+          'Parameter validation failed'
+        );
+        throw validationResult.error;
+      }
+      const validatedParams = validationResult.data;
       logger.debug({ validatedParams, requestId }, 'Parameters validated successfully');
 
       // 検索パラメータの型変換

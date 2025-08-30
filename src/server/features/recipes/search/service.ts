@@ -9,6 +9,7 @@ import type {
   SearchRecipesParams,
   SearchRecipesResult,
 } from '@/server/features/recipes/search/types';
+import { PrismaEquipmentRepository } from '@/server/infrastructure/repositories/PrismaEquipmentRepository';
 import { PrismaRecipeRepository } from '@/server/infrastructure/repositories/PrismaRecipeRepository';
 import { prisma } from '@/server/shared/database/prisma';
 import { createChildLogger, measurePerformance } from '@/server/shared/logger';
@@ -30,7 +31,9 @@ export class SearchRecipesService {
 
       // 依存性注入：リポジトリとユースケースの設定
       const recipeRepository = new PrismaRecipeRepository(prisma);
+      const equipmentRepository = new PrismaEquipmentRepository(prisma);
       const useCase = new SearchRecipesUseCase(recipeRepository);
+      const responseMapper = new SearchRecipesResponseMapper(equipmentRepository);
 
       // パラメータ変換（外部境界からユースケース入力へ）
       const input = {
@@ -59,7 +62,7 @@ export class SearchRecipesService {
       const result = await useCase.execute(input);
 
       // ドメイン結果をAPIレスポンス形式に変換
-      const responseDto = SearchRecipesResponseMapper.toDto(result);
+      const responseDto = await responseMapper.toDto(result);
 
       timer.end();
       this.logger.info(

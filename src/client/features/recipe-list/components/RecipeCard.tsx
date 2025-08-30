@@ -12,7 +12,7 @@ type RecipeCardProps = {
 export default function RecipeCard({ recipe }: RecipeCardProps) {
   return (
     <Link href={`/recipes/${recipe.id}`} className="block h-full">
-      <Card className="group border-border bg-card hover:border-primary flex h-full w-full cursor-pointer flex-col overflow-hidden border-2 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+      <Card className="group border-border bg-card flex h-full w-full cursor-pointer flex-col overflow-hidden border-2 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
         {/* コーヒーの染みのような装飾 */}
         <div className="bg-muted/20 absolute -top-6 -right-6 h-32 w-32 rounded-full blur-3xl" />
         <div className="bg-muted/20 absolute bottom-10 -left-10 h-40 w-40 rounded-full blur-3xl" />
@@ -21,7 +21,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
         <CardHeader className="relative">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <CardTitle className="text-card-foreground group-hover:text-primary line-clamp-2 text-lg font-bold transition-colors">
+              <CardTitle className="text-card-foreground line-clamp-2 text-lg font-bold transition-colors">
                 {recipe.title}
               </CardTitle>
               <p className="text-muted-foreground mt-2 line-clamp-2 text-sm">{recipe.summary}</p>

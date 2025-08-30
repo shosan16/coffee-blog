@@ -5,7 +5,6 @@
 ### 🔥 緊急度: 高
 
 - [x] **単体テストの作成** ✅ 完了 (2025-07-15)
-
   - [x] Recipe.entity.tsのテスト作成
   - [x] Barista.entity.tsのテスト作成
   - [x] Equipment.entity.tsのテスト作成
@@ -14,7 +13,6 @@
   - 期間: 1-2日
 
 - [x] **品質チェックの実行と修正** ✅ 完了 (2025-07-15)
-
   - [x] `npm run format`実行とコミット
   - [x] `npm run lint`エラー解消
   - [x] `npx tsc --noEmit`型エラー解消
@@ -22,14 +20,12 @@
   - 期間: 0.5日
 
 - [x] **Phase 1完了レビュー** ✅ 完了 (2025-07-15)
-
   - [x] ドメインモデルの実装内容確認
   - [x] YAGNI原則適用結果の検証
   - [x] コード品質の最終チェック
   - 期間: 0.5日
 
 - [x] **YAGNI原則適用によるコード簡素化** ✅ 完了 (2025-07-19)
-
   - [x] 未使用メソッド削除（約20個）
   - [x] 不要コード削除（約400行）
   - [x] 複雑さ指数40%削減
@@ -55,7 +51,6 @@
 #### Week 1（1-2日目）
 
 - [x] **Prismaリポジトリの実装** ✅ 完了 (2025-07-19)
-
   - [x] `PrismaRecipeRepository.ts`作成
     - [x] `findById`メソッド実装
     - [x] `findPublishedById`メソッド実装
@@ -77,7 +72,6 @@
 #### Week 1（3-4日目）
 
 - [x] **リポジトリテストの作成** ✅ 完了 (2025-07-19)
-
   - [x] PrismaRecipeRepositoryの統合テスト
   - [x] MemoryRecipeRepositoryの単体テスト
   - [x] データマッピングの正確性テスト
@@ -99,14 +93,12 @@
 #### Week 3（1-2日目）
 
 - [x] **Baristaエンティティのスキーマ分離** ✅ 完了 (2025-07-19)
-
   - [x] `BaristaSchema.ts`ファイル作成（統一バリデーションスキーマ）
   - [x] バリデーション関心事の完全分離
   - [x] 重複バリデーションロジック統合（4個のupdateメソッド→1個に統合）
   - [x] コード行数49%削減（295行→151行）
 
 - [x] **Equipment・Recipeエンティティへの適用** ✅ 完了 (2025-07-19)
-
   - [x] `EquipmentSchema.ts`作成（包括的バリデーション定義）
   - [x] `Recipe.types.ts`作成（YAGNI原則により最小限実装）
   - [x] 各エンティティからのスキーマ分離完了
@@ -154,7 +146,6 @@ src/server/domain/recipe/entities/
 #### Week 2（1-2日目）
 
 - [x] **ユースケース層の実装** ✅ 完了 (2025-07-20)
-
   - [x] `GetRecipeDetailUseCase.ts`実装
     - [x] 依存注入の設定
     - [x] ビジネスロジックの実装
@@ -172,7 +163,6 @@ src/server/domain/recipe/entities/
 #### Week 2（2-3日目）
 
 - [x] **コントローラーのスリム化** ✅ 完了 (2025-07-20)
-
   - [x] `recipe/detail/controller.ts`リファクタリング
   - [x] `recipes/search/controller.ts`リファクタリング
   - [x] ユースケースの依存注入設定
@@ -200,7 +190,6 @@ src/server/domain/recipe/entities/
 #### 即座実行タスク（必須）
 
 - [ ] **TDD違反の解消**（最重要）
-
   - [ ] `GetRecipeDetailUseCase.test.ts`の実用テスト実装
     - [ ] 正常系テスト（公開レシピ取得、ビューカウント増加）
     - [ ] 異常系テスト（レシピ未存在、非公開、無効ID）
@@ -212,7 +201,6 @@ src/server/domain/recipe/entities/
   - 期間: 1日
 
 - [ ] **型安全性の修復**（高優先度）
-
   - [ ] `RecipeDetailResponseMapper`の型安全化
     - [ ] `any`型使用の完全排除
     - [ ] 適切な型定義とガード句
@@ -248,7 +236,6 @@ src/server/domain/recipe/entities/
 #### Week 3（1-2日目）
 
 - [ ] **コントローラー直接統合**
-
   - [ ] サービス層の中間レイヤー除去
     - [ ] `recipe/detail/service.ts`の段階的削除
     - [ ] `recipes/search/service.ts`の段階的削除
@@ -294,7 +281,6 @@ src/server/domain/recipe/entities/
 ### 優先度: 中
 
 - [ ] **統一エラーシステム**
-
   - [ ] ドメインエラーの階層化
     - [ ] `DomainError`ベースクラス
     - [ ] `UseCaseError`、`RepositoryError`派生クラス
@@ -313,7 +299,6 @@ src/server/domain/recipe/entities/
 ### 優先度: 低
 
 - [ ] **クエリ最適化**
-
   - [ ] N+1問題の解決
   - [ ] インデックス戦略の見直し
   - [ ] キャッシュ戦略の実装

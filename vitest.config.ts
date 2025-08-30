@@ -22,7 +22,7 @@ export default defineConfig({
       },
     },
     // パフォーマンス最適化
-    isolate: false, // テスト間の分離を無効化してパフォーマンス向上
+    isolate: true, // テスト間の分離を有効化してモック汚染を防ぐ
     reporters: ['default'],
     logHeapUsage: false, // ヒープ使用量ログを無効化
     // 環境変数を設定

@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-import { useDateFormat } from './useDateFormat';
+import { useDateFormat } from '@/client/features/recipe-detail/hooks/useDateFormat';
 
 describe('useDateFormat', () => {
   // 固定の日付を設定してテストの一貫性を保つ

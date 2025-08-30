@@ -2,11 +2,13 @@ import { format, isValid } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import { useMemo } from 'react';
 
+type DateInput = Date | string | null | undefined;
+
 export type UseDateFormatReturn = {
-  formatDate: (date: Date | string | null | undefined, formatPattern?: string) => string | null;
-  formatDateTime: (date: Date | string | null | undefined) => string | null;
-  formatRelativeDate: (date: Date | string | null | undefined) => string | null;
-  isValidDate: (date: Date | string | null | undefined) => boolean;
+  formatDate: (date: DateInput, formatPattern?: string) => string | null;
+  formatDateTime: (date: DateInput) => string | null;
+  formatRelativeDate: (date: DateInput) => string | null;
+  isValidDate: (date: DateInput) => boolean;
   formatISODate: (isoString: string | null | undefined) => string | null;
 };
 
@@ -31,11 +33,7 @@ export function useDateFormat(): UseDateFormatReturn {
        * formatDate('2024-01-15', 'yyyy/MM/dd') // "2024/01/15"
        * formatDate(null) // null
        */
-      formatDate: (
-        // eslint-disable-next-line sonarjs/use-type-alias
-        date: Date | string | null | undefined,
-        formatPattern: string = 'yyyy年M月d日'
-      ): string | null => {
+      formatDate: (date: DateInput, formatPattern: string = 'yyyy年M月d日'): string | null => {
         if (!date) return null;
 
         try {
@@ -58,7 +56,7 @@ export function useDateFormat(): UseDateFormatReturn {
        * @example
        * formatDateTime(new Date('2024-01-15T14:30:00')) // "2024年1月15日 14:30"
        */
-      formatDateTime: (date: Date | string | null | undefined): string | null => {
+      formatDateTime: (date: DateInput): string | null => {
         if (!date) return null;
 
         try {
@@ -82,7 +80,7 @@ export function useDateFormat(): UseDateFormatReturn {
        * formatRelativeDate(new Date(Date.now() - 86400000)) // "1日前"
        * formatRelativeDate(new Date(Date.now() + 86400000)) // "明日"
        */
-      formatRelativeDate: (date: Date | string | null | undefined): string | null => {
+      formatRelativeDate: (date: DateInput): string | null => {
         if (!date) return null;
 
         try {
@@ -116,7 +114,7 @@ export function useDateFormat(): UseDateFormatReturn {
        * @param date - チェックする日付
        * @returns 有効な日付の場合 true
        */
-      isValidDate: (date: Date | string | null | undefined): boolean => {
+      isValidDate: (date: DateInput): boolean => {
         if (!date) return false;
 
         try {

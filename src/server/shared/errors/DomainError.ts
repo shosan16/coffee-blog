@@ -23,7 +23,7 @@ export abstract class DomainError extends Error {
     this.name = this.constructor.name;
 
     // スタックトレースの最適化（V8エンジン対応）
-    if (Error.captureStackTrace) {
+    if (typeof Error.captureStackTrace === 'function') {
       Error.captureStackTrace(this, this.constructor);
     }
   }

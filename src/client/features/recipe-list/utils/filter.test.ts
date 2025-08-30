@@ -2,7 +2,7 @@ import { RoastLevel, GrindSize } from '@prisma/client';
 import type { ReadonlyURLSearchParams } from 'next/navigation';
 import { describe, it, expect } from 'vitest';
 
-import { parseFiltersFromSearchParams } from './filter';
+import { parseFiltersFromSearchParams } from '@/client/features/recipe-list/utils/filter';
 
 // URLSearchParams モックヘルパー
 const createSearchParams = (params: Record<string, string>): ReadonlyURLSearchParams => {

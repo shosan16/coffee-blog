@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 
-import { useTimeFormat } from './useTimeFormat';
+import { useTimeFormat } from '@/client/features/recipe-detail/hooks/useTimeFormat';
 
 describe('useTimeFormat', () => {
   describe('formatSeconds', () => {

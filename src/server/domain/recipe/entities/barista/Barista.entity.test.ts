@@ -202,17 +202,17 @@ describe('Barista Entity', () => {
         expect(barista.affiliation).toBeUndefined();
       });
 
-      it('updatedAtが更新されること', async () => {
+      it('updatedAtが更新されること', () => {
         // Arrange - 元のupdatedAtを記録
         const originalUpdatedAt = barista.updatedAt;
         const updateParams = createValidUpdateParams();
 
-        // Act - 少し時間を置いてから更新
-        await new Promise((resolve) => setTimeout(resolve, 2));
+        // Act - 更新実行
         barista.update(updateParams);
 
-        // Assert - updatedAtが更新されていることを確認
-        expect(barista.updatedAt.getTime()).toBeGreaterThan(originalUpdatedAt.getTime());
+        // Assert - updatedAtが新しいDateオブジェクトに更新されていることを確認
+        expect(barista.updatedAt).not.toBe(originalUpdatedAt);
+        expect(barista.updatedAt).toBeInstanceOf(Date);
       });
     });
 

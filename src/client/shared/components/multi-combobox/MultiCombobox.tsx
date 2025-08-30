@@ -2,7 +2,6 @@
 
 import * as Popover from '@radix-ui/react-popover';
 import { X, ChevronDown } from 'lucide-react';
-import * as React from 'react';
 
 import { cn } from '@/client/lib/tailwind';
 import { Badge } from '@/client/shared/shadcn/badge';
@@ -55,6 +54,7 @@ export default function MultiCombobox({
   dropdownClassName,
   keepMinHeight = true,
   maxItems,
+  autoFocus = true,
   ...props
 }: MultiComboboxProps) {
   const {
@@ -65,6 +65,7 @@ export default function MultiCombobox({
     filteredItems,
     isMaxItemsReached,
     canCreateNewItem,
+    inputTabIndex,
     setOpen,
     setInputValue,
     handleSelectItem,
@@ -83,6 +84,7 @@ export default function MultiCombobox({
     creatable,
     disabled,
     maxItems,
+    autoFocus,
   });
 
   return (
@@ -134,6 +136,7 @@ export default function MultiCombobox({
                   onClick={handleInputClick}
                   placeholder={selectedItems.length === 0 ? placeholder : ''}
                   disabled={disabled || isMaxItemsReached}
+                  tabIndex={inputTabIndex}
                   className={cn(
                     'placeholder:text-muted-foreground min-w-12 flex-1 border-0 bg-transparent outline-none',
                     inputClassName
@@ -163,7 +166,6 @@ export default function MultiCombobox({
                 </div>
               )}
 
-              {/* 新しいアイテム作成オプション */}
               {canCreateNewItem && (
                 <button
                   type="button"
@@ -173,8 +175,6 @@ export default function MultiCombobox({
                   <span className="font-medium">「{inputValue}」を追加</span>
                 </button>
               )}
-
-              {/* フィルタされたアイテムリスト */}
               {filteredItems.map((item) => (
                 <button
                   key={item.id}
@@ -194,21 +194,18 @@ export default function MultiCombobox({
                 </button>
               ))}
 
-              {/* 結果が見つからない場合のメッセージ */}
               {filteredItems.length === 0 && !canCreateNewItem && inputValue && (
                 <div className="text-muted-foreground px-3 py-2 text-sm">
                   該当するアイテムが見つかりません
                 </div>
               )}
 
-              {/* 最大選択数に達した場合のメッセージ */}
               {isMaxItemsReached && (
                 <div className="text-muted-foreground px-3 py-2 text-sm">
                   最大{maxItems}個まで選択できます
                 </div>
               )}
 
-              {/* アイテムが何もない場合のメッセージ */}
               {items.length === 0 && (
                 <div className="text-muted-foreground px-3 py-2 text-sm">
                   選択可能なアイテムがありません

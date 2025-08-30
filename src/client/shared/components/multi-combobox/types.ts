@@ -48,6 +48,8 @@ export type MultiComboboxProps = {
   keepMinHeight?: boolean;
   /** 最大選択可能数（オプション） */
   maxItems?: number;
+  /** モーダル表示時の自動フォーカスによるユーザー体験の阻害を防止するフラグ */
+  autoFocus?: boolean;
 };
 
 /**
@@ -68,6 +70,8 @@ export type UseMultiComboboxReturn = {
   isMaxItemsReached: boolean;
   /** 新しいアイテムが作成可能かどうか */
   canCreateNewItem: boolean;
+  /** モーダル環境でのキーボードナビゲーション制御に使用するtabIndex値 */
+  inputTabIndex: number;
   /** ドロップダウンの開閉状態を設定する関数 */
   setOpen: (open: boolean) => void;
   /** 入力値を設定する関数 */

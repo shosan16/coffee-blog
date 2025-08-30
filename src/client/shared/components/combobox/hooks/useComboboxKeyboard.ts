@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useCallback } from 'react';
 
 import type { ComboboxOptionType } from '../types';
 
@@ -61,7 +61,7 @@ export const useComboboxKeyboard = ({
   actions,
   disabled = false,
 }: UseComboboxKeyboardProps): { handleKeyDown: (e: React.KeyboardEvent) => void } => {
-  const handleKeyDown = React.useCallback(
+  const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (disabled) return;
 

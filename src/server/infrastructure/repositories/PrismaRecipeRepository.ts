@@ -4,19 +4,16 @@
  * IRecipeRepositoryインターフェースの具象実装
  */
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
-import { PrismaClient } from '@prisma/client';
+import type { PrismaClient } from '@prisma/client';
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
-import { Recipe } from '@/server/domain/recipe/entities/recipe';
+import type { Recipe } from '@/server/domain/recipe/entities/recipe';
 import type {
   IRecipeRepository,
   RecipeSearchCriteria,
   RecipeSearchResult,
   PaginationInfo,
 } from '@/server/domain/recipe/repositories/IRecipeRepository';
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
-import { RecipeId } from '@/server/domain/recipe/value-objects/RecipeId';
+import type { RecipeId } from '@/server/domain/recipe/value-objects/RecipeId';
 import { logger } from '@/server/shared/logger';
 
 import { RecipeMapper } from './mappers/RecipeMapper';
@@ -35,7 +32,11 @@ export class PrismaRecipeRepository implements IRecipeRepository {
       const post = await this.prisma.post.findUnique({
         where: { id: BigInt(id.value) },
         include: {
-          barista: true,
+          barista: {
+            include: {
+              socialLinks: true,
+            },
+          },
           steps: {
             orderBy: { stepOrder: 'asc' },
           },
@@ -75,7 +76,11 @@ export class PrismaRecipeRepository implements IRecipeRepository {
           isPublished: true,
         },
         include: {
-          barista: true,
+          barista: {
+            include: {
+              socialLinks: true,
+            },
+          },
           steps: {
             orderBy: { stepOrder: 'asc' },
           },
@@ -118,7 +123,11 @@ export class PrismaRecipeRepository implements IRecipeRepository {
         this.prisma.post.findMany({
           where,
           include: {
-            barista: true,
+            barista: {
+              include: {
+                socialLinks: true,
+              },
+            },
             steps: {
               orderBy: { stepOrder: 'asc' },
             },
@@ -215,7 +224,11 @@ export class PrismaRecipeRepository implements IRecipeRepository {
           id: { in: ids.map((id) => BigInt(id.value)) },
         },
         include: {
-          barista: true,
+          barista: {
+            include: {
+              socialLinks: true,
+            },
+          },
           steps: {
             orderBy: { stepOrder: 'asc' },
           },

@@ -2,30 +2,21 @@
 
 import type { RoastLevel, GrindSize } from '@prisma/client';
 import { X, Filter, RotateCcw } from 'lucide-react';
-import React, { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, memo } from 'react';
 
-import { useRecipeFilter } from '@/client/features/recipe-list/hooks/useRecipeFilter';
+import ConditionFilter from '@/client/features/recipe-list/components/filter/ConditionFilter';
+import EquipmentFilter from '@/client/features/recipe-list/components/filter/EquipmentFilter';
+import { useRecipeQuery } from '@/client/features/recipe-list/hooks/useRecipeQuery';
 import { Button } from '@/client/shared/shadcn/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
-
-import ActiveFilters from './ActiveFilters';
-import ConditionFilter from './ConditionFilter';
-import EquipmentFilter from './EquipmentFilter';
 
 type RecipeFilterProps = {
   className?: string;
 };
 
-const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: RecipeFilterProps) {
-  const {
-    filters,
-    pendingFilters,
-    updateFilter,
-    applyFilters,
-    resetFilters,
-    isLoading,
-    hasChanges,
-  } = useRecipeFilter();
+function RecipeFilter({ className = '' }: RecipeFilterProps): React.JSX.Element {
+  const { filters, pendingFilters, setFilter, apply, reset, isLoading, hasChanges } =
+    useRecipeQuery();
   const [isOpen, setIsOpen] = useState(false);
 
   const activeFilterCount = useMemo(() => {
@@ -46,44 +37,44 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
 
   const handleEquipmentChange = useCallback(
     (equipment: string[]): void => {
-      updateFilter('equipment', equipment);
+      setFilter('equipment', equipment);
     },
-    [updateFilter]
+    [setFilter]
   );
 
   const handleRoastLevelChange = useCallback(
     (levels: RoastLevel[]): void => {
-      updateFilter('roastLevel', levels);
+      setFilter('roastLevel', levels);
     },
-    [updateFilter]
+    [setFilter]
   );
 
   const handleGrindSizeChange = useCallback(
     (sizes: GrindSize[]): void => {
-      updateFilter('grindSize', sizes);
+      setFilter('grindSize', sizes);
     },
-    [updateFilter]
+    [setFilter]
   );
 
   const handleBeanWeightChange = useCallback(
     (range: { min?: number; max?: number }): void => {
-      updateFilter('beanWeight', range);
+      setFilter('beanWeight', range);
     },
-    [updateFilter]
+    [setFilter]
   );
 
   const handleWaterTempChange = useCallback(
     (range: { min?: number; max?: number }): void => {
-      updateFilter('waterTemp', range);
+      setFilter('waterTemp', range);
     },
-    [updateFilter]
+    [setFilter]
   );
 
   const handleWaterAmountChange = useCallback(
     (range: { min?: number; max?: number }): void => {
-      updateFilter('waterAmount', range);
+      setFilter('waterAmount', range);
     },
-    [updateFilter]
+    [setFilter]
   );
 
   return (
@@ -124,9 +115,6 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
               </div>
             )}
 
-            {/* アクティブフィルター表示 */}
-            <ActiveFilters />
-
             {/* 器具フィルター */}
             <EquipmentFilter
               selectedEquipment={pendingFilters.equipment ?? []}
@@ -152,7 +140,7 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
               <div className="flex gap-3">
                 <Button
                   variant="outline"
-                  onClick={resetFilters}
+                  onClick={reset}
                   disabled={isLoading || (activeFilterCount === 0 && pendingFilterCount === 0)}
                   className={`px-6 transition-all duration-200 ${
                     activeFilterCount > 0 || pendingFilterCount > 0
@@ -168,7 +156,7 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
                   リセット
                 </Button>
                 <Button
-                  onClick={applyFilters}
+                  onClick={apply}
                   disabled={isLoading || !hasChanges}
                   variant={hasChanges ? 'default' : 'secondary'}
                   className={`flex-1 transition-all duration-200 ${
@@ -210,6 +198,6 @@ const RecipeFilter = React.memo(function RecipeFilter({ className = '' }: Recipe
       </div>
     </div>
   );
-});
+}
 
-export default RecipeFilter;
+export default memo(RecipeFilter);
