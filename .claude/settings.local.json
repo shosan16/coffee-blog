@@ -72,7 +72,8 @@
       "mcp__context7__get-library-docs",
       "Bash(npm install:*)",
       "mcp__playwright__browser_take_screenshot",
-      "mcp__serena__list_memories"
+      "mcp__serena__list_memories",
+      "Bash(for i in {1..10})"
     ],
     "deny": []
   }
