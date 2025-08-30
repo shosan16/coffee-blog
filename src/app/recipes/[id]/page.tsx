@@ -7,8 +7,8 @@ import ServerRecipeDetailError from '@/client/features/recipe-detail/components/
 import PageHeader from '@/client/features/recipe-detail/components/layout/PageHeader';
 import RecipeHeader from '@/client/features/recipe-detail/components/recipe/header/RecipeHeader';
 import PreparationPointsCard from '@/client/features/recipe-detail/components/recipe/info/PreparationPointsCard';
+import BrewingParameterCards from '@/client/features/recipe-detail/components/recipe/parameters/BrewingParameterCards';
 import RecipeEquipmentList from '@/client/features/recipe-detail/components/recipe/parameters/RecipeEquipmentList';
-import RecipeInfoCards from '@/client/features/recipe-detail/components/recipe/parameters/RecipeInfoCards';
 import RecipeSteps from '@/client/features/recipe-detail/components/recipe/process/RecipeSteps';
 import { RecipeErrors, RecipeDetailPageErrors } from '@/lib/errors';
 import { logger, createLogContext } from '@/lib/logger';
@@ -165,7 +165,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
               <RecipeHeader recipe={recipe} />
               <div className="flex flex-col gap-8 lg:flex-row">
                 <div className="min-w-0 flex-1 space-y-8">
-                  <RecipeInfoCards recipe={recipe} />
+                  <BrewingParameterCards recipe={recipe} />
                   <PreparationPointsCard remarks={recipe.remarks} />
                   <RecipeSteps steps={recipe.steps} brewingTime={recipe.brewingTime} />
                   <RecipeEquipmentList equipment={recipe.equipment} />
