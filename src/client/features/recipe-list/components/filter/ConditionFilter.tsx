@@ -6,7 +6,7 @@ import { useMemo, useCallback, memo } from 'react';
 import RangeSlider from '@/client/features/recipe-list/components/filter/RangeSlider';
 import MultiCombobox from '@/client/shared/components/multi-combobox/MultiCombobox';
 import type { MultiComboboxItem } from '@/client/shared/components/multi-combobox/types';
-import { ROAST_LEVELS, GRIND_SIZES, type OptionItem } from '@/client/shared/constants/filters';
+import { ROAST_LEVELS, GRIND_SIZES } from '@/client/shared/constants/filters';
 import Label from '@/client/shared/shadcn/label';
 
 type ConditionFilterProps = {
@@ -36,18 +36,9 @@ function ConditionFilter({
   onWaterAmountChange,
   className = '',
 }: ConditionFilterProps): React.JSX.Element {
-  const convertToMultiComboboxItems = (items: OptionItem[]): MultiComboboxItem[] => {
-    return items.map((item) => ({
-      id: item.id,
-      label: item.label,
-      value: item.value,
-      disabled: item.disabled,
-    }));
-  };
-
-  // MultiCombobox用の定数を生成
-  const roastLevelItems = useMemo(() => convertToMultiComboboxItems(ROAST_LEVELS), []);
-  const grindSizeItems = useMemo(() => convertToMultiComboboxItems(GRIND_SIZES), []);
+  // MultiCombobox用の定数（変換不要）
+  const roastLevelItems = useMemo(() => ROAST_LEVELS, []);
+  const grindSizeItems = useMemo(() => GRIND_SIZES, []);
 
   // 選択されている焙煎度をMultiComboboxItem形式に変換
   const selectedRoastLevels = useMemo(() => {
