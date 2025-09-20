@@ -2,14 +2,14 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { z } from 'zod';
 
-import RecipeDetailErrorBoundary from '@/client/features/recipe-detail/components/error/RecipeDetailErrorBoundary';
-import ServerRecipeDetailError from '@/client/features/recipe-detail/components/error/ServerRecipeDetailError';
-import PageHeader from '@/client/features/recipe-detail/components/layout/PageHeader';
 import RecipeHeader from '@/client/features/recipe-detail/components/contents/header/RecipeHeader';
 import PreparationPointsCard from '@/client/features/recipe-detail/components/contents/info/PreparationPointsCard';
 import BrewingParameterCards from '@/client/features/recipe-detail/components/contents/parameters/BrewingParameterCards';
 import RecipeEquipmentList from '@/client/features/recipe-detail/components/contents/parameters/RecipeEquipmentList';
 import RecipeSteps from '@/client/features/recipe-detail/components/contents/process/RecipeSteps';
+import RecipeDetailErrorBoundary from '@/client/features/recipe-detail/components/error/RecipeDetailErrorBoundary';
+import ServerRecipeDetailError from '@/client/features/recipe-detail/components/error/ServerRecipeDetailError';
+import PageHeader from '@/client/features/recipe-detail/components/layout/PageHeader';
 import { RecipeErrors, RecipeDetailPageErrors } from '@/lib/errors';
 import { logger, createLogContext } from '@/lib/logger';
 import { getCachedRecipeMetadata } from '@/lib/recipe-cache';

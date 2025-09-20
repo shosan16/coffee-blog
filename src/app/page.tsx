@@ -1,9 +1,9 @@
 import { Coffee } from 'lucide-react';
 import type { ReadonlyURLSearchParams } from 'next/navigation';
 
-import RecipeList from '@/client/features/recipe-list/components/RecipeList';
+import SearchResultsHeader from '@/client/features/recipe-list/components/layout/SearchResultsHeader';
+import RecipeList from '@/client/features/recipe-list/components/list/RecipeList';
 import HeroSearchSection from '@/client/features/recipe-list/components/search/HeroSearchSection';
-import SearchResultsHeader from '@/client/features/recipe-list/components/SearchResultsHeader';
 import { parseFiltersFromSearchParams } from '@/client/features/recipe-list/utils/filter';
 import { fetchRecipes } from '@/client/features/recipe-list/utils/recipeApi';
 

@@ -3,12 +3,13 @@
 import { Search } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 
-import RecipeCard from '@/client/features/recipe-list/components/RecipeCard';
 import { useRecipes } from '@/client/features/recipe-list/hooks/useRecipes';
 import type { RecipeListResponse } from '@/client/features/recipe-list/types/api';
 import { parseFiltersFromSearchParams } from '@/client/features/recipe-list/utils/filter';
 import RecipePagination from '@/client/shared/components/Pagination';
 import { RecipeListSkeleton } from '@/client/shared/components/skeleton';
+
+import RecipeCard from './RecipeCard';
 
 type RecipeListProps = {
   initialData: RecipeListResponse;
