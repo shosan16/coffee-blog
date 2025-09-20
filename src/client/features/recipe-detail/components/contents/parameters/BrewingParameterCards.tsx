@@ -2,21 +2,21 @@ import { Bean, Droplet } from 'lucide-react';
 
 import { useNumberFormat } from '@/client/features/recipe-detail/hooks/useNumberFormat';
 import type { RecipeDetailInfo } from '@/client/features/recipe-detail/types/recipe-detail';
-import { getRoastLevelLabel, getGrindSizeLabel } from '@/client/shared/constants/filters';
+import { getRoastLevelLabel, getGrindSizeLabel } from '@/client/shared/constants/coffee-beans';
 import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
 
-type RecipeInfoCardsProps = {
+type BrewingParameterCardsProps = {
   /** レシピ詳細情報 */
   recipe: RecipeDetailInfo;
 };
 
 /**
- * レシピ基本情報カード群
+ * 抽出パラメータカード群
  *
  * 豆情報と湯温・湯量を別々の
  * カード形式で表示する。
  */
-export default function RecipeInfoCards({ recipe }: RecipeInfoCardsProps) {
+export default function BrewingParameterCards({ recipe }: BrewingParameterCardsProps) {
   const { formatWeight, formatTemperature } = useNumberFormat();
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

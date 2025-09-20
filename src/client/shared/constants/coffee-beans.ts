@@ -1,22 +1,9 @@
-/**
- * 基本的な選択肢の型定義
- * MultiComboboxItemと互換性を持つ汎用的な型
- */
-export type OptionItem = {
-  /** アイテムの一意識別子 */
-  id: string;
-  /** アイテムの表示ラベル */
-  label: string;
-  /** アイテムの値 */
-  value: string;
-  /** アイテムが無効化されているかどうか（オプション） */
-  disabled?: boolean;
-};
+import type { MultiComboboxItem } from '@/client/shared/components/multi-combobox/types';
 
 /**
  * 焙煎度の選択肢
  */
-export const ROAST_LEVELS: OptionItem[] = [
+export const ROAST_LEVELS: MultiComboboxItem[] = [
   { id: 'LIGHT', label: '浅煎り', value: 'LIGHT' },
   { id: 'LIGHT_MEDIUM', label: '中浅煎り', value: 'LIGHT_MEDIUM' },
   { id: 'MEDIUM', label: '中煎り', value: 'MEDIUM' },
@@ -28,7 +15,7 @@ export const ROAST_LEVELS: OptionItem[] = [
 /**
  * 挽き目の選択肢
  */
-export const GRIND_SIZES: OptionItem[] = [
+export const GRIND_SIZES: MultiComboboxItem[] = [
   { id: 'EXTRA_FINE', label: '極細挽き', value: 'EXTRA_FINE' },
   { id: 'FINE', label: '細挽き', value: 'FINE' },
   { id: 'MEDIUM_FINE', label: '中細挽き', value: 'MEDIUM_FINE' },

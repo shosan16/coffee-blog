@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
 
-import RecipeHeader from '@/client/features/recipe-detail/components/RecipeHeader';
 import type { RecipeDetailInfo } from '@/client/features/recipe-detail/types/recipe-detail';
+
+import RecipeHeader from './RecipeHeader';
 
 describe('RecipeHeader', () => {
   describe('基本表示', () => {

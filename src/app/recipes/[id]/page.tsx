@@ -2,14 +2,14 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { z } from 'zod';
 
-import PageHeader from '@/client/features/recipe-detail/components/PageHeader';
-import PreparationPointsCard from '@/client/features/recipe-detail/components/PreparationPointsCard';
-import RecipeDetailErrorBoundary from '@/client/features/recipe-detail/components/RecipeDetailErrorBoundary';
-import RecipeEquipmentList from '@/client/features/recipe-detail/components/RecipeEquipmentList';
-import RecipeHeader from '@/client/features/recipe-detail/components/RecipeHeader';
-import RecipeInfoCards from '@/client/features/recipe-detail/components/RecipeInfoCards';
-import RecipeSteps from '@/client/features/recipe-detail/components/RecipeSteps';
-import ServerRecipeDetailError from '@/client/features/recipe-detail/components/ServerRecipeDetailError';
+import RecipeHeader from '@/client/features/recipe-detail/components/contents/header/RecipeHeader';
+import PreparationPointsCard from '@/client/features/recipe-detail/components/contents/info/PreparationPointsCard';
+import BrewingParameterCards from '@/client/features/recipe-detail/components/contents/parameters/BrewingParameterCards';
+import RecipeEquipmentList from '@/client/features/recipe-detail/components/contents/parameters/RecipeEquipmentList';
+import RecipeSteps from '@/client/features/recipe-detail/components/contents/process/RecipeSteps';
+import RecipeDetailErrorBoundary from '@/client/features/recipe-detail/components/error/RecipeDetailErrorBoundary';
+import ServerRecipeDetailError from '@/client/features/recipe-detail/components/error/ServerRecipeDetailError';
+import PageHeader from '@/client/features/recipe-detail/components/layout/PageHeader';
 import { RecipeErrors, RecipeDetailPageErrors } from '@/lib/errors';
 import { logger, createLogContext } from '@/lib/logger';
 import { getCachedRecipeMetadata } from '@/lib/recipe-cache';
@@ -165,7 +165,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
               <RecipeHeader recipe={recipe} />
               <div className="flex flex-col gap-8 lg:flex-row">
                 <div className="min-w-0 flex-1 space-y-8">
-                  <RecipeInfoCards recipe={recipe} />
+                  <BrewingParameterCards recipe={recipe} />
                   <PreparationPointsCard remarks={recipe.remarks} />
                   <RecipeSteps steps={recipe.steps} brewingTime={recipe.brewingTime} />
                   <RecipeEquipmentList equipment={recipe.equipment} />
