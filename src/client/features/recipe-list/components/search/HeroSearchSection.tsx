@@ -3,7 +3,7 @@
 import { Coffee, Search } from 'lucide-react';
 import { useState, useMemo, useCallback, memo } from 'react';
 
-import FilterSheet from '@/client/features/recipe-list/components/search/FilterSheet';
+import FilterPanel from '@/client/features/recipe-list/components/search/FilterPanel';
 import FilterTriggerButton from '@/client/features/recipe-list/components/search/FilterTriggerButton';
 import SearchInput from '@/client/features/recipe-list/components/search/SearchInput';
 import { useRecipeQuery } from '@/client/features/recipe-list/hooks/useRecipeQuery';
@@ -57,11 +57,10 @@ function HeroSearchSection({
   }, []);
 
   return (
-    <div className="bg-primary text-primary-foreground relative overflow-hidden py-20">
+    <div className="bg-primary text-primary-foreground relative overflow-visible py-20">
       <div className="bg-primary/10 absolute inset-0" />
       <div className="relative container mx-auto px-4">
         <div className="flex flex-col items-center text-center">
-          {/* メインタイトル */}
           <Coffee className="text-primary-foreground mb-6 h-16 w-16" />
           <h1 className="mb-4 text-5xl font-bold tracking-tight">Coffee Recipe Collection</h1>
           <p className="text-primary-foreground mb-8 max-w-2xl text-xl">
@@ -70,23 +69,19 @@ function HeroSearchSection({
             おうちカフェを極上の体験に
           </p>
 
-          {/* 統合検索バー */}
-          <div className="w-full max-w-3xl">
+          <div className="relative w-full max-w-3xl">
             <div className={searchBarClassName}>
-              {/* 検索入力フィールド */}
               <SearchInput
                 placeholder="キーワード  [例: バリスタ・レシピ・コーヒー豆]"
                 aria-label="コーヒーレシピを検索"
               />
 
-              {/* フィルターボタン */}
               <FilterTriggerButton
                 activeFilterCount={activeFilterCount}
                 onClick={handleFilterClick}
                 isOpen={isFilterOpen}
               />
 
-              {/* 検索ボタン */}
               <div className="border-input border-l">
                 <Button
                   onClick={handleSearchClick}
@@ -99,12 +94,15 @@ function HeroSearchSection({
                 </Button>
               </div>
             </div>
+
+            <FilterPanel
+              isOpen={isFilterOpen}
+              onOpenChange={setIsFilterOpen}
+              queryResult={queryResult}
+            />
           </div>
         </div>
       </div>
-
-      {/* フィルターシート */}
-      <FilterSheet isOpen={isFilterOpen} onOpenChange={setIsFilterOpen} queryResult={queryResult} />
     </div>
   );
 }

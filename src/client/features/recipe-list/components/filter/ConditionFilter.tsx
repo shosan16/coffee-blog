@@ -83,7 +83,7 @@ function ConditionFilter({
   return (
     <div className={`space-y-6 ${className}`}>
       <div className="space-y-6">
-        <Label className="text-foreground block text-sm font-medium">抽出条件</Label>
+        <Label className="text-foreground block text-left text-sm font-medium">抽出条件</Label>
 
         {/* 焙煎度 */}
         <div className="space-y-3">
