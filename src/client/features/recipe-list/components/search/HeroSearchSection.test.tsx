@@ -24,8 +24,8 @@ vi.mock('./FilterTriggerButton', () => ({
   default: vi.fn(() => <button data-testid="filter-trigger-button">フィルター</button>),
 }));
 
-vi.mock('./FilterSheet', () => ({
-  default: vi.fn(() => <div data-testid="filter-sheet">フィルターシート</div>),
+vi.mock('./FilterPanel', () => ({
+  default: vi.fn(() => <div data-testid="filter-panel">フィルターパネル</div>),
 }));
 
 vi.mock('@/client/shared/shadcn/button', () => ({
@@ -52,7 +52,10 @@ describe('HeroSearchSection', () => {
 
   describe('レンダリング', () => {
     it('コンポーネントが正しくレンダリングされる', () => {
-      // Arrange & Act
+      // Arrange
+      // （準備不要）
+
+      // Act
       render(<HeroSearchSection />);
 
       // Assert - タイトルと統合検索バーの構成要素の存在を確認
@@ -60,11 +63,14 @@ describe('HeroSearchSection', () => {
       expect(document.querySelector('[data-testid="search-input"]')).toBeInTheDocument();
       expect(document.querySelector('[data-testid="filter-trigger-button"]')).toBeInTheDocument();
       expect(document.querySelector('[data-testid="search-action-button"]')).toBeInTheDocument();
-      expect(document.querySelector('[data-testid="filter-sheet"]')).toBeInTheDocument();
+      expect(document.querySelector('[data-testid="filter-panel"]')).toBeInTheDocument();
     });
 
     it('initialResultCountプロパティが設定されても問題なく動作する', () => {
-      // Arrange & Act - resultCountは削除されたがpropsの互換性を確認
+      // Arrange
+      // resultCountは削除されたがpropsの互換性を確認
+
+      // Act
       render(<HeroSearchSection initialResultCount={50} />);
 
       // Assert
@@ -74,7 +80,10 @@ describe('HeroSearchSection', () => {
 
   describe('スタイリング', () => {
     it('適切なCSSクラスが適用される', () => {
-      // Arrange & Act
+      // Arrange
+      // （準備不要）
+
+      // Act
       const { container } = render(<HeroSearchSection initialResultCount={100} />);
 
       // Assert
@@ -83,7 +92,7 @@ describe('HeroSearchSection', () => {
         'bg-primary',
         'text-primary-foreground',
         'relative',
-        'overflow-hidden',
+        'overflow-visible',
         'py-20'
       );
     });

@@ -152,6 +152,7 @@ export default function MultiCombobox({
           <Popover.Content
             id={listboxId}
             role="listbox"
+            data-filter-dropdown
             className={cn(
               'bg-popover text-popover-foreground animate-in fade-in-0 zoom-in-95 z-50 max-h-72 w-[--radix-popover-trigger-width] overflow-hidden rounded-md border p-0 shadow-md',
               dropdownClassName

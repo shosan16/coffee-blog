@@ -2,7 +2,7 @@ import { render, screen, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 
-import FilterSheet from '@/client/features/recipe-list/components/search/FilterSheet';
+import FilterPanel from '@/client/features/recipe-list/components/search/FilterPanel';
 import type { UseRecipeQueryReturn } from '@/client/features/recipe-list/hooks/useRecipeQuery';
 
 // モックデータの作成
@@ -32,38 +32,38 @@ const createMockQueryResult = (
   ...overrides,
 });
 
-describe('FilterSheet', () => {
+describe('FilterPanel', () => {
   beforeEach(() => {
     cleanup();
   });
 
   describe('基本的な表示', () => {
-    it('シートが閉じている場合、コンテンツが表示されないこと', () => {
+    it('パネルが閉じている場合、コンテンツが表示されないこと', () => {
       // Arrange - isOpen=falseでレンダリング
       render(
-        <FilterSheet isOpen={false} onOpenChange={vi.fn()} queryResult={createMockQueryResult()} />
+        <FilterPanel isOpen={false} onOpenChange={vi.fn()} queryResult={createMockQueryResult()} />
       );
 
-      // Assert - シートのコンテンツが表示されないことを確認
+      // Assert - パネルのコンテンツが表示されないことを確認
       expect(screen.queryByText('フィルター条件')).not.toBeInTheDocument();
     });
 
-    it('シートが開いている場合、コンテンツが表示されること', () => {
+    it('パネルが開いている場合、コンテンツが表示されること', () => {
       // Arrange - isOpen=trueでレンダリング
       render(
-        <FilterSheet isOpen={true} onOpenChange={vi.fn()} queryResult={createMockQueryResult()} />
+        <FilterPanel isOpen={true} onOpenChange={vi.fn()} queryResult={createMockQueryResult()} />
       );
 
-      // Assert - シートのコンテンツが表示されることを確認
+      // Assert - パネルのコンテンツが表示されることを確認
       expect(screen.getByText('フィルター条件')).toBeInTheDocument();
       expect(screen.getByText('リセット')).toBeInTheDocument();
       expect(screen.getByText('絞り込む')).toBeInTheDocument();
     });
 
     it('フィルター説明がスクリーンリーダー向けに適切に設定されること', () => {
-      // Arrange - シートを開いた状態でレンダリング
+      // Arrange - パネルを開いた状態でレンダリング
       render(
-        <FilterSheet isOpen={true} onOpenChange={vi.fn()} queryResult={createMockQueryResult()} />
+        <FilterPanel isOpen={true} onOpenChange={vi.fn()} queryResult={createMockQueryResult()} />
       );
 
       // Assert - アクセシビリティ向けの説明テキストが存在することを確認
@@ -77,7 +77,7 @@ describe('FilterSheet', () => {
     it('アクティブフィルターが0の場合、リセットボタンが無効になること', () => {
       // Arrange - activeFilterCount=0でレンダリング
       render(
-        <FilterSheet
+        <FilterPanel
           isOpen={true}
           onOpenChange={vi.fn()}
           queryResult={createMockQueryResult({ activeFilterCount: 0 })}
@@ -85,15 +85,14 @@ describe('FilterSheet', () => {
       );
 
       // Assert - リセットボタンが無効化されることを確認
-      const resetButtons = screen.getAllByText('リセット');
-      const resetButton = resetButtons[0].closest('button');
+      const resetButton = screen.getByText('リセット').closest('button');
       expect(resetButton).toBeDisabled();
     });
 
     it('アクティブフィルターがある場合、リセットボタンが有効になること', () => {
       // Arrange - activeFilterCount=3でレンダリング
       render(
-        <FilterSheet
+        <FilterPanel
           isOpen={true}
           onOpenChange={vi.fn()}
           queryResult={createMockQueryResult({ activeFilterCount: 3 })}
@@ -101,15 +100,14 @@ describe('FilterSheet', () => {
       );
 
       // Assert - リセットボタンが有効化されることを確認
-      const resetButtons = screen.getAllByText('リセット');
-      const resetButton = resetButtons[0].closest('button');
+      const resetButton = screen.getByText('リセット').closest('button');
       expect(resetButton).toBeEnabled();
     });
 
     it('読み込み中の場合、リセットボタンが無効になること', () => {
       // Arrange - isLoading=trueでレンダリング
       render(
-        <FilterSheet
+        <FilterPanel
           isOpen={true}
           onOpenChange={vi.fn()}
           queryResult={createMockQueryResult({
@@ -120,8 +118,7 @@ describe('FilterSheet', () => {
       );
 
       // Assert - リセットボタンが無効化されることを確認
-      const resetButtons = screen.getAllByText('リセット');
-      const resetButton = resetButtons[0].closest('button');
+      const resetButton = screen.getByText('リセット').closest('button');
       expect(resetButton).toBeDisabled();
     });
 
@@ -131,7 +128,7 @@ describe('FilterSheet', () => {
       const user = userEvent.setup();
 
       render(
-        <FilterSheet
+        <FilterPanel
           isOpen={true}
           onOpenChange={vi.fn()}
           queryResult={createMockQueryResult({
@@ -142,8 +139,7 @@ describe('FilterSheet', () => {
       );
 
       // Act - リセットボタンをクリック
-      const resetButtons = screen.getAllByText('リセット');
-      const resetButton = resetButtons[0].closest('button');
+      const resetButton = screen.getByText('リセット').closest('button');
       expect(resetButton).toBeTruthy();
       await user.click(resetButton as HTMLButtonElement);
 
@@ -156,7 +152,7 @@ describe('FilterSheet', () => {
     it('変更がない場合、適用ボタンが無効になること', () => {
       // Arrange - hasChanges=falseでレンダリング
       render(
-        <FilterSheet
+        <FilterPanel
           isOpen={true}
           onOpenChange={vi.fn()}
           queryResult={createMockQueryResult({ hasChanges: false })}
@@ -164,15 +160,14 @@ describe('FilterSheet', () => {
       );
 
       // Assert - 適用ボタンが無効化されることを確認
-      const applyButtons = screen.getAllByText('絞り込む');
-      const applyButton = applyButtons[0].closest('button');
+      const applyButton = screen.getByText('絞り込む').closest('button');
       expect(applyButton).toBeDisabled();
     });
 
     it('変更がある場合、適用ボタンが有効になること', () => {
       // Arrange - hasChanges=trueでレンダリング
       render(
-        <FilterSheet
+        <FilterPanel
           isOpen={true}
           onOpenChange={vi.fn()}
           queryResult={createMockQueryResult({ hasChanges: true })}
@@ -180,15 +175,14 @@ describe('FilterSheet', () => {
       );
 
       // Assert - 適用ボタンが有効化されることを確認
-      const applyButtons = screen.getAllByText('絞り込む');
-      const applyButton = applyButtons[0].closest('button');
+      const applyButton = screen.getByText('絞り込む').closest('button');
       expect(applyButton).toBeEnabled();
     });
 
     it('読み込み中の場合、適用ボタンが無効になること', () => {
       // Arrange - isLoading=trueでレンダリング
       render(
-        <FilterSheet
+        <FilterPanel
           isOpen={true}
           onOpenChange={vi.fn()}
           queryResult={createMockQueryResult({
@@ -199,20 +193,20 @@ describe('FilterSheet', () => {
       );
 
       // Assert - 適用ボタンが無効化されることを確認
-      const applyButtons = screen.getAllByText('絞り込む');
-      const applyButton = applyButtons[0].closest('button');
+      const applyButton = screen.getByText('絞り込む').closest('button');
       expect(applyButton).toBeDisabled();
     });
 
-    it('適用ボタンクリック時にapplyハンドラーが呼ばれること', async () => {
-      // Arrange - applyモック関数を準備
+    it('適用ボタンクリック時にapplyハンドラーが呼ばれ、パネルが閉じること', async () => {
+      // Arrange - applyモック関数とonOpenChangeモック関数を準備
       const mockApply = vi.fn();
+      const mockOnOpenChange = vi.fn();
       const user = userEvent.setup();
 
       render(
-        <FilterSheet
+        <FilterPanel
           isOpen={true}
-          onOpenChange={vi.fn()}
+          onOpenChange={mockOnOpenChange}
           queryResult={createMockQueryResult({
             hasChanges: true,
             apply: mockApply,
@@ -221,13 +215,14 @@ describe('FilterSheet', () => {
       );
 
       // Act - 適用ボタンをクリック
-      const applyButtons = screen.getAllByText('絞り込む');
-      const applyButton = applyButtons[0].closest('button');
+      const applyButton = screen.getByText('絞り込む').closest('button');
       expect(applyButton).toBeTruthy();
       await user.click(applyButton as HTMLButtonElement);
 
-      // Assert - applyが1回呼ばれることを確認
+      // Assert - applyとonOpenChange(false)が呼ばれることを確認
       expect(mockApply).toHaveBeenCalledTimes(1);
+      expect(mockOnOpenChange).toHaveBeenCalledTimes(1);
+      expect(mockOnOpenChange).toHaveBeenCalledWith(false);
     });
   });
 
@@ -235,7 +230,7 @@ describe('FilterSheet', () => {
     it('変更がない場合、変更メッセージが表示されないこと', () => {
       // Arrange - hasChanges=falseでレンダリング
       render(
-        <FilterSheet
+        <FilterPanel
           isOpen={true}
           onOpenChange={vi.fn()}
           queryResult={createMockQueryResult({ hasChanges: false })}
@@ -249,7 +244,7 @@ describe('FilterSheet', () => {
     it('変更がある場合、変更メッセージが表示されること', () => {
       // Arrange - hasChanges=trueでレンダリング
       render(
-        <FilterSheet
+        <FilterPanel
           isOpen={true}
           onOpenChange={vi.fn()}
           queryResult={createMockQueryResult({ hasChanges: true })}
@@ -264,56 +259,66 @@ describe('FilterSheet', () => {
     });
   });
 
-  describe('シート開閉の制御', () => {
-    it('onOpenChangeハンドラーが適切に設定されること', () => {
+  describe('外側クリックでの閉じる動作', () => {
+    it('パネル外をクリックした場合、onOpenChange(false)が呼ばれること', async () => {
       // Arrange - onOpenChangeモック関数を準備
       const mockOnOpenChange = vi.fn();
+      const user = userEvent.setup();
 
       render(
-        <FilterSheet
+        <div>
+          <div data-testid="outside">Outside</div>
+          <FilterPanel
+            isOpen={true}
+            onOpenChange={mockOnOpenChange}
+            queryResult={createMockQueryResult()}
+          />
+        </div>
+      );
+
+      // Act - パネル外の要素をクリック
+      const outsideElement = screen.getByTestId('outside');
+      await user.click(outsideElement);
+
+      // Assert - onOpenChange(false)が呼ばれることを確認
+      expect(mockOnOpenChange).toHaveBeenCalledWith(false);
+    });
+
+    it('パネル内をクリックした場合、onOpenChangeが呼ばれないこと', async () => {
+      // Arrange - onOpenChangeモック関数を準備
+      const mockOnOpenChange = vi.fn();
+      const user = userEvent.setup();
+
+      render(
+        <FilterPanel
           isOpen={true}
           onOpenChange={mockOnOpenChange}
           queryResult={createMockQueryResult()}
         />
       );
 
-      // Assert - Sheetコンポーネントが正しくレンダリングされることを確認
-      // （Sheetの内部実装の詳細なテストは shadcn/ui に任せる）
-      expect(screen.getByText('フィルター条件')).toBeInTheDocument();
+      // Act - パネル内のタイトルをクリック
+      const title = screen.getByText('フィルター条件');
+      await user.click(title);
+
+      // Assert - onOpenChangeが呼ばれないことを確認
+      expect(mockOnOpenChange).not.toHaveBeenCalled();
     });
   });
 
-  describe('フォーカス管理', () => {
-    it('シートが開いた時、フォーカス管理用のラッパーdivにtabIndex=-1が設定されていること', () => {
-      // Arrange - シートを開いた状態でレンダリング
+  describe('パネルの配置とスタイル', () => {
+    it('パネルが絶対配置されていること', () => {
+      // Arrange - パネルを開いた状態でレンダリング
       render(
-        <FilterSheet isOpen={true} onOpenChange={vi.fn()} queryResult={createMockQueryResult()} />
+        <FilterPanel isOpen={true} onOpenChange={vi.fn()} queryResult={createMockQueryResult()} />
       );
 
-      // Act - フォーカス管理用のラッパーdivを取得
-      const focusWrapper = document.querySelector('.outline-none[tabindex="-1"]');
+      // Act - パネルコンテナを取得
+      const panel = screen.getByText('フィルター条件').closest('[role="dialog"]');
 
-      // Assert - tabIndex=-1が設定されていることを確認
-      // これにより、プログラム的にフォーカス可能だが、タブ順序には含まれない
-      expect(focusWrapper).toBeInTheDocument();
-      expect(focusWrapper).toHaveAttribute('tabIndex', '-1');
-      expect(focusWrapper).toHaveClass('outline-none');
-    });
-
-    it('aria-describedby属性が適切に設定されていること', () => {
-      // Arrange - シートを開いた状態でレンダリング
-      render(
-        <FilterSheet isOpen={true} onOpenChange={vi.fn()} queryResult={createMockQueryResult()} />
-      );
-
-      // Act - SheetContentとdescription要素を取得
-      const sheetContent = document.querySelector('[data-slot="sheet-content"]');
-      const description = document.getElementById('filter-description');
-
-      // Assert - アクセシビリティ属性が適切に設定されていることを確認
-      expect(sheetContent).toHaveAttribute('aria-describedby', 'filter-description');
-      expect(description).toBeInTheDocument();
-      expect(description).toHaveClass('sr-only');
+      // Assert - 絶対配置のスタイルが設定されていることを確認
+      expect(panel).toBeInTheDocument();
+      expect(panel).toHaveClass('absolute');
     });
   });
 });
