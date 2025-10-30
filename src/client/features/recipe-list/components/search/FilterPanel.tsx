@@ -35,7 +35,7 @@ function FilterPanel({ isOpen, onOpenChange, queryResult }: FilterPanelProps): J
 
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // フィルター適用後にパネルを自動的に閉じることで、UX を向上させる
+  // フィルター適用後に検索結果を即座に表示するため、パネルを自動的に閉じる
   const handleApply = useCallback((): void => {
     apply();
     onOpenChange(false);
@@ -92,11 +92,11 @@ function FilterPanel({ isOpen, onOpenChange, queryResult }: FilterPanelProps): J
     const handleClickOutside = (event: MouseEvent): void => {
       const target = event.target as Node;
 
-      // Radix UI Popover のコンテンツかチェック
-      // MultiComboboxのドロップダウンがbody直下にレンダリングされるため、
-      // これもパネル内とみなす必要がある
+      // MultiCombobox のドロップダウンコンテンツかチェック
+      // ドロップダウンは body 直下にレンダリングされるため、
+      // data-filter-dropdown 属性を使って明示的に判定する
       const isPopoverContent =
-        target instanceof Element && target.closest('[data-radix-popper-content-wrapper]');
+        target instanceof Element && target.closest('[data-filter-dropdown]');
 
       if (panelRef.current && !panelRef.current.contains(target) && !isPopoverContent) {
         onOpenChange(false);
