@@ -19,7 +19,7 @@ export default function RecipeHeader({ recipe, title }: RecipeHeaderProps) {
       <CardContent className="p-5 md:p-7">
         <div className="space-y-6 px-3">
           {/* レシピタイトル */}
-          <h1 className="text-card-foreground mb-3 text-2xl md:text-3xl">{title}</h1>
+          <h1 className="text-card-foreground mb-3 font-serif text-2xl md:text-3xl">{title}</h1>
 
           {/* レシピ概要 */}
           {recipe.summary && (

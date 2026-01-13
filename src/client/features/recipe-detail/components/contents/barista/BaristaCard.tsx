@@ -28,6 +28,7 @@ export default function BaristaCard({ barista }: BaristaCardProps) {
     <Card className="border-border bg-card overflow-hidden shadow-sm">
       {/* トグルボタン */}
       <button
+        id="barista-toggle-button"
         onClick={handleToggle}
         className="flex w-full cursor-pointer items-center justify-between p-4 md:p-5"
         aria-expanded={isOpen}
