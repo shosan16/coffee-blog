@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import { z } from 'zod';
 
 import RecipeHeader from '@/client/features/recipe-detail/components/contents/header/RecipeHeader';
-import PreparationPointsCard from '@/client/features/recipe-detail/components/contents/info/PreparationPointsCard';
 import BrewingParameterCards from '@/client/features/recipe-detail/components/contents/parameters/BrewingParameterCards';
 import RecipeEquipmentList from '@/client/features/recipe-detail/components/contents/parameters/RecipeEquipmentList';
 import RecipeSteps from '@/client/features/recipe-detail/components/contents/process/RecipeSteps';
@@ -166,7 +165,6 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
               <div className="flex flex-col gap-8 lg:flex-row">
                 <div className="min-w-0 flex-1 space-y-8">
                   <BrewingParameterCards recipe={recipe} />
-                  <PreparationPointsCard remarks={recipe.remarks} />
                   <RecipeSteps steps={recipe.steps} brewingTime={recipe.brewingTime} />
                   <RecipeEquipmentList equipment={recipe.equipment} />
                 </div>
