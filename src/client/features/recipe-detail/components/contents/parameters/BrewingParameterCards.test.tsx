@@ -75,7 +75,7 @@ describe('BrewingParameterCards', () => {
       expect(title).toBeInTheDocument();
     });
 
-    it('Slidersアイコンと「抽出条件」タイトルが表示されること', () => {
+    it('「抽出条件」タイトルが表示されること', () => {
       // Arrange - レシピデータを準備
       const recipe = mockRecipeFull;
 
