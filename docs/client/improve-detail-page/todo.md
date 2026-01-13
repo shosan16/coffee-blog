@@ -4,66 +4,66 @@
 
 ---
 
-## 1. Hero セクション
+## 1. Hero セクション ✅
 
 **目的**: タイトル・説明・タグを1つのカードに統合し、ナビゲーションをstickyヘッダーに変更することで情報の視認性とスクロール時のナビゲーション利便性を向上させる
 
 ### UI変更
 
-- [ ] `PageHeader.tsx` をstickyヘッダーに変更（`className` に `sticky top-0 z-50 bg-background py-3 md:py-4` を追加）
-- [ ] 戻るボタンのスタイルを変更（`text-muted-foreground hover:text-card-foreground` に統一）
-- [ ] シェアボタンを円形デザインに変更（`w-9 h-9 bg-card shadow-sm rounded-full flex items-center justify-center` を適用）
-- [ ] `PageHeader.tsx` からタイトル表示を削除（`<h1>` 要素と `title` プロパティを削除）
-- [ ] `RecipeHeader.tsx` に `title` プロパティを追加（`RecipeHeaderProps` に `title: string` を追加）
-- [ ] `RecipeHeader.tsx` にタイトル表示を追加（`font-serif text-2xl md:text-3xl mb-3` スタイルでセリフフォント使用）
-- [ ] タグのスタイルを変更（`bg-background border border-border px-3 py-1.5 rounded-full text-sm` に変更）
+- [x] `PageHeader.tsx` をstickyヘッダーに変更（`className` に `sticky top-0 z-50 bg-background py-3 md:py-4` を追加）
+- [x] 戻るボタンのスタイルを変更（`text-muted-foreground hover:text-card-foreground` に統一）
+- [x] シェアボタンを円形デザインに変更（`w-9 h-9 bg-card shadow-sm rounded-full flex items-center justify-center` を適用）
+- [x] `PageHeader.tsx` からタイトル表示を削除（`<h1>` 要素と `title` プロパティを削除）
+- [x] `RecipeHeader.tsx` に `title` プロパティを追加（`RecipeHeaderProps` に `title: string` を追加）
+- [x] `RecipeHeader.tsx` にタイトル表示を追加（`font-serif text-2xl md:text-3xl mb-3` スタイルでセリフフォント使用）
+- [x] タグのスタイルを変更（`bg-background border border-border px-3 py-1.5 rounded-full text-sm` に変更）
 
 ### コンポーネント分割
 
-- [ ] `RecipeHeader.tsx` から `renderBaristaSection` 関数とバリスタ関連JSXを削除
-- [ ] `src/app/recipes/[id]/page.tsx` で `RecipeHeader` に `title={recipe.title}` プロパティを渡す
-- [ ] `src/app/recipes/[id]/page.tsx` で `PageHeader` から `title` プロパティを削除（`recipeId` のみ渡す）
+- [x] `RecipeHeader.tsx` から `renderBaristaSection` 関数とバリスタ関連JSXを削除
+- [x] `src/app/recipes/[id]/page.tsx` で `RecipeHeader` に `title={recipe.title}` プロパティを渡す
+- [x] `src/app/recipes/[id]/page.tsx` で `PageHeader` から `title` プロパティを削除（`recipeId` のみ渡す）
 
 ### スタイリング変更
 
-- [ ] `PageHeader.tsx` の `<header>` に `mb-6` を削除し、sticky関連スタイルを追加
-- [ ] `RecipeHeader.tsx` の `CardContent` 内余白を `p-8` → `p-5 md:p-7` に変更
-- [ ] 説明文に `leading-relaxed` を追加（既存の `leading-relaxed` を確認）
+- [x] `PageHeader.tsx` の `<header>` に `mb-6` を削除し、sticky関連スタイルを追加
+- [x] `RecipeHeader.tsx` の `CardContent` 内余白を `p-8` → `p-5 md:p-7` に変更
+- [x] 説明文に `leading-relaxed` を追加（既存の `leading-relaxed` を確認）
 
 ---
 
-## 2. バリスタセクション
+## 2. バリスタセクション ✅
 
 **目的**: バリスタ情報をアコーディオン形式に変更しデフォルトで折りたたむことでページの情報密度を最適化し、必要に応じて詳細を確認できるようにする
 
 ### UI変更
 
-- [ ] `src/client/features/recipe-detail/components/contents/barista/BaristaCard.tsx` を新規作成
-- [ ] アコーディオン用の `useState` フック追加（`const [isOpen, setIsOpen] = useState(false)`）
-- [ ] トグルボタンを実装（`w-full flex items-center justify-between p-4 md:p-5 cursor-pointer`）
-- [ ] アバター表示を実装（`w-10 h-10 bg-accent text-accent-foreground rounded-full flex items-center justify-center`）
-- [ ] アバター内に `Users` アイコンを配置（`h-5 w-5`）
-- [ ] バリスタ名と所属を縦積みレイアウトで実装（アバターの右側）
-- [ ] トグルアイコン (`ChevronDown`) を実装（`transition-transform duration-300`、open時に `rotate-180`）
-- [ ] SNSリンクのスタイルを変更（`bg-background rounded-full px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground`）
+- [x] `src/client/features/recipe-detail/components/contents/barista/BaristaCard.tsx` を新規作成
+- [x] アコーディオン用の `useState` フック追加（`const [isOpen, setIsOpen] = useState(false)`）
+- [x] トグルボタンを実装（`w-full flex items-center justify-between p-4 md:p-5 cursor-pointer`）
+- [x] アバター表示を実装（`w-10 h-10 bg-accent text-accent-foreground rounded-full flex items-center justify-center`）
+- [x] アバター内に `Users` アイコンを配置（`h-5 w-5`）
+- [x] バリスタ名と所属を縦積みレイアウトで実装（アバターの右側）
+- [x] トグルアイコン (`ChevronDown`) を実装（`transition-transform duration-300`、open時に `rotate-180`）
+- [x] SNSリンクのスタイルを変更（`bg-background rounded-full px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground`）
 
 ### データ構造変更
 
-- [ ] `BaristaCardProps` 型定義を作成（`barista: RecipeDetailInfo['barista']` を受け取る）
-- [ ] デフォルト状態を閉じた状態に設定（`useState(false)`）
+- [x] `BaristaCardProps` 型定義を作成（`barista: RecipeDetailInfo['barista']` を受け取る）
+- [x] デフォルト状態を閉じた状態に設定（`useState(false)`）
 
 ### コンポーネント分割
 
-- [ ] `RecipeHeader.tsx` から削除したバリスタセクションを `BaristaCard.tsx` に移行
-- [ ] `src/app/recipes/[id]/page.tsx` で `BaristaCard` を import
-- [ ] `src/app/recipes/[id]/page.tsx` で `BaristaCard` を `RecipeHeader` の直後に配置
-- [ ] `recipe.barista` が存在する場合のみ `BaristaCard` をレンダリング（条件分岐）
+- [x] `RecipeHeader.tsx` から削除したバリスタセクションを `BaristaCard.tsx` に移行
+- [x] `src/app/recipes/[id]/page.tsx` で `BaristaCard` を import
+- [x] `src/app/recipes/[id]/page.tsx` で `BaristaCard` を `RecipeHeader` の直後に配置
+- [x] `recipe.barista` が存在する場合のみ `BaristaCard` をレンダリング（条件分岐）
 
 ### スタイリング変更
 
-- [ ] アコーディオンコンテンツに `overflow-hidden transition-[max-height] duration-300 ease-out` を追加
-- [ ] `max-height` を state に応じて切り替え（閉じた状態: `max-h-0`、開いた状態: `max-h-32`）
-- [ ] SNSリンクコンテナの余白を `px-4 md:px-5 pb-4 md:pb-5` に設定
+- [x] アコーディオンコンテンツに `overflow-hidden transition-[max-height] duration-300 ease-out` を追加
+- [x] `max-height` を state に応じて切り替え（閉じた状態: `max-h-0`、開いた状態: `max-h-32`）
+- [x] SNSリンクコンテナの余白を `px-4 md:px-5 pb-4 md:pb-5` に設定
 
 ---
 

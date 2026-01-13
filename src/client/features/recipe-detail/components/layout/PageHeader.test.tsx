@@ -38,30 +38,42 @@ describe('PageHeader', () => {
   });
 
   describe('基本表示', () => {
-    it('レシピタイトルと戻るボタン、シェアボタンが正しく表示されること', () => {
+    it('戻るボタンとシェアボタンが正しく表示されること', () => {
       // Arrange - ページヘッダーの基本データを準備
-      const title = 'エチオピア シングルオリジン';
       const recipeId = '1';
 
       // Act - 実行：PageHeaderをレンダリング
-      render(<PageHeader title={title} recipeId={recipeId} />);
+      render(<PageHeader recipeId={recipeId} />);
 
       // Assert - 検証：必要な要素が表示されることを確認
-      expect(screen.getByText(title)).toBeInTheDocument();
       expect(screen.getByLabelText('前のページに戻る')).toBeInTheDocument();
       expect(screen.getByLabelText('レシピをシェア')).toBeInTheDocument();
     });
+  });
 
-    it('長いタイトルが適切に表示されること', () => {
-      // Arrange - 長いタイトルでテスト
-      const longTitle =
-        'とても長いレシピタイトルがここに入ります。非常に詳細な説明文が含まれています。';
+  describe('スティッキーヘッダーのスタイル', () => {
+    it('sticky positioning、z-index、背景色が正しく適用されること', () => {
+      // Arrange
+      render(<PageHeader recipeId="1" />);
 
-      // Act - 実行：長いタイトルでPageHeaderをレンダリング
-      render(<PageHeader title={longTitle} recipeId="1" />);
+      // Act
+      const header = screen.getByRole('banner');
 
-      // Assert - 検証：長いタイトルが表示されることを確認
-      expect(screen.getByText(longTitle)).toBeInTheDocument();
+      // Assert
+      expect(header).toHaveClass('sticky', 'top-0', 'z-50', 'bg-background');
+    });
+  });
+
+  describe('シェアボタンのデザイン', () => {
+    it('円形ボタンとして正しくスタイリングされていること', () => {
+      // Arrange
+      render(<PageHeader recipeId="1" />);
+
+      // Act
+      const shareButton = screen.getByLabelText('レシピをシェア');
+
+      // Assert
+      expect(shareButton).toHaveClass('rounded-full', 'w-9', 'h-9');
     });
   });
 
@@ -73,7 +85,7 @@ describe('PageHeader', () => {
         writable: true,
       });
 
-      render(<PageHeader title="テストタイトル" recipeId="1" />);
+      render(<PageHeader recipeId="1" />);
 
       // Act - 実行：戻るボタンをクリック
       fireEvent.click(screen.getAllByLabelText('前のページに戻る')[0]);
@@ -90,7 +102,7 @@ describe('PageHeader', () => {
         writable: true,
       });
 
-      render(<PageHeader title="テストタイトル" recipeId="1" />);
+      render(<PageHeader recipeId="1" />);
 
       // Act - 実行：戻るボタンをクリック
       fireEvent.click(screen.getAllByLabelText('前のページに戻る')[0]);
@@ -127,7 +139,7 @@ describe('PageHeader', () => {
 
     it('シェアボタンクリック時にクリップボードAPIが呼ばれ、成功トーストが表示されること', async () => {
       // Arrange - ページヘッダーをレンダリング
-      render(<PageHeader title="テストレシピ" recipeId="123" />);
+      render(<PageHeader recipeId="123" />);
 
       // Act - 実行：シェアボタンをクリック
       fireEvent.click(screen.getByLabelText('レシピをシェア'));
@@ -146,7 +158,7 @@ describe('PageHeader', () => {
     });
 
     it('recipeIdがない場合、現在のURLをコピーし、成功トーストが表示されること', async () => {
-      render(<PageHeader title="テストレシピ" />);
+      render(<PageHeader />);
 
       // Act - 実行：シェアボタンをクリック
       fireEvent.click(screen.getByLabelText('レシピをシェア'));
@@ -170,7 +182,7 @@ describe('PageHeader', () => {
         writable: true,
       });
 
-      render(<PageHeader title="テストレシピ" recipeId="123" />);
+      render(<PageHeader recipeId="123" />);
 
       // Act - 実行：シェアボタンをクリック
       fireEvent.click(screen.getByLabelText('レシピをシェア'));
@@ -185,7 +197,7 @@ describe('PageHeader', () => {
       // Arrange - クリップボードAPIがエラーを発生させる状態を設定
       mockWriteText.mockRejectedValue(new Error('Clipboard access denied'));
 
-      render(<PageHeader title="テストレシピ" recipeId="123" />);
+      render(<PageHeader recipeId="123" />);
 
       // Act - 実行：シェアボタンをクリック
       fireEvent.click(screen.getByLabelText('レシピをシェア'));
@@ -205,7 +217,7 @@ describe('PageHeader', () => {
 
   describe('アクセシビリティ', () => {
     it('適切なaria-label属性が設定されていること', () => {
-      render(<PageHeader title="テストタイトル" recipeId="1" />);
+      render(<PageHeader recipeId="1" />);
 
       // Assert - 検証：aria-labelが適切に設定されていることを確認
       expect(screen.getByLabelText('前のページに戻る')).toBeInTheDocument();
@@ -213,7 +225,7 @@ describe('PageHeader', () => {
     });
 
     it('ヘッダー要素として適切にマークアップされていること', () => {
-      render(<PageHeader title="テストタイトル" recipeId="1" />);
+      render(<PageHeader recipeId="1" />);
 
       // Assert - 検証：header要素が存在することを確認
       expect(screen.getByRole('banner')).toBeInTheDocument();
