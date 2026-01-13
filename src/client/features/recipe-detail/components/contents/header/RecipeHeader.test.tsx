@@ -1,13 +1,17 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, cleanup } from '@testing-library/react';
+import { afterEach } from 'vitest';
 
 import type { RecipeDetailInfo } from '@/client/features/recipe-detail/types/recipe-detail';
 
 import RecipeHeader from './RecipeHeader';
 
 describe('RecipeHeader', () => {
+  afterEach(() => {
+    cleanup();
+  });
   describe('基本表示', () => {
-    it('レシピ概要とバリスタ情報を正しく表示できること', () => {
-      // Arrange - レシピ詳細情報（バリスタ付き）を作成
+    it('タイトル、レシピ概要、タグを正しく表示できること', () => {
+      // Arrange - レシピ詳細情報を作成
       const recipe: RecipeDetailInfo = {
         id: '1',
         title: 'エチオピア シングルオリジン',
@@ -17,40 +21,26 @@ describe('RecipeHeader', () => {
         isPublished: true,
         createdAt: '2024-01-01T00:00:00Z',
         updatedAt: '2024-01-01T00:00:00Z',
-        tags: [],
+        tags: [{ id: 'tag-1', name: 'エチオピア', slug: 'ethiopia' }],
         steps: [],
         equipment: [],
-        barista: {
-          id: 'barista-1',
-          name: '田中太郎',
-          affiliation: 'カフェ・ドゥ・ラ・ペ',
-          socialLinks: [
-            {
-              id: 'twitter-1',
-              platform: 'Twitter',
-              url: 'https://twitter.com/tanaka_barista',
-            },
-          ],
-        },
       };
 
       // Act - 実行：RecipeHeaderをレンダリング
-      render(<RecipeHeader recipe={recipe} />);
+      render(<RecipeHeader recipe={recipe} title={recipe.title} />);
 
-      // Assert - 検証：レシピ概要とバリスタ情報が表示されることを確認
+      // Assert - 検証：タイトル、概要、タグが表示されることを確認
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+        'エチオピア シングルオリジン'
+      );
       expect(
         screen.getByText('華やかな香りと爽やかな酸味が特徴的なコーヒーです。')
       ).toBeInTheDocument();
-      expect(document.querySelector('[data-testid="barista-section"]')).toBeInTheDocument();
-      expect(document.querySelector('[data-testid="barista-name"]')).toHaveTextContent('田中太郎');
-      expect(document.querySelector('[data-testid="barista-affiliation"]')).toHaveTextContent(
-        'カフェ・ドゥ・ラ・ペ'
-      );
-      expect(document.querySelector('[data-testid="sns-section"]')).toBeInTheDocument();
+      expect(screen.getByText('エチオピア')).toBeInTheDocument();
     });
 
-    it('バリスタ情報がない場合、バリスタセクションを表示しないこと', () => {
-      // Arrange - レシピ詳細情報（バリスタなし）を作成
+    it('タグが複数ある場合、すべて正しく表示できること', () => {
+      // Arrange - 複数タグ付きレシピを作成
       const recipe: RecipeDetailInfo = {
         id: '1',
         title: 'エチオピア シングルオリジン',
@@ -60,25 +50,27 @@ describe('RecipeHeader', () => {
         isPublished: true,
         createdAt: '2024-01-01T00:00:00Z',
         updatedAt: '2024-01-01T00:00:00Z',
-        tags: [],
+        tags: [
+          { id: 'tag-1', name: 'エチオピア', slug: 'ethiopia' },
+          { id: 'tag-2', name: 'シングルオリジン', slug: 'single-origin' },
+        ],
         steps: [],
         equipment: [],
-        barista: undefined,
       };
 
-      // Act - 実行：RecipeHeaderをレンダリング
-      const { container } = render(<RecipeHeader recipe={recipe} />);
+      // Act
+      render(<RecipeHeader recipe={recipe} title={recipe.title} />);
 
-      // Assert - 検証：バリスタセクションが表示されないことを確認
-      expect(container.querySelector('[data-testid="barista-section"]')).not.toBeInTheDocument();
+      // Assert
+      expect(screen.getByText('エチオピア')).toBeInTheDocument();
+      expect(screen.getByText('シングルオリジン')).toBeInTheDocument();
     });
 
-    it('バリスタのSNSリンクが複数ある場合、すべて正しく表示できること', () => {
-      // Arrange - レシピ詳細情報（複数SNSリンク付きバリスタ）を作成
+    it('概要がない場合、概要セクションを表示しないこと', () => {
+      // Arrange - 概要なしのレシピを作成
       const recipe: RecipeDetailInfo = {
         id: '1',
         title: 'エチオピア シングルオリジン',
-        summary: '華やかな香りと爽やかな酸味が特徴的なコーヒーです。',
         roastLevel: 'MEDIUM',
         viewCount: 0,
         isPublished: true,
@@ -87,39 +79,39 @@ describe('RecipeHeader', () => {
         tags: [],
         steps: [],
         equipment: [],
-        barista: {
-          id: 'barista-1',
-          name: '田中太郎',
-          affiliation: 'カフェ・ドゥ・ラ・ペ',
-          socialLinks: [
-            {
-              id: 'twitter-1',
-              platform: 'Twitter',
-              url: 'https://twitter.com/tanaka_barista',
-            },
-            {
-              id: 'instagram-1',
-              platform: 'Instagram',
-              url: 'https://instagram.com/tanaka_barista',
-            },
-          ],
-        },
       };
 
-      // Act - 実行：RecipeHeaderをレンダリング
-      const { container } = render(<RecipeHeader recipe={recipe} />);
+      // Act
+      const { container } = render(<RecipeHeader recipe={recipe} title={recipe.title} />);
 
-      // Assert - 検証：すべてのSNSリンクが正しく表示されることを確認
-      const snsLinks = container.querySelectorAll('[data-testid="sns-section"] a');
-      expect(snsLinks).toHaveLength(2);
+      // Assert - pタグが存在しないことを確認（概要が非表示）
+      const paragraphs = container.querySelectorAll('p');
+      expect(paragraphs).toHaveLength(0);
+    });
+  });
 
-      expect(snsLinks[0]).toHaveAttribute('href', 'https://twitter.com/tanaka_barista');
-      expect(snsLinks[0]).toHaveAttribute('target', '_blank');
-      expect(snsLinks[0]).toHaveAttribute('rel', 'noopener noreferrer');
-      expect(snsLinks[0]).toHaveTextContent('Twitter');
+  describe('タグのスタイリング', () => {
+    it('新しいタグスタイル（丸型、ボーダー）が適用されること', () => {
+      // Arrange
+      const recipe: RecipeDetailInfo = {
+        id: '1',
+        title: 'エチオピア シングルオリジン',
+        roastLevel: 'MEDIUM',
+        viewCount: 0,
+        isPublished: true,
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z',
+        tags: [{ id: 'tag-1', name: 'エチオピア', slug: 'ethiopia' }],
+        steps: [],
+        equipment: [],
+      };
 
-      expect(snsLinks[1]).toHaveAttribute('href', 'https://instagram.com/tanaka_barista');
-      expect(snsLinks[1]).toHaveTextContent('Instagram');
+      // Act
+      render(<RecipeHeader recipe={recipe} title="テスト" />);
+      const tag = screen.getByText('エチオピア');
+
+      // Assert
+      expect(tag).toHaveClass('rounded-full', 'border', 'border-border');
     });
   });
 });

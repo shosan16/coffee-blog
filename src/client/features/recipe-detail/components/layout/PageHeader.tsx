@@ -5,18 +5,16 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 type PageHeaderProps = {
-  /** レシピタイトル */
-  title: string;
   /** レシピID（シェア用） */
   recipeId?: string;
 };
 
 /**
- * レシピ詳細ページヘッダーコンポーネント
+ * レシピ詳細ページナビゲーションヘッダー
  *
- * 戻るボタン、レシピタイトル、シェアボタンを含むページヘッダー。
+ * 戻るボタンとシェアボタンを含むstickyナビゲーションヘッダー。
  */
-export default function PageHeader({ title, recipeId }: PageHeaderProps) {
+export default function PageHeader({ recipeId }: PageHeaderProps) {
   const router = useRouter();
 
   const handleBack = () => {
@@ -56,7 +54,7 @@ export default function PageHeader({ title, recipeId }: PageHeaderProps) {
   };
 
   return (
-    <header className="mb-6">
+    <header className="bg-background sticky top-0 z-50 py-3 md:py-4">
       <div className="flex items-center justify-between gap-4">
         {/* 戻るボタン */}
         <button
@@ -68,19 +66,13 @@ export default function PageHeader({ title, recipeId }: PageHeaderProps) {
           <span className="hidden sm:inline">戻る</span>
         </button>
 
-        {/* レシピタイトル */}
-        <h1 className="text-card-foreground min-w-0 flex-1 truncate text-center text-xl font-bold sm:text-2xl">
-          {title}
-        </h1>
-
         {/* シェアボタン */}
         <button
           onClick={handleShareClick}
-          className="text-muted-foreground hover:text-card-foreground flex items-center gap-2 transition-colors"
+          className="bg-card flex h-9 w-9 items-center justify-center rounded-full shadow-sm transition-transform hover:scale-105 hover:shadow-md"
           aria-label="レシピをシェア"
         >
-          <span className="hidden sm:inline">シェア</span>
-          <Share className="h-5 w-5" />
+          <Share className="text-muted-foreground h-5 w-5" />
         </button>
       </div>
     </header>
