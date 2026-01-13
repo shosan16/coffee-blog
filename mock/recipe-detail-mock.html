@@ -1,0 +1,953 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>エチオピア産豆の最適な抽出法</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=DM+Serif+Display&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --color-bg: #f5f5f5;
+        --color-card: #ffffff;
+        --color-text: #222222;
+        --color-text-muted: #777777;
+        --color-accent: #444444;
+        --color-accent-light: #999999;
+        --color-success: #555555;
+        --color-border: #e0e0e0;
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Noto Sans JP', sans-serif;
+        background: var(--color-bg);
+        color: var(--color-text);
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 0 16px 40px;
+      }
+
+      /* PC Layout */
+      @media (min-width: 768px) {
+        .container {
+          max-width: 720px;
+          padding: 0 24px 60px;
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .container {
+          max-width: 800px;
+          padding: 0 32px 80px;
+        }
+      }
+
+      /* Header Nav */
+      .header-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 0;
+        position: sticky;
+        top: 0;
+        background: var(--color-bg);
+        z-index: 100;
+      }
+
+      @media (min-width: 768px) {
+        .header-nav {
+          padding: 16px 0;
+        }
+      }
+
+      .back-btn {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        color: var(--color-text-muted);
+        text-decoration: none;
+        font-size: 14px;
+        transition: color 0.2s;
+      }
+
+      .back-btn:hover {
+        color: var(--color-accent);
+      }
+
+      .share-btn {
+        width: 36px;
+        height: 36px;
+        border: none;
+        background: var(--color-card);
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-sm);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .share-btn:hover {
+        transform: scale(1.05);
+        box-shadow: var(--shadow-md);
+      }
+
+      /* Hero Card */
+      .hero-card {
+        background: var(--color-card);
+        border-radius: var(--radius-lg);
+        padding: 20px;
+        margin-bottom: 16px;
+        box-shadow: var(--shadow-md);
+        animation: fadeSlideIn 0.3s ease-out;
+      }
+
+      @media (min-width: 768px) {
+        .hero-card {
+          padding: 28px;
+          margin-bottom: 20px;
+        }
+      }
+
+      .hero-title {
+        font-family: 'DM Serif Display', serif;
+        font-size: 24px;
+        font-weight: 400;
+        letter-spacing: 0.02em;
+        margin-bottom: 12px;
+        color: var(--color-text);
+      }
+
+      @media (min-width: 768px) {
+        .hero-title {
+          font-size: 32px;
+          margin-bottom: 16px;
+        }
+      }
+
+      .hero-description {
+        font-size: 15px;
+        color: var(--color-text-muted);
+        margin-bottom: 16px;
+        line-height: 1.7;
+      }
+
+      .tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 6px 12px;
+        background: var(--color-bg);
+        border-radius: 20px;
+        font-size: 13px;
+        color: var(--color-text-muted);
+        border: 1px solid var(--color-border);
+      }
+
+      /* Recipe Parameters Card */
+      .params-card {
+        background: var(--color-card);
+        border-radius: var(--radius-lg);
+        padding: 20px;
+        margin-bottom: 16px;
+        box-shadow: var(--shadow-sm);
+        animation: fadeSlideIn 0.4s ease-out 0.1s both;
+      }
+
+      @media (min-width: 768px) {
+        .params-card {
+          padding: 28px;
+          margin-bottom: 20px;
+        }
+      }
+
+      .params-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .params-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--color-text);
+      }
+
+      .params-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      @media (min-width: 768px) {
+        .params-grid {
+          gap: 16px;
+          margin-bottom: 24px;
+        }
+      }
+
+      .param-item {
+        text-align: center;
+        padding: 14px 8px;
+        background: #f5f5f5;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--color-border);
+      }
+
+      @media (min-width: 768px) {
+        .param-item {
+          padding: 20px 12px;
+        }
+      }
+
+      .param-value {
+        font-family: 'DM Serif Display', serif;
+        font-size: 28px;
+        font-weight: 400;
+        color: var(--color-accent);
+        line-height: 1;
+      }
+
+      @media (min-width: 768px) {
+        .param-value {
+          font-size: 36px;
+        }
+      }
+
+      .param-unit {
+        font-size: 12px;
+        color: var(--color-accent);
+      }
+
+      @media (min-width: 768px) {
+        .param-unit {
+          font-size: 16px;
+        }
+      }
+
+      .param-label {
+        font-size: 12px;
+        color: var(--color-text-muted);
+        margin-top: 6px;
+      }
+
+      .params-details {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px 24px;
+        padding-top: 16px;
+        border-top: 1px solid var(--color-border);
+      }
+
+      @media (min-width: 768px) {
+        .params-details {
+          gap: 24px 32px;
+          padding-top: 20px;
+        }
+      }
+
+      .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: var(--color-text-muted);
+      }
+
+      .detail-label {
+        color: var(--color-text-muted);
+      }
+
+      .detail-value {
+        color: var(--color-text);
+        font-weight: 500;
+      }
+
+      /* Section Card */
+      .section-card {
+        background: var(--color-card);
+        border-radius: var(--radius-lg);
+        padding: 20px;
+        margin-bottom: 16px;
+        box-shadow: var(--shadow-sm);
+        animation: fadeSlideIn 0.4s ease-out both;
+      }
+
+      @media (min-width: 768px) {
+        .section-card {
+          padding: 28px;
+          margin-bottom: 20px;
+        }
+      }
+
+      .section-card:nth-of-type(3) {
+        animation-delay: 0.15s;
+      }
+      .section-card:nth-of-type(4) {
+        animation-delay: 0.2s;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .section-title {
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      /* Equipment */
+      .equipment-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      @media (min-width: 768px) {
+        .equipment-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .equipment-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background: var(--color-bg);
+        border-radius: var(--radius-md);
+        text-decoration: none;
+        color: var(--color-text);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .equipment-item:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .equipment-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--color-card);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+
+      .equipment-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .equipment-name {
+        font-size: 14px;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .equipment-brand {
+        font-size: 12px;
+        color: var(--color-text-muted);
+      }
+
+      /* Timeline */
+      .timeline-header {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      @media (min-width: 768px) {
+        .timeline-header {
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+        }
+      }
+
+      .total-time {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+        color: var(--color-accent);
+        font-weight: 500;
+      }
+
+      .timeline {
+        position: relative;
+      }
+
+      .step {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 20px;
+        position: relative;
+      }
+
+      .step::after {
+        content: '';
+        position: absolute;
+        left: 15px;
+        top: 32px;
+        bottom: -20px;
+        width: 2px;
+        background: var(--color-border);
+      }
+
+      .step:last-child {
+        margin-bottom: 0;
+      }
+
+      .step:last-child::after {
+        display: none;
+      }
+
+      .step-marker {
+        width: 32px;
+        height: 32px;
+        background: var(--color-accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 12px;
+        font-weight: 700;
+        flex-shrink: 0;
+        z-index: 1;
+      }
+
+      .step-content {
+        flex: 1;
+        background: var(--color-bg);
+        border-radius: var(--radius-md);
+        padding: 14px;
+      }
+
+      @media (min-width: 768px) {
+        .step-content {
+          padding: 16px 20px;
+        }
+      }
+
+      .step-time {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        color: var(--color-accent);
+        font-weight: 500;
+        margin-bottom: 6px;
+      }
+
+      @media (min-width: 768px) {
+        .step-time {
+          font-size: 13px;
+          margin-bottom: 8px;
+        }
+      }
+
+      .step-description {
+        font-size: 14px;
+        color: var(--color-text);
+        line-height: 1.7;
+      }
+
+      @media (min-width: 768px) {
+        .step-description {
+          font-size: 15px;
+        }
+      }
+
+      /* Barista */
+      .barista-card {
+        background: var(--color-card);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 16px;
+        animation: fadeSlideIn 0.4s ease-out 0.05s both;
+      }
+
+      @media (min-width: 768px) {
+        .barista-card {
+          margin-bottom: 20px;
+        }
+      }
+
+      .barista-toggle {
+        width: 100%;
+        padding: 16px 20px;
+        background: none;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        font-family: inherit;
+      }
+
+      @media (min-width: 768px) {
+        .barista-toggle {
+          padding: 20px 28px;
+        }
+      }
+
+      .barista-toggle-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .barista-avatar {
+        width: 40px;
+        height: 40px;
+        background: #444444;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+      }
+
+      .barista-name {
+        font-weight: 500;
+        color: var(--color-text);
+        text-align: left;
+      }
+
+      .barista-shop-label {
+        font-size: 13px;
+        color: var(--color-text-muted);
+        text-align: left;
+      }
+
+      .toggle-icon {
+        transition: transform 0.3s;
+      }
+
+      .barista-card.open .toggle-icon {
+        transform: rotate(180deg);
+      }
+
+      .barista-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+      }
+
+      .barista-card.open .barista-content {
+        max-height: 100px;
+      }
+
+      .barista-inner {
+        padding: 4px 20px 20px;
+      }
+
+      @media (min-width: 768px) {
+        .barista-inner {
+          padding: 4px 28px 28px;
+        }
+      }
+
+      .social-links {
+        display: flex;
+        gap: 8px;
+      }
+
+      .social-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        background: var(--color-bg);
+        border-radius: 20px;
+        font-size: 13px;
+        color: var(--color-text-muted);
+        text-decoration: none;
+        transition:
+          background 0.2s,
+          color 0.2s;
+      }
+
+      .social-link:hover {
+        background: var(--color-accent);
+        color: white;
+      }
+
+      /* Animations */
+      @keyframes fadeSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header Nav -->
+      <nav class="header-nav">
+        <a href="#" class="back-btn">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+          戻る
+        </a>
+        <button class="share-btn">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+            <polyline points="16 6 12 2 8 6" />
+            <line x1="12" y1="2" x2="12" y2="15" />
+          </svg>
+        </button>
+      </nav>
+
+      <!-- Hero Card -->
+      <div class="hero-card">
+        <h1 class="hero-title">エチオピア産豆の最適な抽出法</h1>
+        <p class="hero-description">
+          フルーティな香りが特徴的なエチオピア産豆の魅力を最大限に引き出す抽出方法を解説します。
+        </p>
+        <div class="tags">
+          <span class="tag">フルーティ</span>
+          <span class="tag">酸味強め</span>
+          <span class="tag">シングルオリジン</span>
+        </div>
+      </div>
+
+      <!-- Barista -->
+      <div class="barista-card" id="baristaCard">
+        <button
+          class="barista-toggle"
+          onclick="document.getElementById('baristaCard').classList.toggle('open')"
+        >
+          <div class="barista-toggle-left">
+            <div class="barista-avatar">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <div>
+              <div class="barista-name">鈴木エスプレッソ</div>
+              <div class="barista-shop-label">カフェ・ラテ</div>
+            </div>
+          </div>
+          <svg
+            class="toggle-icon"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </button>
+        <div class="barista-content">
+          <div class="barista-inner">
+            <div class="social-links">
+              <a href="#" class="social-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                  />
+                </svg>
+                Twitter
+              </a>
+              <a href="#" class="social-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"
+                  />
+                </svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recipe Parameters -->
+      <div class="params-card">
+        <div class="params-header">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="4" y1="6" x2="20" y2="6" />
+            <circle cx="8" cy="6" r="2" />
+            <line x1="4" y1="12" x2="20" y2="12" />
+            <circle cx="14" cy="12" r="2" />
+            <line x1="4" y1="18" x2="20" y2="18" />
+            <circle cx="10" cy="18" r="2" />
+          </svg>
+          <span class="params-title">抽出条件</span>
+        </div>
+        <div class="params-grid">
+          <div class="param-item">
+            <div class="param-value">18<span class="param-unit">g</span></div>
+            <div class="param-label">豆の量</div>
+          </div>
+          <div class="param-item">
+            <div class="param-value">270<span class="param-unit">g</span></div>
+            <div class="param-label">湯量</div>
+          </div>
+          <div class="param-item">
+            <div class="param-value">92<span class="param-unit">℃</span></div>
+            <div class="param-label">湯温</div>
+          </div>
+        </div>
+        <div class="params-details">
+          <div class="detail-item">
+            <span class="detail-label">焙煎度</span>
+            <span class="detail-value">中浅煎り</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">挽き目</span>
+            <span class="detail-value">中挽き</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Equipment -->
+      <div class="section-card">
+        <div class="section-header">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
+            />
+          </svg>
+          <span class="section-title">使用器具</span>
+        </div>
+        <div class="equipment-grid">
+          <a href="#" class="equipment-item">
+            <div class="equipment-icon">🫖</div>
+            <div class="equipment-info">
+              <div class="equipment-name">ORIGAMI ドリッパー</div>
+              <div class="equipment-brand">ORIGAMI</div>
+            </div>
+          </a>
+          <a href="#" class="equipment-item">
+            <div class="equipment-icon">⚙️</div>
+            <div class="equipment-info">
+              <div class="equipment-name">バラッツァ エンコア</div>
+              <div class="equipment-brand">Baratza</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Brewing Steps -->
+      <div class="section-card">
+        <div class="timeline-header">
+          <div class="section-header" style="margin-bottom: 0">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="8" y1="6" x2="21" y2="6" />
+              <line x1="8" y1="12" x2="21" y2="12" />
+              <line x1="8" y1="18" x2="21" y2="18" />
+              <line x1="3" y1="6" x2="3.01" y2="6" />
+              <line x1="3" y1="12" x2="3.01" y2="12" />
+              <line x1="3" y1="18" x2="3.01" y2="18" />
+            </svg>
+            <span class="section-title">抽出手順</span>
+          </div>
+          <div class="total-time">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            総抽出時間 2分30秒
+          </div>
+        </div>
+
+        <div class="timeline">
+          <div class="step">
+            <div class="step-marker">1</div>
+            <div class="step-content">
+              <div class="step-time">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                0:00 - 0:20（20秒）
+              </div>
+              <p class="step-description">
+                フィルターをドリッパーにセットし、95℃のお湯でリンスします。
+              </p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-marker">2</div>
+            <div class="step-content">
+              <div class="step-time">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                0:20 - 0:50（30秒）
+              </div>
+              <p class="step-description">
+                粉を入れて中央を少し凹ませ、30gのお湯を注いで30秒蒸らします。
+              </p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-marker">3</div>
+            <div class="step-content">
+              <div class="step-time">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                0:50 - 1:50（1分）
+              </div>
+              <p class="step-description">円を描くように120gまでお湯を注ぎ、1分待ちます。</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-marker">4</div>
+            <div class="step-content">
+              <div class="step-time">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                1:50 - 2:30（40秒）
+              </div>
+              <p class="step-description">残りのお湯を注ぎ、合計2分30秒で抽出を完了させます。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
