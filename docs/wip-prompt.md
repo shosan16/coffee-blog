@@ -1,34 +1,44 @@
-# 指示
+以下のレビューをもらいました。修正すべきものと修正すべきでないものを判断して、修正してください。
 
-以下の仕様を満たすリアルタイム検索機能を実装するための計画を立ててください。
+---
 
-# 目的
+In
+@src/client/features/recipe-detail/components/contents/barista/BaristaCard.test.tsx
+around lines 147 - 162, Remove the unnecessary eslint-disable comment at the top
+of the BaristaCard.test.tsx test case; specifically delete the line "//
+eslint-disable-next-line sonarjs/assertions-in-tests" above the
+it('SNSリンクがない場合、リンクセクションを表示しないこと'...) block so the test uses the existing valid
+assertion (expect(...).not.toBeInTheDocument()) without disabling the sonarjs
+rule.
 
-「検索」ボタンを廃止し、フィルター条件変更と同時に検索結果をリアルタイム更新する。
+---
 
-# 要求仕様
+In
+@src/client/features/recipe-detail/components/contents/barista/BaristaCard.test.tsx
+around lines 187 - 200, The toggle button in the BaristaCard component is
+missing the id referenced by the region's aria-labelledby; update the
+BaristaCard component to add id="barista-toggle-button" to the toggle button
+element (the same button that controls the accordion/visibility), ensuring the
+region with aria-labelledby="barista-toggle-button" correctly references it so
+the test and ARIA labeling pass.
 
-## 基本機能
+---
 
-1. ドロップダウン（豆の種類、挽き具合など）選択時に即検索実行
-2. 数値入力（豆の量、湯温、湯量）は入力停止後300msで検索実行（デバウンス）
-3. 同一条件での重複検索を防止
-4. 検索結果件数をリアルタイムに表示
+In
+@src/client/features/recipe-detail/components/contents/barista/BaristaCard.tsx
+around lines 30 - 35, The button in the BaristaCard component is missing the id
+referenced by aria-labelledby, breaking the ARIA relationship; add
+id="barista-toggle-button" (or make the id value match the existing
+aria-labelledby on the details region) to the button element that uses
+onClick={handleToggle} and aria-controls="barista-details" so screen readers can
+resolve the control-label relationship while leaving the rest of the attributes
+(aria-expanded, aria-controls, aria-label) unchanged.
 
-## パフォーマンス要件
+---
 
-- デバウンス時間：300〜500ms
-- 重複検索防止：前回リクエストと同一パラメータならAPIを呼ばない
-
-## UX要件
-
-- 検索中は「検索中…」を表示
-- API失敗時は「検索に失敗しました。再試行してください。」を表示
-- 新しい検索結果が届くまでは直前の結果を維持
-
-# 期待するアウトプット
-
-既存コードに対して必要な修正計画
-
-@docs/search/search-plan.md  @docs/search/search-todo.md を参考に Phase1 の実装を進めて下さい。
-実装をする際は t-wada のTDDに従って、テスト駆動開発で進めて下さい。
+In
+@src/client/features/recipe-detail/components/contents/header/RecipeHeader.tsx
+around lines 21 - 22, The RecipeHeader title element is missing the required
+font-serif class per todo.md; update the h1 in RecipeHeader (the element
+rendering {title}) so its className includes "font-serif" alongside the existing
+"text-card-foreground mb-3 text-2xl md:text-3xl" to match the specified styling.
