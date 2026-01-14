@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Roboto, Noto_Sans_JP } from 'next/font/google';
+import { Roboto, Noto_Sans_JP, DM_Serif_Display } from 'next/font/google';
 
 import './globals.css';
 import Toaster from '@/client/shared/shadcn/ui/sonner';
@@ -18,6 +18,13 @@ const notoSansJP = Noto_Sans_JP({
   display: 'swap',
 });
 
+const dmSerifDisplay = DM_Serif_Display({
+  variable: '--font-serif',
+  weight: ['400'],
+  subsets: ['latin'],
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
   title: 'Coffee Recipe Collection - プロのコーヒーレシピ集',
   description:
@@ -31,7 +38,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={`${roboto.variable} ${notoSansJP.variable} font-sans antialiased`}>
+      <body
+        className={`${roboto.variable} ${notoSansJP.variable} ${dmSerifDisplay.variable} font-sans antialiased`}
+      >
         {children}
         <Toaster />
       </body>
