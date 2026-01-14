@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>使用器具コンポーネント</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Noto Sans JP', sans-serif;
+        background: #f5f3f0;
+        padding: 40px 24px;
+      }
+
+      .equipment-section {
+        background: #fff;
+        border-radius: 16px;
+        padding: 24px;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .section-icon {
+        width: 20px;
+        height: 20px;
+        color: #8b8580;
+      }
+
+      .section-title {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #4a4540;
+      }
+
+      .equipment-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+
+      .equipment-card {
+        padding: 16px;
+        background: #fafaf9;
+        border-radius: 12px;
+        border: 1px solid #eae8e5;
+        transition: all 0.2s ease;
+      }
+
+      .equipment-card:hover {
+        background: #f5f3f0;
+        border-color: #dbd8d4;
+      }
+
+      .equipment-category {
+        font-size: 0.7rem;
+        font-weight: 500;
+        color: #9b9590;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+      }
+
+      .equipment-name {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #2d2a26;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="equipment-section">
+      <div class="section-header">
+        <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+          />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+          />
+        </svg>
+        <h2 class="section-title">使用器具</h2>
+      </div>
+      <div class="equipment-grid">
+        <div class="equipment-card">
+          <div class="equipment-category">ドリッパー</div>
+          <div class="equipment-name">HARIO V60</div>
+        </div>
+        <div class="equipment-card">
+          <div class="equipment-category">グラインダー</div>
+          <div class="equipment-name">コマンダンテ C40</div>
+        </div>
+        <div class="equipment-card">
+          <div class="equipment-category">スケール</div>
+          <div class="equipment-name">タイムモア Black Mirror</div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
