@@ -63,12 +63,22 @@ describe('EquipmentItem', () => {
       // Act
       const { container } = render(<EquipmentItem item={item} />);
 
-      // Assert - DOMツリーの順序を確認
-      const textContent = container.textContent || '';
-      const categoryIndex = textContent.indexOf('ドリッパー');
-      const nameIndex = textContent.indexOf('V60ドリッパー');
+      // Assert - 個別のDOM要素を取得して順序を検証
+      // カテゴリー要素（text-muted-foreground クラス）と器具名要素（text-card-foreground クラス）を特定
+      const categoryElement = container.querySelector('.text-muted-foreground');
+      const nameElement = container.querySelector('.text-card-foreground');
 
-      expect(categoryIndex).toBeLessThan(nameIndex);
+      expect(categoryElement).toBeInTheDocument();
+      expect(nameElement).toBeInTheDocument();
+      expect(categoryElement).toHaveTextContent('ドリッパー');
+      expect(nameElement).toHaveTextContent('V60ドリッパー');
+
+      // compareDocumentPosition でDOM内の順序を検証
+      // DOCUMENT_POSITION_FOLLOWING (4) が設定されていれば、nameElement は categoryElement の後にある
+      if (categoryElement && nameElement) {
+        const position = categoryElement.compareDocumentPosition(nameElement);
+        expect(position & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      }
     });
   });
 

@@ -70,10 +70,9 @@ describe('BrewingParameterCards', () => {
       // Act - BrewingParameterCardsをレンダリング
       render(<BrewingParameterCards recipe={recipe} />);
 
-      // Assert - 単一のカードが表示される（抽出条件タイトルが存在する）
+      // Assert - 単一のカードが表示される（抽出条件タイトルが1つだけ存在する）
       const titles = screen.getAllByText('抽出条件');
-      expect(titles.length).toBeGreaterThanOrEqual(1);
-      expect(titles[0]).toBeInTheDocument();
+      expect(titles).toHaveLength(1);
     });
 
     it('「抽出条件」タイトルが表示されること', () => {
