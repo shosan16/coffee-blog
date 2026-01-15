@@ -75,7 +75,6 @@ export class RecipeMapper {
       beanWeight: prismaPost.beanWeight ?? undefined,
       waterAmount: prismaPost.waterAmount ?? undefined,
       waterTemp: prismaPost.waterTemp ?? undefined,
-      brewingTime: prismaPost.brewingTime ?? undefined,
     });
 
     // RecipeStepの変換
@@ -124,7 +123,6 @@ export class RecipeMapper {
     beanWeight?: { min?: number; max?: number };
     waterTemp?: { min?: number; max?: number };
     waterAmount?: { min?: number; max?: number };
-    brewingTime?: { min?: number; max?: number };
     equipmentNames?: string[];
     equipmentTypeNames?: string[];
     tagIds?: string[];
@@ -154,7 +152,6 @@ export class RecipeMapper {
     this.addRangeFilter(where, 'beanWeight', criteria.beanWeight);
     this.addRangeFilter(where, 'waterTemp', criteria.waterTemp);
     this.addRangeFilter(where, 'waterAmount', criteria.waterAmount);
-    this.addRangeFilter(where, 'brewingTime', criteria.brewingTime);
 
     // 関連エンティティフィルター
     const andConditions: Array<Record<string, unknown>> = [];

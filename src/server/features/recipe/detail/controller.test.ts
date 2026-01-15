@@ -62,7 +62,6 @@ describe('handleGetRecipeDetail', () => {
         beanWeight: 20,
         waterTemp: 92,
         waterAmount: 300,
-        brewingTime: 180,
         viewCount: 150,
         isPublished: true,
         publishedAt: '2025-06-20T10:30:00.000Z',

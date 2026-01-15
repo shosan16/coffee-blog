@@ -21,7 +21,6 @@ describe('RecipeMapper', () => {
         beanWeight: 20,
         waterAmount: 300,
         waterTemp: 90,
-        brewingTime: 240,
         viewCount: 100,
         isPublished: true,
         publishedAt: new Date('2025-01-01'),
@@ -120,7 +119,6 @@ describe('RecipeMapper', () => {
       expect(brewingConditions.beanWeight).toBe(20);
       expect(brewingConditions.waterAmount).toBe(300);
       expect(brewingConditions.waterTemp).toBe(90);
-      expect(brewingConditions.brewingTime).toBe(240);
 
       // ステップの確認
       expect(recipe.steps).toHaveLength(2);
@@ -152,7 +150,6 @@ describe('RecipeMapper', () => {
         beanWeight: null,
         waterAmount: null,
         waterTemp: null,
-        brewingTime: null,
         viewCount: 0,
         isPublished: false,
         publishedAt: null,
@@ -187,7 +184,6 @@ describe('RecipeMapper', () => {
       expect(brewingConditions.beanWeight).toBeUndefined();
       expect(brewingConditions.waterAmount).toBeUndefined();
       expect(brewingConditions.waterTemp).toBeUndefined();
-      expect(brewingConditions.brewingTime).toBeUndefined();
     });
 
     it('ステップが順序通りにソートされること', () => {
@@ -204,7 +200,6 @@ describe('RecipeMapper', () => {
         beanWeight: null,
         waterAmount: null,
         waterTemp: null,
-        brewingTime: null,
         viewCount: 0,
         isPublished: false,
         publishedAt: null,

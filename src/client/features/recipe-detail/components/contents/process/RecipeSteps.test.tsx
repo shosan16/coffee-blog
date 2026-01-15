@@ -40,9 +40,10 @@ describe('RecipeSteps', () => {
 
       // Assert - 確認：手順が正しい順序で表示されることを検証
       expect(screen.getByText('抽出手順')).toBeInTheDocument();
-      expect(screen.getByText('Step 1')).toBeInTheDocument();
-      expect(screen.getByText('Step 2')).toBeInTheDocument();
-      expect(screen.getByText('Step 3')).toBeInTheDocument();
+      // ステップ番号は数字のみ表示
+      expect(screen.getByText('1')).toBeInTheDocument();
+      expect(screen.getByText('2')).toBeInTheDocument();
+      expect(screen.getByText('3')).toBeInTheDocument();
 
       expect(
         screen.getByText('フィルターをドリッパーにセットし、コーヒー粉を投入')
@@ -51,7 +52,7 @@ describe('RecipeSteps', () => {
       expect(screen.getByText('残りのお湯を3回に分けて注ぐ')).toBeInTheDocument();
     });
 
-    it('時間付きの手順で時間表示が正しく表示されること', () => {
+    it('時間付きの手順で累積時間表示が正しく表示されること', () => {
       // Arrange - 準備：時間付き手順データを設定
       const steps: RecipeStepInfo[] = [
         {
@@ -71,9 +72,11 @@ describe('RecipeSteps', () => {
       // Act - 実行：レシピ手順をレンダリング
       const { container } = render(<RecipeSteps steps={steps} />);
 
-      // Assert - 確認：時間表示が正しく表示されることを検証
-      expect(container).toHaveTextContent('30秒');
-      expect(container).toHaveTextContent('2分');
+      // Assert - 確認：累積時間形式で正しく表示されることを検証
+      // Step 1: 0:00 - 0:30（30秒）
+      expect(container).toHaveTextContent('0:00 - 0:30（30秒）');
+      // Step 2: 0:30 - 2:30（2分）
+      expect(container).toHaveTextContent('0:30 - 2:30（2分）');
     });
 
     it('時間がない手順では時間表示をしないこと', () => {
@@ -97,7 +100,8 @@ describe('RecipeSteps', () => {
 
       // Assert - 確認：時間なし手順で時間表示がないことを検証
       expect(container).toHaveTextContent('コーヒー豆の香りを確認');
-      expect(container).toHaveTextContent('1分');
+      // Step 2の時間表示のみ（Step 1は時間なし）
+      expect(container).toHaveTextContent('0:00 - 1:00（1分）');
 
       // Step表示の確認
       const stepElements = container.querySelectorAll('[class*="rounded-full"]');
@@ -119,51 +123,48 @@ describe('RecipeSteps', () => {
     });
   });
 
-  describe('時間表示フォーマット', () => {
-    it('秒数を適切にフォーマットできること', () => {
+  describe('累積時間計算と時間表示フォーマット', () => {
+    it('累積時間が正しく計算されること', () => {
       // Arrange - 準備：様々な時間の手順データを設定
       const steps: RecipeStepInfo[] = [
         {
           id: '1',
           stepOrder: 1,
-          timeSeconds: 15,
-          description: '15秒手順',
+          timeSeconds: 20,
+          description: '第1ステップ',
         },
         {
           id: '2',
           stepOrder: 2,
-          timeSeconds: 60,
-          description: '1分手順',
+          timeSeconds: 30,
+          description: '第2ステップ',
         },
         {
           id: '3',
           stepOrder: 3,
-          timeSeconds: 90,
-          description: '1分30秒手順',
+          timeSeconds: 60,
+          description: '第3ステップ',
         },
         {
           id: '4',
           stepOrder: 4,
-          timeSeconds: 180,
-          description: '3分手順',
-        },
-        {
-          id: '5',
-          stepOrder: 5,
-          timeSeconds: 195,
-          description: '3分15秒手順',
+          timeSeconds: 40,
+          description: '第4ステップ',
         },
       ];
 
       // Act - 実行：レシピ手順をレンダリング
       const { container } = render(<RecipeSteps steps={steps} />);
 
-      // Assert - 確認：時間フォーマットが正しく表示されることを検証
-      expect(container).toHaveTextContent('15秒');
-      expect(container).toHaveTextContent('1分');
-      expect(container).toHaveTextContent('1分30秒');
-      expect(container).toHaveTextContent('3分');
-      expect(container).toHaveTextContent('3分15秒');
+      // Assert - 確認：累積時間形式で正しく表示されることを検証
+      // Step 1: 0:00 - 0:20（20秒）
+      expect(container).toHaveTextContent('0:00 - 0:20（20秒）');
+      // Step 2: 0:20 - 0:50（30秒）
+      expect(container).toHaveTextContent('0:20 - 0:50（30秒）');
+      // Step 3: 0:50 - 1:50（1分）
+      expect(container).toHaveTextContent('0:50 - 1:50（1分）');
+      // Step 4: 1:50 - 2:30（40秒）
+      expect(container).toHaveTextContent('1:50 - 2:30（40秒）');
     });
 
     it('0秒の場合、時間表示をしないこと', () => {
@@ -182,7 +183,7 @@ describe('RecipeSteps', () => {
 
       // Assert - 確認：0秒の場合は時間表示がないことを検証
       expect(screen.getByText('0秒手順')).toBeInTheDocument();
-      expect(screen.queryByText('0秒')).not.toBeInTheDocument();
+      expect(screen.queryByText(/0:00 - 0:00/)).not.toBeInTheDocument();
     });
   });
 
@@ -214,9 +215,9 @@ describe('RecipeSteps', () => {
       render(<RecipeSteps steps={steps} />);
 
       // Assert - 確認：各ステップが表示されることを検証
-      expect(screen.getByText('Step 1')).toBeInTheDocument();
-      expect(screen.getByText('Step 2')).toBeInTheDocument();
-      expect(screen.getByText('Step 3')).toBeInTheDocument();
+      expect(screen.getByText('1')).toBeInTheDocument();
+      expect(screen.getByText('2')).toBeInTheDocument();
+      expect(screen.getByText('3')).toBeInTheDocument();
       expect(screen.getByText('第1ステップ')).toBeInTheDocument();
       expect(screen.getByText('第2ステップ')).toBeInTheDocument();
       expect(screen.getByText('第3ステップ')).toBeInTheDocument();
@@ -272,8 +273,8 @@ describe('RecipeSteps', () => {
   });
 
   describe('総抽出時間表示', () => {
-    it('brewingTimeが提供された場合、総抽出時間を正しく表示すること', () => {
-      // Arrange - 準備：手順データと総抽出時間を設定
+    it('ステップの合計時間から総抽出時間を算出して表示すること', () => {
+      // Arrange - 準備：複数の手順データを設定
       const steps: RecipeStepInfo[] = [
         {
           id: '1',
@@ -288,100 +289,53 @@ describe('RecipeSteps', () => {
           description: '抽出',
         },
       ];
-      const brewingTime = 180; // 3分
 
-      // Act - 実行：総抽出時間付きでレンダリング
-      render(<RecipeSteps steps={steps} brewingTime={brewingTime} />);
+      // Act - 実行：レンダリング
+      render(<RecipeSteps steps={steps} />);
 
-      // Assert - 確認：総抽出時間が正しく表示されることを検証
-      expect(screen.getByText('総抽出時間: 3分0秒')).toBeInTheDocument();
+      // Assert - 確認：ステップ合計（30+120=150秒=2分30秒）が表示されることを検証
+      expect(screen.getByText('総抽出時間 2分30秒')).toBeInTheDocument();
       expect(screen.getByText('抽出手順')).toBeInTheDocument();
     });
 
-    it('brewingTimeが未定義の場合、総抽出時間を表示しないこと', () => {
-      // Arrange - 準備：手順データのみ設定
+    it('全ステップの時間が0の場合、総抽出時間を表示しないこと', () => {
+      // Arrange - 準備：時間なし手順データを設定
       const steps: RecipeStepInfo[] = [
         {
           id: '1',
           stepOrder: 1,
-          timeSeconds: 30,
-          description: '蒸らし',
-        },
-        {
-          id: '2',
-          stepOrder: 2,
-          timeSeconds: 120,
-          description: '抽出',
+          timeSeconds: 0,
+          description: '準備',
         },
       ];
 
-      // Act - 実行：総抽出時間なしでレンダリング
+      // Act - 実行：レンダリング
       render(<RecipeSteps steps={steps} />);
 
       // Assert - 確認：総抽出時間が表示されないことを検証
       expect(screen.queryByText(/総抽出時間/)).not.toBeInTheDocument();
-      expect(screen.getByText('抽出手順')).toBeInTheDocument();
     });
 
-    it('brewingTimeが0の場合、総抽出時間を表示しないこと', () => {
-      // Arrange - 準備：手順データと0秒の総抽出時間を設定
-      const steps: RecipeStepInfo[] = [
-        {
-          id: '1',
-          stepOrder: 1,
-          timeSeconds: 30,
-          description: '準備',
-        },
-      ];
-      const brewingTime = 0;
-
-      // Act - 実行：0秒の総抽出時間でレンダリング
-      render(<RecipeSteps steps={steps} brewingTime={brewingTime} />);
-
-      // Assert - 確認：総抽出時間が表示されないことを検証
-      expect(screen.queryByText(/総抽出時間/)).not.toBeInTheDocument();
-    });
-
-    it('brewingTimeが複雑な時間の場合、正しくフォーマットされること', () => {
-      // Arrange - 準備：手順データと複雑な総抽出時間を設定
+    it('1分未満の合計時間が正しくフォーマットされること', () => {
+      // Arrange - 準備：短時間手順データを設定
       const steps: RecipeStepInfo[] = [
         {
           id: '1',
           stepOrder: 1,
           timeSeconds: 45,
-          description: '前処理',
-        },
-      ];
-      const brewingTime = 255; // 4分15秒
-
-      // Act - 実行：複雑な総抽出時間でレンダリング
-      render(<RecipeSteps steps={steps} brewingTime={brewingTime} />);
-
-      // Assert - 確認：複雑な時間が正しくフォーマットされることを検証
-      expect(screen.getByText('総抽出時間: 4分15秒')).toBeInTheDocument();
-    });
-
-    it('brewingTimeが1分未満の場合、正しくフォーマットされること', () => {
-      // Arrange - 準備：手順データと1分未満の総抽出時間を設定
-      const steps: RecipeStepInfo[] = [
-        {
-          id: '1',
-          stepOrder: 1,
-          timeSeconds: 30,
           description: '短時間手順',
         },
       ];
-      const brewingTime = 45; // 45秒
 
-      // Act - 実行：1分未満の総抽出時間でレンダリング
-      render(<RecipeSteps steps={steps} brewingTime={brewingTime} />);
+      // Act - 実行：レンダリング
+      render(<RecipeSteps steps={steps} />);
 
-      // Assert - 確認：1分未満の時間が正しくフォーマットされることを検証
-      expect(screen.getByText('総抽出時間: 0分45秒')).toBeInTheDocument();
+      // Assert - 確認：45秒が正しくフォーマットされることを検証
+      expect(screen.getByText('総抽出時間 45秒')).toBeInTheDocument();
     });
 
-    it('brewingTimeとstepsの時間表示が両方表示されること', () => {
-      // Arrange - 準備：時間付き手順データと総抽出時間を設定
+    it('総抽出時間とステップ時間の両方が表示されること', () => {
+      // Arrange - 準備：時間付き手順データを設定
       const steps: RecipeStepInfo[] = [
         {
           id: '1',
@@ -396,24 +350,24 @@ describe('RecipeSteps', () => {
           description: '抽出手順',
         },
       ];
-      const brewingTime = 150; // 2分30秒
 
-      // Act - 実行：両方の時間表示でレンダリング
-      const { container } = render(<RecipeSteps steps={steps} brewingTime={brewingTime} />);
+      // Act - 実行：レンダリング
+      const { container } = render(<RecipeSteps steps={steps} />);
 
-      // Assert - 確認：総抽出時間とステップ時間の両方が表示されることを検証
-      expect(screen.getByText('総抽出時間: 2分30秒')).toBeInTheDocument();
-      expect(container).toHaveTextContent('30秒');
-      expect(container).toHaveTextContent('1分30秒');
+      // Assert - 確認：総抽出時間（30+90=120秒=2分）とステップ時間の両方が表示されることを検証
+      expect(screen.getByText('総抽出時間 2分')).toBeInTheDocument();
+      // Step 1: 0:00 - 0:30（30秒）
+      expect(container).toHaveTextContent('0:00 - 0:30（30秒）');
+      // Step 2: 0:30 - 2:00（1分30秒）
+      expect(container).toHaveTextContent('0:30 - 2:00（1分30秒）');
     });
 
-    it('空の手順でbrewingTimeが提供された場合でも総抽出時間を表示しないこと', () => {
-      // Arrange - 準備：空の手順データと総抽出時間を設定
+    it('空の手順では総抽出時間を表示しないこと', () => {
+      // Arrange - 準備：空の手順データを設定
       const steps: RecipeStepInfo[] = [];
-      const brewingTime = 120;
 
-      // Act - 実行：空手順で総抽出時間付きレンダリング
-      render(<RecipeSteps steps={steps} brewingTime={brewingTime} />);
+      // Act - 実行：レンダリング
+      render(<RecipeSteps steps={steps} />);
 
       // Assert - 確認：空状態では総抽出時間を表示しないことを検証
       expect(screen.queryByText(/総抽出時間/)).not.toBeInTheDocument();

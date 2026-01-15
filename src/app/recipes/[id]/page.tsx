@@ -167,7 +167,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
               <div className="flex flex-col gap-8 lg:flex-row">
                 <div className="min-w-0 flex-1 space-y-8">
                   <BrewingParameterCards recipe={recipe} />
-                  <RecipeSteps steps={recipe.steps} brewingTime={recipe.brewingTime} />
+                  <RecipeSteps steps={recipe.steps} />
                   <RecipeEquipmentList equipment={recipe.equipment} />
                 </div>
               </div>

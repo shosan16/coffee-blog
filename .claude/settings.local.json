@@ -75,7 +75,8 @@
       "mcp__serena__list_memories",
       "Bash(for i in {1..10})",
       "Bash(npm run dev:*)",
-      "Bash(docker compose:*)"
+      "Bash(docker compose:*)",
+      "Bash(npx prisma generate:*)"
     ],
     "deny": []
   }

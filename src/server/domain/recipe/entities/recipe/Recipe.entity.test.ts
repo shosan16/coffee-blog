@@ -20,7 +20,6 @@ describe('Recipe Entity', () => {
       beanWeight: 20,
       waterAmount: 300,
       waterTemp: 90,
-      brewingTime: 240,
     });
   });
 

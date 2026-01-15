@@ -126,18 +126,6 @@ export class MemoryRecipeRepository implements IRecipeRepository {
       });
     }
 
-    if (criteria.brewingTime) {
-      filteredRecipes = filteredRecipes.filter((recipe) => {
-        const brewingTime = recipe.brewingConditions.brewingTime;
-        if (brewingTime === undefined) return false;
-
-        return (
-          (criteria.brewingTime?.min === undefined || brewingTime >= criteria.brewingTime.min) &&
-          (criteria.brewingTime?.max === undefined || brewingTime <= criteria.brewingTime.max)
-        );
-      });
-    }
-
     // 関連エンティティフィルター
     if (criteria.equipmentIds?.length) {
       filteredRecipes = filteredRecipes.filter((recipe) =>

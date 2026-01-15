@@ -41,7 +41,6 @@ describe('RecipeDetailResponseMapper', () => {
         beanWeight: 20,
         waterTemp: 92,
         waterAmount: 300,
-        brewingTime: 240,
       });
 
       recipe = Recipe.reconstruct({
@@ -74,7 +73,6 @@ describe('RecipeDetailResponseMapper', () => {
         beanWeight: 20,
         waterTemp: 92,
         waterAmount: 300,
-        brewingTime: 240,
         viewCount: 100,
         isPublished: true,
         publishedAt: RECIPE_PUBLISHED_AT,
@@ -199,7 +197,6 @@ describe('RecipeDetailResponseMapper', () => {
         expect(dto.beanWeight).toBe(20);
         expect(dto.waterTemp).toBe(92);
         expect(dto.waterAmount).toBe(300);
-        expect(dto.brewingTime).toBe(240);
         expect(dto.viewCount).toBe(100);
         expect(dto.isPublished).toBe(true);
       });

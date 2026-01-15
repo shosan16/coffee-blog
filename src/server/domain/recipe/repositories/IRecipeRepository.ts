@@ -27,10 +27,6 @@ export type RecipeSearchCriteria = {
     readonly min?: number;
     readonly max?: number;
   };
-  readonly brewingTime?: {
-    readonly min?: number;
-    readonly max?: number;
-  };
 
   // 関連エンティティフィルター
   readonly equipmentIds?: string[];

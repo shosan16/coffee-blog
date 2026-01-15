@@ -83,7 +83,6 @@ model Post {
   beanWeight  Int?        @map("bean_weight")
   waterAmount Int?        @map("water_amount")
   waterTemp   Int?        @map("water_temp")
-  brewingTime Int?        @map("brewing_time")
   viewCount   Int         @default(0) @map("view_count")
   isPublished Boolean     @default(false) @map("is_published")
   publishedAt DateTime?   @map("published_at")
