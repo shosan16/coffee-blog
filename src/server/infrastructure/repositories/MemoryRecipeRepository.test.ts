@@ -38,7 +38,6 @@ describe('MemoryRecipeRepository', () => {
       beanWeight: 20,
       waterAmount: 300,
       waterTemp: 90,
-      brewingTime: 240,
     });
 
     const steps: RecipeStep[] = [
@@ -158,7 +157,6 @@ describe('MemoryRecipeRepository', () => {
           beanWeight: 18,
           waterAmount: 270,
           waterTemp: 93,
-          brewingTime: 25,
         }),
         baristaId: '1',
         viewCount: 0,
@@ -181,7 +179,6 @@ describe('MemoryRecipeRepository', () => {
           beanWeight: 20,
           waterAmount: 300,
           waterTemp: 88,
-          brewingTime: 240,
         }),
         baristaId: '2',
         viewCount: 0,

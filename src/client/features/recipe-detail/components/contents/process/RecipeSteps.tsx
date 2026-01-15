@@ -8,8 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn
 type RecipeStepsProps = {
   /** レシピ手順リスト */
   steps: RecipeStepInfo[];
-  /** 総抽出時間（秒） */
-  brewingTime?: number;
 };
 
 /**
@@ -19,7 +17,7 @@ type RecipeStepsProps = {
  * タイムライン形式で手順を視覚化する。
  * 累積時間表示により「いつ何をすべきか」が直感的に理解できる。
  */
-export default function RecipeSteps({ steps, brewingTime }: RecipeStepsProps) {
+export default function RecipeSteps({ steps }: RecipeStepsProps) {
   const { formatSeconds, formatTimeRangeWithDuration } = useTimeFormat();
 
   const stepsWithCumulativeTime = useMemo(() => {
@@ -31,6 +29,12 @@ export default function RecipeSteps({ steps, brewingTime }: RecipeStepsProps) {
       return { ...step, startSeconds, endSeconds };
     });
   }, [steps]);
+
+  const totalBrewingTime = useMemo(() => {
+    if (stepsWithCumulativeTime.length === 0) return 0;
+    const lastStep = stepsWithCumulativeTime[stepsWithCumulativeTime.length - 1];
+    return lastStep.endSeconds;
+  }, [stepsWithCumulativeTime]);
 
   if (steps.length === 0) {
     return (
@@ -56,11 +60,11 @@ export default function RecipeSteps({ steps, brewingTime }: RecipeStepsProps) {
             <List className="text-primary h-6 w-6" />
             抽出手順
           </CardTitle>
-          {brewingTime && (
+          {totalBrewingTime > 0 && (
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-gray-800" />
               <span className="text-sm font-medium text-gray-800">
-                総抽出時間 {formatSeconds(brewingTime)}
+                総抽出時間 {formatSeconds(totalBrewingTime)}
               </span>
             </div>
           )}

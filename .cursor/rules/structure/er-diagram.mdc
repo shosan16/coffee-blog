@@ -57,7 +57,6 @@ erDiagram
         int bean_weight
         int water_amount
         int water_temp
-        int brewing_time
         int view_count
         boolean is_published
         timestamp published_at

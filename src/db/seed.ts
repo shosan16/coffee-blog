@@ -440,7 +440,6 @@ async function main(): Promise<void> {
       beanWeight: 15,
       waterAmount: 225,
       waterTemp: 90,
-      brewingTime: 120,
       viewCount: 0,
       isPublished: true,
       publishedAt: new Date(),
@@ -507,7 +506,6 @@ async function main(): Promise<void> {
       beanWeight: 18,
       waterAmount: 270,
       waterTemp: 92,
-      brewingTime: 150,
       viewCount: 12,
       isPublished: true,
       publishedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 一週間前
@@ -581,7 +579,6 @@ async function main(): Promise<void> {
       beanWeight: 20,
       waterAmount: 240,
       waterTemp: 88,
-      brewingTime: 180,
       viewCount: 45,
       isPublished: true,
       publishedAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000), // 二週間前
@@ -647,7 +644,6 @@ async function main(): Promise<void> {
       beanWeight: 16,
       waterAmount: 200,
       waterTemp: 85,
-      brewingTime: 60,
       viewCount: 78,
       isPublished: true,
       publishedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3日前
@@ -758,9 +754,6 @@ async function main(): Promise<void> {
     const beanWeight = faker.number.int({ min: 15, max: 25 });
     const waterAmount = beanWeight * faker.number.int({ min: 13, max: 17 }); // 豆:水 = 1:13〜1:17
 
-    // 抽出時間を生成
-    const brewingTime = faker.number.int({ min: 60, max: 240 });
-
     // 投稿日時を生成
     const publishedAt = randomPastDate();
 
@@ -858,7 +851,6 @@ async function main(): Promise<void> {
         beanWeight,
         waterAmount,
         waterTemp,
-        brewingTime,
         viewCount,
         isPublished: true,
         publishedAt,

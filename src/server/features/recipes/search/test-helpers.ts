@@ -112,7 +112,6 @@ export function createMockPrismaRecipes(count: number = 1): Array<{
   beanWeight: number | null;
   waterTemp: number | null;
   waterAmount: number | null;
-  brewingTime: number | null;
   viewCount: number;
   isPublished: boolean;
   publishedAt: Date | null;
@@ -162,7 +161,6 @@ export function createMockPrismaRecipes(count: number = 1): Array<{
     beanWeight: 20,
     waterTemp: 90,
     waterAmount: 300,
-    brewingTime: 180,
     viewCount: 100,
     isPublished: true,
     publishedAt: new Date(TEST_DATE),
@@ -280,7 +278,6 @@ export function createMockRecipeWithNulls(): {
   beanWeight: number | null;
   waterTemp: number | null;
   waterAmount: number | null;
-  brewingTime: number | null;
   viewCount: number;
   isPublished: boolean;
   publishedAt: Date | null;
@@ -303,7 +300,6 @@ export function createMockRecipeWithNulls(): {
     beanWeight: null,
     waterTemp: null,
     waterAmount: null,
-    brewingTime: null,
     viewCount: 0,
     isPublished: true,
     publishedAt: new Date(TEST_DATE),

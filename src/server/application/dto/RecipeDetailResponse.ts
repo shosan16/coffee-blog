@@ -69,7 +69,6 @@ export type RecipeDetailDto = {
   readonly beanWeight?: number;
   readonly waterTemp?: number;
   readonly waterAmount?: number;
-  readonly brewingTime?: number;
   readonly viewCount: number;
   readonly isPublished: boolean;
   readonly publishedAt?: string;
@@ -107,7 +106,6 @@ export class RecipeDetailResponseMapper {
       beanWeight: recipe.brewingConditions.beanWeight ?? undefined,
       waterTemp: recipe.brewingConditions.waterTemp ?? undefined,
       waterAmount: recipe.brewingConditions.waterAmount ?? undefined,
-      brewingTime: recipe.brewingConditions.brewingTime ?? undefined,
       viewCount: recipe.viewCount,
       isPublished: recipe.isPublished,
       publishedAt: recipe.publishedAt?.toISOString() ?? undefined,
@@ -214,7 +212,6 @@ type RecipeEntity = {
     readonly beanWeight?: number;
     readonly waterTemp?: number;
     readonly waterAmount?: number;
-    readonly brewingTime?: number;
   };
   readonly viewCount: number;
   readonly isPublished: boolean;

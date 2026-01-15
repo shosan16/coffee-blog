@@ -41,7 +41,6 @@ describe('GetRecipeDetailUseCase', () => {
         beanWeight: 15,
         waterAmount: 250,
         waterTemp: 92,
-        brewingTime: 240,
       });
 
       const publishedRecipe = Recipe.reconstruct({

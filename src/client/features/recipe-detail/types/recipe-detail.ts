@@ -59,7 +59,6 @@ export type RecipeDetailInfo = {
   beanWeight?: number;
   waterTemp?: number;
   waterAmount?: number;
-  brewingTime?: number;
   viewCount: number;
   isPublished: boolean;
   publishedAt?: string;

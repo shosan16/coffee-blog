@@ -66,20 +66,6 @@ paths:
             type: integer
             minimum: 50
             maximum: 1000
-        - name: brewingTimeMin
-          in: query
-          description: 抽出時間最小値（秒）
-          schema:
-            type: integer
-            minimum: 30
-            maximum: 600
-        - name: brewingTimeMax
-          in: query
-          description: 抽出時間最大値（秒）
-          schema:
-            type: integer
-            minimum: 30
-            maximum: 600
         - $ref: '#/components/parameters/SortParam'
         - $ref: '#/components/parameters/OrderParam'
       responses:
@@ -113,7 +99,6 @@ paths:
                         beanWeight: 20
                         waterTemp: 92
                         waterAmount: 300
-                        brewingTime: 180
                         remarks: '特に蒸らし時間に注意。豆の膨らみを見て判断する。'
                         createdAt: '2025-06-20T10:30:00Z'
                         updatedAt: '2025-06-20T10:30:00Z'
@@ -398,17 +383,7 @@ components:
       schema:
         type: string
         enum:
-          [
-            title,
-            beanWeight,
-            waterTemp,
-            waterAmount,
-            brewingTime,
-            roastLevel,
-            grindSize,
-            createdAt,
-            updatedAt,
-          ]
+          [title, beanWeight, waterTemp, waterAmount, roastLevel, grindSize, createdAt, updatedAt]
         default: createdAt
 
     OrderParam:
@@ -480,8 +455,6 @@ components:
                       message: '豆の重量は1以上100以下で入力してください'
                     - field: 'waterTemp'
                       message: '湯温は60以上100以下で入力してください'
-                    - field: 'brewingTime'
-                      message: '抽出時間は30以上600以下で入力してください'
             missing_field:
               summary: 必須フィールド不足
               value:
@@ -603,13 +576,6 @@ components:
           maximum: 1000
           example: 300
           nullable: true
-        brewingTime:
-          type: integer
-          description: 抽出時間（秒）
-          minimum: 30
-          maximum: 600
-          example: 180
-          nullable: true
         remarks:
           type: string
           description: 備考・コメント
@@ -685,13 +651,6 @@ components:
           minimum: 50
           maximum: 1000
           example: 300
-          nullable: true
-        brewingTime:
-          type: integer
-          description: 抽出時間（秒）
-          minimum: 30
-          maximum: 600
-          example: 180
           nullable: true
         remarks:
           type: string
@@ -927,13 +886,6 @@ components:
           minimum: 50
           maximum: 1000
           example: 300
-          nullable: true
-        brewingTime:
-          type: integer
-          description: 抽出時間（秒）
-          minimum: 30
-          maximum: 600
-          example: 180
           nullable: true
         viewCount:
           type: integer

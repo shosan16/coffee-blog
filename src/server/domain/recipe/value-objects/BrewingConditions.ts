@@ -40,11 +40,6 @@ const BrewingConditionsSchema = z
       .positive('Water amount must be positive')
       .max(5000, 'Water amount must be 5000ml or less')
       .optional(),
-    brewingTime: z
-      .number()
-      .positive('Brewing time must be positive')
-      .max(3600, 'Brewing time must be 3600 seconds or less')
-      .optional(),
   })
   .refine(
     (data) => {
@@ -73,8 +68,7 @@ export class BrewingConditions {
     private readonly _grindSize?: GrindSize,
     private readonly _beanWeight?: number,
     private readonly _waterTemp?: number,
-    private readonly _waterAmount?: number,
-    private readonly _brewingTime?: number
+    private readonly _waterAmount?: number
   ) {}
 
   /**
@@ -90,7 +84,6 @@ export class BrewingConditions {
     beanWeight?: number;
     waterTemp?: number;
     waterAmount?: number;
-    brewingTime?: number;
   }): BrewingConditions {
     const validatedParams = BrewingConditionsSchema.parse(params);
 
@@ -107,8 +100,7 @@ export class BrewingConditions {
       validatedParams.grindSize,
       validatedParams.beanWeight,
       validatedParams.waterTemp,
-      validatedParams.waterAmount,
-      validatedParams.brewingTime
+      validatedParams.waterAmount
     );
   }
 
@@ -133,10 +125,6 @@ export class BrewingConditions {
     return this._waterAmount;
   }
 
-  get brewingTime(): number | undefined {
-    return this._brewingTime;
-  }
-
   /**
    * 値の等価性を判定
    *
@@ -149,8 +137,7 @@ export class BrewingConditions {
       this._grindSize === other._grindSize &&
       this._beanWeight === other._beanWeight &&
       this._waterTemp === other._waterTemp &&
-      this._waterAmount === other._waterAmount &&
-      this._brewingTime === other._brewingTime
+      this._waterAmount === other._waterAmount
     );
   }
 
@@ -163,7 +150,6 @@ export class BrewingConditions {
     beanWeight?: number;
     waterTemp?: number;
     waterAmount?: number;
-    brewingTime?: number;
   } {
     return {
       roastLevel: this._roastLevel,
@@ -171,7 +157,6 @@ export class BrewingConditions {
       beanWeight: this._beanWeight,
       waterTemp: this._waterTemp,
       waterAmount: this._waterAmount,
-      brewingTime: this._brewingTime,
     };
   }
 }
