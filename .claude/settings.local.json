@@ -76,7 +76,8 @@
       "Bash(for i in {1..10})",
       "Bash(npm run dev:*)",
       "Bash(docker compose:*)",
-      "Bash(npx prisma generate:*)"
+      "Bash(npx prisma generate:*)",
+      "mcp__serena__initial_instructions"
     ],
     "deny": []
   }
