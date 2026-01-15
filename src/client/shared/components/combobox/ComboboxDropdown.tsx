@@ -47,8 +47,9 @@ function ComboboxDropdown({
     () =>
       cn(
         'absolute top-full left-0 z-50 mt-1 w-full',
-        'bg-popover border rounded-md shadow-md',
-        'max-h-60 overflow-y-auto'
+        'bg-popover text-popover-foreground border rounded-md shadow-md',
+        'animate-in fade-in-0 zoom-in-95',
+        'max-h-72 overflow-y-auto'
       ),
     []
   );
