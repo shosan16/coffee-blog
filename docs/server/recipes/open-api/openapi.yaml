@@ -382,9 +382,8 @@ components:
       required: false
       schema:
         type: string
-        enum:
-          [title, beanWeight, waterTemp, waterAmount, roastLevel, grindSize, createdAt, updatedAt]
-        default: createdAt
+        enum: [id, title, viewCount, createdAt, updatedAt, publishedAt]
+        default: id
 
     OrderParam:
       name: order
