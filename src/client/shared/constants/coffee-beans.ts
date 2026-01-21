@@ -44,3 +44,26 @@ export const getGrindSizeLabel = (value: string | null): string => {
   if (!value) return '';
   return GRIND_SIZES.find((item) => item.value === value)?.label ?? value;
 };
+
+/**
+ * 焙煎度ごとのカラーコード
+ * mockデザイン（mock/recipe-card.html）で定義されたカラーパレットに準拠
+ */
+export const ROAST_LEVEL_COLORS: Record<string, string> = {
+  LIGHT: '#e2b714',
+  LIGHT_MEDIUM: '#c9a227',
+  MEDIUM: '#a67c52',
+  MEDIUM_DARK: '#7a5a3a',
+  DARK: '#5c4033',
+  FRENCH: '#2d1f1a',
+};
+
+/**
+ * 焙煎度に対応するカラーコードを取得するヘルパー関数
+ * @param roastLevel - 焙煎度の値（例: "LIGHT", "MEDIUM"）
+ * @returns 対応するカラーコード、見つからない場合はMEDIUMの色を返す
+ */
+export const getRoastLevelColor = (roastLevel: string | null): string => {
+  if (!roastLevel) return ROAST_LEVEL_COLORS.MEDIUM;
+  return ROAST_LEVEL_COLORS[roastLevel] ?? ROAST_LEVEL_COLORS.MEDIUM;
+};

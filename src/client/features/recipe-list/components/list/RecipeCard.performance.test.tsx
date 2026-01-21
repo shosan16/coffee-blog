@@ -95,7 +95,8 @@ describe('RecipeCard Performance Tests', () => {
     // DOM要素の存在確認（構造的検証）
     expect(container.firstChild).not.toBeNull();
     expect(container.textContent).toContain('テストレシピ');
-    expect(container.textContent).toContain('テスト用のレシピ説明文です。');
+    // 新しいレイアウトでは焙煎度バッジが表示される
+    expect(container.textContent).toContain('中煎り');
 
     // クリーンアップが正常に動作することを確認
     expect(() => unmount()).not.toThrow();
