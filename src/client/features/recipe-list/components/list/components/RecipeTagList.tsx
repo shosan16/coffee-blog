@@ -39,10 +39,11 @@ export default function RecipeTagList({ tags, maxVisible = 6 }: RecipeTagListPro
   return (
     <div className="relative min-h-[56px]">
       <div className="flex flex-wrap gap-1.5">
-        {/* 表示されるタグ */}
-        {visibleTags.map((tag) => (
+        {/* 表示されるタグ（将来的にAPIからタグを取得した際に重複の可能性があるためindexを使用） */}
+        {visibleTags.map((tag, idx) => (
           <button
-            key={tag}
+            // eslint-disable-next-line react/no-array-index-key
+            key={`${tag}-${idx}`}
             type="button"
             onClick={(e) => handleTagClick(tag, e)}
             aria-label={`${tag}でフィルター`}
@@ -76,9 +77,10 @@ export default function RecipeTagList({ tags, maxVisible = 6 }: RecipeTagListPro
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex flex-wrap gap-1.5">
-                {hiddenTags.map((tag) => (
+                {hiddenTags.map((tag, idx) => (
                   <button
-                    key={tag}
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={`${tag}-${idx}`}
                     type="button"
                     onClick={(e) => {
                       handleTagClick(tag, e);
