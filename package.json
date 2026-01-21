@@ -25,10 +25,10 @@
     "db:generate": "npx prisma generate",
     "db:migrate": "npx prisma migrate deploy",
     "db:migrate:local": "DATABASE_URL=\"postgresql://user:password@localhost:5432/db?schema=public\" npx prisma migrate deploy",
-    "db:migrate:docker": "docker exec coffee-blog-app-dev-1 npm run db:migrate",
+    "db:migrate:docker": "docker compose exec app-dev npm run db:migrate",
     "db:seed": "npx tsx src/db/seed.ts",
     "db:seed:local": "DATABASE_URL=\"postgresql://user:password@localhost:5432/db?schema=public\" npx tsx src/db/seed.ts",
-    "db:seed:docker": "docker exec coffee-blog-app-dev-1 npm run db:seed",
+    "db:seed:docker": "docker compose exec app-dev npm run db:seed",
     "db:setup": "npm run db:generate && npm run db:migrate:docker && npm run db:seed:docker",
     "db:studio": "npx prisma studio",
     "prepare": "husky"

@@ -1,128 +1,73 @@
-import { Bean, Droplet, Settings } from 'lucide-react';
 import Link from 'next/link';
 
 import type { Recipe } from '@/client/features/recipe-list/types/recipe';
-import { getRoastLevelLabel, getGrindSizeLabel } from '@/client/shared/constants/coffee-beans';
-import { Card, CardContent, CardHeader, CardTitle } from '@/client/shared/shadcn/card';
+import { getRoastLevelColor, getRoastLevelLabel } from '@/client/shared/constants/coffee-beans';
+
+import type { RecipeCardDisplay } from '../../types/recipe-display';
+import { enrichRecipeWithDummyData } from '../../utils/dummy-data';
+
+import RecipeTagList from './components/RecipeTagList';
 
 type RecipeCardProps = {
   recipe: Recipe;
 };
 
+/**
+ * レシピカードコンポーネント
+ *
+ * mock/recipe-card.html のデザインを参考にした新しいレイアウト。
+ * - 左サイドラインで焙煎度を表現
+ * - タイトル（2行固定）と焙煎度バッジ
+ * - タグリスト（2行＋オーバーフロー）
+ * - 投稿者名
+ */
 export default function RecipeCard({ recipe }: RecipeCardProps) {
+  // Phase 1: ダミーデータで tags と authorName を付与
+  const enrichedRecipe: RecipeCardDisplay = enrichRecipeWithDummyData(recipe);
+  const sideLineColor = getRoastLevelColor(recipe.roastLevel);
+  const roastLabel = getRoastLevelLabel(recipe.roastLevel);
+
   return (
     <Link href={`/recipes/${recipe.id}`} className="block h-full">
-      <Card className="group border-border bg-card flex h-full w-full cursor-pointer flex-col overflow-hidden border-2 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-        {/* コーヒーの染みのような装飾 */}
-        <div className="bg-muted/20 absolute -top-6 -right-6 h-32 w-32 rounded-full blur-3xl" />
-        <div className="bg-muted/20 absolute bottom-10 -left-10 h-40 w-40 rounded-full blur-3xl" />
+      <article
+        className="relative flex h-full cursor-pointer flex-col rounded-xl border border-gray-200 bg-white p-5 pl-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
+        data-testid="recipe-card"
+      >
+        {/* 左サイドライン */}
+        <div
+          className="absolute top-0 left-0 h-full w-1.5 rounded-l-xl"
+          style={{ backgroundColor: sideLineColor }}
+          data-testid="roast-sideline"
+          data-roast-color={sideLineColor}
+        />
 
-        {/* ヘッダー部分 */}
-        <CardHeader className="relative">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <CardTitle className="text-card-foreground line-clamp-2 text-lg font-bold transition-colors">
-                {recipe.title}
-              </CardTitle>
-              <p className="text-muted-foreground mt-2 line-clamp-2 text-sm">{recipe.summary}</p>
-            </div>
+        {/* ヘッダー: タイトル + 焙煎度バッジ */}
+        <div className="mb-3 flex items-start justify-between gap-3">
+          <h3 className="line-clamp-2 min-h-[2.8em] flex-1 text-[15px] leading-snug font-medium text-gray-800">
+            {recipe.title}
+          </h3>
+          {/* 焙煎度バッジ */}
+          {roastLabel && (
+            <span
+              className="shrink-0 rounded px-2.5 py-1 text-[10px] font-medium whitespace-nowrap text-white"
+              style={{ backgroundColor: sideLineColor }}
+              data-roast-color={sideLineColor}
+            >
+              {roastLabel}
+            </span>
+          )}
+        </div>
+
+        {/* タグリスト */}
+        <RecipeTagList tags={enrichedRecipe.tags} />
+
+        {/* 投稿者情報 */}
+        {enrichedRecipe.authorName && (
+          <div className="mt-3 border-t border-gray-200 pt-2.5" data-testid="author-info">
+            <p className="text-xs text-gray-400">{enrichedRecipe.authorName}</p>
           </div>
-        </CardHeader>
-
-        <CardContent className="flex flex-1 flex-col">
-          {/* レシピ情報 - 固定レイアウト */}
-          <div className="flex-1 space-y-3">
-            {/* 豆・挽き目  */}
-            <div className="border-border bg-muted rounded-lg border p-4 shadow-sm">
-              <div className="flex items-start gap-3">
-                <div className="border-border bg-card flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border">
-                  <Bean className="text-primary h-4 w-4" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground text-sm">焙煎度</span>
-                      <span className="text-card-foreground text-sm font-medium">
-                        {getRoastLevelLabel(recipe.roastLevel)}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground text-sm">挽き目</span>
-                      <span className="text-card-foreground text-sm font-medium">
-                        {getGrindSizeLabel(recipe.grindSize)}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground text-sm">豆の量</span>
-                      <span className="text-card-foreground text-sm font-medium">
-                        {recipe.beanWeight}g
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 湯温・湯量  */}
-            <div className="border-border bg-muted rounded-lg border p-4 shadow-sm">
-              <div className="flex items-start gap-3">
-                <div className="border-border bg-card flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border">
-                  <Droplet className="text-primary h-4 w-4" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground text-sm">湯温</span>
-                      <span className="text-card-foreground text-sm font-medium">
-                        {recipe.waterTemp}°C
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground text-sm">湯量</span>
-                      <span className="text-card-foreground text-sm font-medium">
-                        {recipe.waterAmount}g
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 器具  */}
-            <div className="border-border bg-muted rounded-lg border p-4 shadow-sm">
-              <div className="flex items-start gap-3">
-                <div className="border-border bg-card flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border">
-                  <Settings className="text-primary h-4 w-4" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="space-y-2">
-                    {recipe.equipment.length > 0 ? (
-                      <>
-                        <div className="text-muted-foreground text-xs">器具</div>
-                        <div className="space-y-1">
-                          {recipe.equipment.slice(0, 3).map((item) => (
-                            <div key={item} className="text-card-foreground text-sm font-medium">
-                              {item}
-                            </div>
-                          ))}
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="text-muted-foreground text-xs">器具</div>
-                        <div className="text-card-foreground text-sm font-medium">なし</div>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-
-        {/* ホバー時のオーバーレイ効果 */}
-        <div className="bg-primary/5 pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-      </Card>
+        )}
+      </article>
     </Link>
   );
 }

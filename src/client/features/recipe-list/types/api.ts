@@ -39,4 +39,6 @@ export type RecipeFilters = {
   search?: string;
   sort?: string;
   order?: 'asc' | 'desc';
+  /** タグによる絞り込み（Phase 1: クライアントサイドでのみ使用） */
+  tags?: string[];
 };

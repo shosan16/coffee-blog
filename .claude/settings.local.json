@@ -77,7 +77,8 @@
       "Bash(npm run dev:*)",
       "Bash(docker compose:*)",
       "Bash(npx prisma generate:*)",
-      "mcp__serena__initial_instructions"
+      "mcp__serena__initial_instructions",
+      "Bash(npm run db:generate:*)"
     ],
     "deny": []
   }

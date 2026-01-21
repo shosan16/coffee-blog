@@ -54,6 +54,7 @@ export function parseFiltersFromSearchParams(
     grindSize: (size: string): GrindSize => size as GrindSize,
     equipment: (item: string): string => item,
     equipmentType: (item: string): string => item,
+    tags: (item: string): string => item,
   };
   Object.entries(arrayParams).forEach(([param, converter]) => {
     const value = searchParams.get(param);
