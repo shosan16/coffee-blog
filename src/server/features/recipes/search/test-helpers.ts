@@ -60,6 +60,7 @@ export function createSearchParams(
     grindSize: undefined,
     equipment: undefined,
     equipmentType: undefined,
+    tags: undefined,
     beanWeight: undefined,
     waterTemp: undefined,
     waterAmount: undefined,
@@ -83,6 +84,8 @@ export function createMockRecipes(count: number = 1): Array<{
   beanWeight: number;
   waterTemp: number;
   waterAmount: number;
+  tags: Array<{ id: string; name: string; slug: string }>;
+  baristaName: string;
 }> {
   return Array.from({ length: count }, (_, index) => ({
     id: `recipe-${index + 1}`,
@@ -94,6 +97,8 @@ export function createMockRecipes(count: number = 1): Array<{
     beanWeight: 20,
     waterTemp: 90,
     waterAmount: 300,
+    tags: [{ id: '1', name: 'ハンドドリップ', slug: 'hand-drip' }],
+    baristaName: 'テスト投稿者',
   }));
 }
 
@@ -224,6 +229,8 @@ export function createMockSearchResult(
     beanWeight: number;
     waterTemp: number;
     waterAmount: number;
+    tags: Array<{ id: string; name: string; slug: string }>;
+    baristaName: string;
   }>;
   pagination: {
     currentPage: number;
@@ -254,6 +261,7 @@ export function createFullSearchParams(): SearchRecipesParams {
     grindSize: [GrindSize.MEDIUM],
     equipment: ['1'], // 数値IDを文字列で表現
     equipmentType: ['1'], // 数値IDを文字列で表現
+    tags: ['1', '2'], // タグIDを文字列で表現
     beanWeight: { min: 15, max: 25 },
     waterTemp: { min: 85, max: 95 },
     waterAmount: { min: 200, max: 300 },

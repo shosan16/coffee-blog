@@ -68,4 +68,46 @@ describe('Recipe Entity', () => {
       expect(recipe.tagIds).toHaveLength(1);
     });
   });
+
+  describe('baristaName', () => {
+    it('baristaNameが正しく取得できること', () => {
+      // Arrange - baristaNameを含むデータを準備
+      const data = {
+        id: testRecipeId,
+        title: 'テストレシピ',
+        brewingConditions: testBrewingConditions,
+        viewCount: 0,
+        isPublished: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        baristaName: 'テストバリスタ',
+      };
+
+      // Act - レシピを再構築
+      const recipe = Recipe.reconstruct(data);
+
+      // Assert - baristaNameが正しく取得できることを確認
+      expect(recipe.baristaName).toBe('テストバリスタ');
+    });
+
+    it('baristaNameが省略された場合、nullがデフォルト値として設定されること', () => {
+      // Arrange - baristaNameを省略したデータを準備
+      const data = {
+        id: testRecipeId,
+        title: 'テストレシピ',
+        brewingConditions: testBrewingConditions,
+        viewCount: 0,
+        isPublished: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        // baristaName は省略
+      };
+
+      // Act - レシピを再構築
+      const recipe = Recipe.reconstruct(data);
+
+      // Assert - baristaNameがnullであることを確認
+      expect(recipe.baristaName).toBeNull();
+    });
+  });
 });

@@ -43,6 +43,9 @@ describe('getRecipeDetail', () => {
         publishedAt: new Date('2025-06-20T10:30:00Z'),
         createdAt: new Date('2025-06-20T10:30:00Z'),
         updatedAt: new Date('2025-06-22T10:30:00Z'),
+        author: {
+          name: 'テスト投稿者',
+        },
         barista: {
           id: 1n,
           name: '佐藤花子',
@@ -159,6 +162,9 @@ describe('getRecipeDetail', () => {
         publishedAt: new Date('2025-06-20T10:30:00Z'),
         createdAt: new Date('2025-06-20T10:30:00Z'),
         updatedAt: new Date('2025-06-20T10:30:00Z'),
+        author: {
+          name: 'テスト投稿者',
+        },
         barista: null,
         steps: [],
         equipment: [],
@@ -213,6 +219,9 @@ describe('getRecipeDetail', () => {
         publishedAt: null,
         createdAt: new Date('2025-06-20T10:30:00Z'),
         updatedAt: new Date('2025-06-20T10:30:00Z'),
+        author: {
+          name: 'テスト投稿者',
+        },
         barista: null,
         steps: [],
         equipment: [],
@@ -262,6 +271,9 @@ describe('getRecipeDetail', () => {
         publishedAt: new Date('2025-06-20T10:30:00Z'),
         createdAt: new Date('2025-06-20T10:30:00Z'),
         updatedAt: new Date('2025-06-20T10:30:00Z'),
+        author: {
+          name: 'テスト投稿者',
+        },
         barista: null,
         steps: [],
         equipment: [],

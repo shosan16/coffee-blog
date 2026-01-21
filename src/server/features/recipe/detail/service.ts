@@ -29,6 +29,7 @@ async function getPrismaRecipeWithRelations(
   return prisma.post.findUnique({
     where: { id: BigInt(recipeId.value) },
     include: {
+      author: { select: { name: true } },
       barista: {
         include: {
           socialLinks: true,

@@ -49,6 +49,8 @@ describe('RecipeList', () => {
         beanWeight: 20,
         waterTemp: 90,
         waterAmount: 300,
+        tags: [{ id: '1', name: 'Test', slug: 'test' }],
+        baristaName: 'Test Author',
       },
       {
         id: '2',
@@ -60,6 +62,8 @@ describe('RecipeList', () => {
         beanWeight: 25,
         waterTemp: 85,
         waterAmount: 400,
+        tags: [{ id: '2', name: 'Light', slug: 'light' }],
+        baristaName: 'Test Author 2',
       },
     ],
     pagination: {

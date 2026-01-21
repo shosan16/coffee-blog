@@ -10,6 +10,7 @@ export const searchRecipesQuerySchema = z
     grindSize: z.array(z.nativeEnum(GrindSize)).optional(),
     equipment: z.array(z.string()).optional(),
     equipmentType: z.array(z.string()).optional(),
+    tags: z.array(z.string()).optional(),
     beanWeight: z
       .object({
         min: z.number().optional(),

@@ -20,6 +20,7 @@ export class Recipe {
     private readonly _steps: RecipeStep[] = [],
     private readonly _equipmentIds: string[] = [],
     private readonly _tagIds: string[] = [],
+    private readonly _baristaName: string | null = null,
     private readonly _summary?: string,
     private readonly _remarks?: string,
     private readonly _publishedAt?: Date,
@@ -47,6 +48,7 @@ export class Recipe {
     steps?: RecipeStep[];
     equipmentIds?: string[];
     tagIds?: string[];
+    baristaName?: string | null;
   }): Recipe {
     return new Recipe(
       data.id,
@@ -59,6 +61,7 @@ export class Recipe {
       data.steps ?? [],
       data.equipmentIds ?? [],
       data.tagIds ?? [],
+      data.baristaName ?? null,
       data.summary,
       data.remarks,
       data.publishedAt,
@@ -121,6 +124,10 @@ export class Recipe {
 
   get tagIds(): readonly string[] {
     return [...this._tagIds];
+  }
+
+  get baristaName(): string | null {
+    return this._baristaName;
   }
 
   /**
