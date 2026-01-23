@@ -110,7 +110,7 @@ paths:
                           - id: '2'
                             name: 'フルーティー'
                             slug: 'fruity'
-                        authorName: 'コーヒー愛好家'
+                        baristaName: 'コーヒー愛好家'
                     pagination:
                       currentPage: 1
                       totalPages: 5
@@ -626,10 +626,11 @@ components:
             - id: '1'
               name: 'エチオピア'
               slug: 'ethiopia'
-        authorName:
+        baristaName:
           type: string
-          description: 投稿者名
+          description: バリスタ名（投稿者名）
           example: 'テスト投稿者'
+          nullable: true
 
     RecipeInput:
       type: object

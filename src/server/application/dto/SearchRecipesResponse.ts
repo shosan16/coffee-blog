@@ -147,6 +147,8 @@ export class SearchRecipesResponseMapper {
   /**
    * 器具IDリストを器具名リストに変換
    *
+   * 器具が見つからない場合はIDをそのまま返す（フォールバック動作）
+   *
    * @param equipmentIds - 器具IDリスト
    * @param equipmentMap - 器具IDから器具エンティティへのマップ
    * @returns 器具名リスト
@@ -173,6 +175,9 @@ export class SearchRecipesResponseMapper {
   /**
    * タグIDリストをタグ情報リストに変換
    *
+   * タグが見つからない場合はIDをそのままプレースホルダーとして返す
+   * （convertEquipmentIdsToNamesと同様のフォールバック動作）
+   *
    * @param tagIds - タグIDリスト
    * @param tagMap - タグIDからタグエンティティへのマップ
    * @returns タグ情報リスト
@@ -185,14 +190,22 @@ export class SearchRecipesResponseMapper {
       return [];
     }
 
-    return tagIds
-      .map((id) => tagMap.get(id))
-      .filter((tag): tag is TagEntity => tag !== undefined)
-      .map((tag) => ({
+    return tagIds.map((id) => {
+      const tag = tagMap.get(id);
+      if (!tag) {
+        // タグが見つからない場合はIDをプレースホルダーとして返す
+        return {
+          id,
+          name: id,
+          slug: id,
+        };
+      }
+      return {
         id: tag.id,
         name: tag.name,
         slug: tag.slug,
-      }));
+      };
+    });
   }
 }
 

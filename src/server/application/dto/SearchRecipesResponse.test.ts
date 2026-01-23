@@ -194,6 +194,51 @@ describe('SearchRecipesResponseMapper', () => {
       expect(mockTagRepository.findByIds).toHaveBeenCalledWith(['1', '2']);
     });
 
+    it('タグが見つからない場合、IDをプレースホルダーとして表示すること', async () => {
+      // Arrange - タグが見つからない場合のデータを準備
+      const mockSearchResult = {
+        recipes: [
+          {
+            id: { value: 'recipe-01' },
+            title: 'テストレシピ',
+            summary: 'テスト要約',
+            brewingConditions: {
+              roastLevel: 'MEDIUM',
+              grindSize: 'MEDIUM',
+              beanWeight: 20,
+              waterTemp: 95,
+              waterAmount: 300,
+            },
+            equipmentIds: [],
+            tagIds: ['unknown-tag-01', 'unknown-tag-02'],
+            baristaName: 'テスト投稿者',
+          },
+        ],
+        pagination: {
+          currentPage: 1,
+          totalPages: 1,
+          totalItems: 1,
+          itemsPerPage: 10,
+        },
+      };
+
+      mockEquipmentRepository.findByIds.mockResolvedValue([]);
+      mockTagRepository.findByIds.mockResolvedValue([]);
+
+      // Act - DTOに変換
+      const result = await mapper.toDto(mockSearchResult);
+
+      // Assert - タグが見つからない場合、IDをプレースホルダーとして表示
+      expect(result.recipes[0].tags).toEqual([
+        { id: 'unknown-tag-01', name: 'unknown-tag-01', slug: 'unknown-tag-01' },
+        { id: 'unknown-tag-02', name: 'unknown-tag-02', slug: 'unknown-tag-02' },
+      ]);
+      expect(mockTagRepository.findByIds).toHaveBeenCalledWith([
+        'unknown-tag-01',
+        'unknown-tag-02',
+      ]);
+    });
+
     it('tagIdsが空配列の場合、空配列を返すこと', async () => {
       // Arrange - タグIDが空の場合のデータを準備
       const mockSearchResult = {
