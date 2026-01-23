@@ -1,19 +1,12 @@
 import type { Metadata } from 'next';
-import { Roboto, Noto_Sans_JP, DM_Serif_Display } from 'next/font/google';
+import { Zen_Kaku_Gothic_New, DM_Serif_Display } from 'next/font/google';
 
 import './globals.css';
 import Toaster from '@/client/shared/shadcn/ui/sonner';
 
-const roboto = Roboto({
+const zenKakuGothicNew = Zen_Kaku_Gothic_New({
   variable: '--font-sans',
-  weight: ['400', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-});
-
-const notoSansJP = Noto_Sans_JP({
-  variable: '--font-sans-jp',
-  weight: ['400', '700'],
+  weight: ['400', '500', '700'],
   subsets: ['latin'],
   display: 'swap',
 });
@@ -39,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body
-        className={`${roboto.variable} ${notoSansJP.variable} ${dmSerifDisplay.variable} font-sans antialiased`}
+        className={`${zenKakuGothicNew.variable} ${dmSerifDisplay.variable} font-sans antialiased`}
       >
         {children}
         <Toaster />
