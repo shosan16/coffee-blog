@@ -11,6 +11,7 @@ import type {
 } from '@/server/features/recipes/search/types';
 import { PrismaEquipmentRepository } from '@/server/infrastructure/repositories/PrismaEquipmentRepository';
 import { PrismaRecipeRepository } from '@/server/infrastructure/repositories/PrismaRecipeRepository';
+import { PrismaTagRepository } from '@/server/infrastructure/repositories/PrismaTagRepository';
 import { prisma } from '@/server/shared/database/prisma';
 import { createChildLogger, measurePerformance } from '@/server/shared/logger';
 
@@ -32,8 +33,9 @@ export class SearchRecipesService {
       // 依存性注入：リポジトリとユースケースの設定
       const recipeRepository = new PrismaRecipeRepository(prisma);
       const equipmentRepository = new PrismaEquipmentRepository(prisma);
+      const tagRepository = new PrismaTagRepository(prisma);
       const useCase = new SearchRecipesUseCase(recipeRepository);
-      const responseMapper = new SearchRecipesResponseMapper(equipmentRepository);
+      const responseMapper = new SearchRecipesResponseMapper(equipmentRepository, tagRepository);
 
       // パラメータ変換（外部境界からユースケース入力へ）
       const input = {
@@ -44,6 +46,7 @@ export class SearchRecipesService {
         grindSize: params.grindSize,
         equipment: params.equipment,
         equipmentType: params.equipmentType,
+        tags: params.tags,
         beanWeight: params.beanWeight,
         waterTemp: params.waterTemp,
         waterAmount: params.waterAmount,
@@ -87,6 +90,8 @@ export class SearchRecipesService {
           beanWeight: recipe.beanWeight,
           waterTemp: recipe.waterTemp,
           waterAmount: recipe.waterAmount,
+          tags: recipe.tags,
+          baristaName: recipe.baristaName,
         })),
         pagination: responseDto.pagination,
       };

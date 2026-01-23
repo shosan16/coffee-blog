@@ -22,6 +22,9 @@ vi.mock('@/server/shared/database/prisma', () => ({
       findMany: vi.fn(),
       findUnique: vi.fn(),
     },
+    tag: {
+      findMany: vi.fn(),
+    },
   },
 }));
 
@@ -36,6 +39,9 @@ type MockPrisma = {
   equipment: {
     findMany: ReturnType<typeof vi.fn>;
     findUnique: ReturnType<typeof vi.fn>;
+  };
+  tag: {
+    findMany: ReturnType<typeof vi.fn>;
   };
 };
 
@@ -53,6 +59,9 @@ describe('SearchRecipesService', () => {
 
     // $connectのモックを設定
     mockPrisma.$connect.mockResolvedValue(undefined);
+
+    // デフォルトのタグモック設定（空配列）
+    mockPrisma.tag.findMany.mockResolvedValue([]);
   });
 
   describe('基本的なレシピ検索', () => {

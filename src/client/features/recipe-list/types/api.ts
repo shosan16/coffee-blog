@@ -24,6 +24,7 @@ export type RecipeFilters = {
   grindSize?: GrindSize[];
   equipment?: string[];
   equipmentType?: string[];
+  tags?: string[];
   beanWeight?: {
     min?: number;
     max?: number;
@@ -39,6 +40,4 @@ export type RecipeFilters = {
   search?: string;
   sort?: string;
   order?: 'asc' | 'desc';
-  /** タグによる絞り込み（Phase 1: クライアントサイドでのみ使用） */
-  tags?: string[];
 };

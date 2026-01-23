@@ -27,6 +27,8 @@ const createMockRecipe = (overrides: Partial<Recipe> = {}): Recipe => ({
   beanWeight: 18,
   waterTemp: 93,
   waterAmount: 36,
+  tags: [{ id: '1', name: 'エスプレッソ', slug: 'espresso' }],
+  baristaName: 'テスト投稿者',
   ...overrides,
 });
 

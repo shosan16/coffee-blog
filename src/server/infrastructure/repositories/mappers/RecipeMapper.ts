@@ -107,6 +107,7 @@ export class RecipeMapper {
       steps,
       equipmentIds,
       tagIds,
+      baristaName: prismaPost.barista?.name ?? null,
     });
   }
 

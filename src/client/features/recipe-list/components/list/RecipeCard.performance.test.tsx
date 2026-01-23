@@ -15,6 +15,8 @@ const createMockRecipe = (id: string, title: string): Recipe => ({
   beanWeight: 20,
   waterTemp: 92,
   waterAmount: 300,
+  tags: [{ id: '1', name: 'テスト', slug: 'test' }],
+  baristaName: 'テスト投稿者',
 });
 
 const createMockRecipes = (count: number): Recipe[] => {

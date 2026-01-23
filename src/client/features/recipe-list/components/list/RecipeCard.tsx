@@ -3,9 +3,6 @@ import Link from 'next/link';
 import type { Recipe } from '@/client/features/recipe-list/types/recipe';
 import { getRoastLevelColor, getRoastLevelLabel } from '@/client/shared/constants/coffee-beans';
 
-import type { RecipeCardDisplay } from '../../types/recipe-display';
-import { enrichRecipeWithDummyData } from '../../utils/dummy-data';
-
 import RecipeTagList from './components/RecipeTagList';
 
 type RecipeCardProps = {
@@ -22,8 +19,6 @@ type RecipeCardProps = {
  * - 投稿者名
  */
 export default function RecipeCard({ recipe }: RecipeCardProps) {
-  // Phase 1: ダミーデータで tags と authorName を付与
-  const enrichedRecipe: RecipeCardDisplay = enrichRecipeWithDummyData(recipe);
   const sideLineColor = getRoastLevelColor(recipe.roastLevel);
   const roastLabel = getRoastLevelLabel(recipe.roastLevel);
 
@@ -59,12 +54,12 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
         </div>
 
         {/* タグリスト */}
-        <RecipeTagList tags={enrichedRecipe.tags} />
+        <RecipeTagList tags={recipe.tags} />
 
         {/* 投稿者情報 */}
-        {enrichedRecipe.authorName && (
+        {recipe.baristaName && (
           <div className="mt-3 border-t border-gray-200 pt-2.5" data-testid="author-info">
-            <p className="text-xs text-gray-400">{enrichedRecipe.authorName}</p>
+            <p className="text-xs text-gray-400">{recipe.baristaName}</p>
           </div>
         )}
       </article>

@@ -1,12 +1,8 @@
 import type { Recipe } from './recipe';
 
 /**
- * レシピカード表示用の拡張型
- * Phase 1 では tags と authorName はダミーデータから生成
+ * レシピカード表示用の型
+ *
+ * Recipe 型のエイリアス（後方互換性のため維持）
  */
-export type RecipeCardDisplay = Recipe & {
-  /** レシピに関連するタグ（味わい、特徴など） */
-  tags: string[];
-  /** 投稿者名 */
-  authorName: string;
-};
+export type RecipeCardDisplay = Recipe;

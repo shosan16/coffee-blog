@@ -1,5 +1,14 @@
 import type { RoastLevel, GrindSize } from '@prisma/client';
 
+/**
+ * タグ要約型
+ */
+export type RecipeTagSummary = {
+  id: string;
+  name: string;
+  slug: string;
+};
+
 // Recipe型の定義（client側の型と一致させる）
 export type Recipe = {
   id: string;
@@ -11,6 +20,8 @@ export type Recipe = {
   beanWeight: number;
   waterTemp: number;
   waterAmount: number;
+  tags: RecipeTagSummary[];
+  baristaName: string | null;
 };
 
 // 範囲フィルター用の型
@@ -27,6 +38,7 @@ export type SearchRecipesParams = {
   grindSize?: GrindSize[];
   equipment?: string[];
   equipmentType?: string[];
+  tags?: string[];
   beanWeight?: RangeFilter;
   waterTemp?: RangeFilter;
   waterAmount?: RangeFilter;

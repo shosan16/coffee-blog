@@ -67,6 +67,7 @@ export type SearchRecipesInput = {
   readonly grindSize?: GrindSize[];
   readonly equipment?: string[];
   readonly equipmentType?: string[];
+  readonly tags?: string[];
   readonly beanWeight?: {
     readonly min?: number;
     readonly max?: number;
@@ -200,6 +201,7 @@ export class SearchRecipesUseCase {
       grindSize: input.grindSize,
       equipmentNames: input.equipment,
       equipmentTypeNames: input.equipmentType,
+      tagIds: input.tags,
       beanWeight: input.beanWeight,
       waterTemp: input.waterTemp,
       waterAmount: input.waterAmount,

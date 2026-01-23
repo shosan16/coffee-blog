@@ -24,6 +24,7 @@ paths:
         - $ref: '#/components/parameters/GrindSizeParam'
         - $ref: '#/components/parameters/EquipmentParam'
         - $ref: '#/components/parameters/EquipmentTypeParam'
+        - $ref: '#/components/parameters/TagsParam'
         - name: beanWeightMin
           in: query
           description: 豆の重量最小値（グラム）
@@ -102,6 +103,14 @@ paths:
                         remarks: '特に蒸らし時間に注意。豆の膨らみを見て判断する。'
                         createdAt: '2025-06-20T10:30:00Z'
                         updatedAt: '2025-06-20T10:30:00Z'
+                        tags:
+                          - id: '1'
+                            name: 'エチオピア'
+                            slug: 'ethiopia'
+                          - id: '2'
+                            name: 'フルーティー'
+                            slug: 'fruity'
+                        baristaName: 'コーヒー愛好家'
                     pagination:
                       currentPage: 1
                       totalPages: 5
@@ -375,6 +384,23 @@ components:
           type: string
           enum: [grinder, dripper, filter]
 
+    TagsParam:
+      name: tags
+      in: query
+      description: |
+        タグIDによるフィルタ（カンマ区切りで複数指定可能）
+        - 複数指定時はAND条件（すべてのタグに一致するレシピを返す）
+        - 存在しないIDは無視される
+        - 空の場合はフィルタなし
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          pattern: '^[0-9]+$'
+
     SortParam:
       name: sort
       in: query
@@ -591,6 +617,20 @@ components:
           format: date-time
           description: 最終更新日時（ISO 8601形式）
           example: '2025-06-22T10:30:00Z'
+        tags:
+          type: array
+          description: レシピに関連するタグ
+          items:
+            $ref: '#/components/schemas/RecipeTag'
+          example:
+            - id: '1'
+              name: 'エチオピア'
+              slug: 'ethiopia'
+        baristaName:
+          type: string
+          description: バリスタ名（投稿者名）
+          example: 'テスト投稿者'
+          nullable: true
 
     RecipeInput:
       type: object

@@ -10,12 +10,17 @@ const mockEquipmentRepository = {
   findByType: vi.fn(),
 };
 
+// Mock Tag Repository
+const mockTagRepository = {
+  findByIds: vi.fn(),
+};
+
 describe('SearchRecipesResponseMapper', () => {
   let mapper: SearchRecipesResponseMapper;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mapper = new SearchRecipesResponseMapper(mockEquipmentRepository);
+    mapper = new SearchRecipesResponseMapper(mockEquipmentRepository, mockTagRepository);
   });
 
   describe('器具ID→器具名変換', () => {
@@ -40,6 +45,8 @@ describe('SearchRecipesResponseMapper', () => {
               waterAmount: 300,
             },
             equipmentIds: ['drip-01', 'filter-02'],
+            tagIds: [],
+            baristaName: 'テスト投稿者',
           },
         ],
         pagination: {
@@ -51,6 +58,7 @@ describe('SearchRecipesResponseMapper', () => {
       };
 
       mockEquipmentRepository.findByIds.mockResolvedValue(mockEquipment);
+      mockTagRepository.findByIds.mockResolvedValue([]);
 
       // Act - DTOに変換
       const result = await mapper.toDto(mockSearchResult);
@@ -76,6 +84,8 @@ describe('SearchRecipesResponseMapper', () => {
               waterAmount: 300,
             },
             equipmentIds: ['unknown-01'],
+            tagIds: [],
+            baristaName: 'テスト投稿者',
           },
         ],
         pagination: {
@@ -87,6 +97,7 @@ describe('SearchRecipesResponseMapper', () => {
       };
 
       mockEquipmentRepository.findByIds.mockResolvedValue([]);
+      mockTagRepository.findByIds.mockResolvedValue([]);
 
       // Act - DTOに変換
       const result = await mapper.toDto(mockSearchResult);
@@ -112,6 +123,8 @@ describe('SearchRecipesResponseMapper', () => {
               waterAmount: 300,
             },
             equipmentIds: [],
+            tagIds: [],
+            baristaName: 'テスト投稿者',
           },
         ],
         pagination: {
@@ -122,12 +135,187 @@ describe('SearchRecipesResponseMapper', () => {
         },
       };
 
+      mockTagRepository.findByIds.mockResolvedValue([]);
+
       // Act - DTOに変換
       const result = await mapper.toDto(mockSearchResult);
 
       // Assert - 空配列が返される
       expect(result.recipes[0].equipment).toEqual([]);
       expect(mockEquipmentRepository.findByIds).toHaveBeenCalledWith([]);
+    });
+  });
+
+  describe('タグID→タグ情報変換', () => {
+    it('タグIDがタグ情報に正しくマッピングされること', async () => {
+      // Arrange - タグマスターデータとレシピデータを準備
+      const mockTags = [
+        { id: '1', name: 'エチオピア', slug: 'ethiopia' },
+        { id: '2', name: 'フルーティー', slug: 'fruity' },
+      ];
+
+      const mockSearchResult = {
+        recipes: [
+          {
+            id: { value: 'recipe-01' },
+            title: 'テストレシピ',
+            summary: 'テスト要約',
+            brewingConditions: {
+              roastLevel: 'MEDIUM',
+              grindSize: 'MEDIUM',
+              beanWeight: 20,
+              waterTemp: 95,
+              waterAmount: 300,
+            },
+            equipmentIds: [],
+            tagIds: ['1', '2'],
+            baristaName: 'テスト投稿者',
+          },
+        ],
+        pagination: {
+          currentPage: 1,
+          totalPages: 1,
+          totalItems: 1,
+          itemsPerPage: 10,
+        },
+      };
+
+      mockEquipmentRepository.findByIds.mockResolvedValue([]);
+      mockTagRepository.findByIds.mockResolvedValue(mockTags);
+
+      // Act - DTOに変換
+      const result = await mapper.toDto(mockSearchResult);
+
+      // Assert - タグ情報が正しくマッピングされていることを検証
+      expect(result.recipes[0].tags).toEqual([
+        { id: '1', name: 'エチオピア', slug: 'ethiopia' },
+        { id: '2', name: 'フルーティー', slug: 'fruity' },
+      ]);
+      expect(mockTagRepository.findByIds).toHaveBeenCalledWith(['1', '2']);
+    });
+
+    it('タグが見つからない場合、IDをプレースホルダーとして表示すること', async () => {
+      // Arrange - タグが見つからない場合のデータを準備
+      const mockSearchResult = {
+        recipes: [
+          {
+            id: { value: 'recipe-01' },
+            title: 'テストレシピ',
+            summary: 'テスト要約',
+            brewingConditions: {
+              roastLevel: 'MEDIUM',
+              grindSize: 'MEDIUM',
+              beanWeight: 20,
+              waterTemp: 95,
+              waterAmount: 300,
+            },
+            equipmentIds: [],
+            tagIds: ['unknown-tag-01', 'unknown-tag-02'],
+            baristaName: 'テスト投稿者',
+          },
+        ],
+        pagination: {
+          currentPage: 1,
+          totalPages: 1,
+          totalItems: 1,
+          itemsPerPage: 10,
+        },
+      };
+
+      mockEquipmentRepository.findByIds.mockResolvedValue([]);
+      mockTagRepository.findByIds.mockResolvedValue([]);
+
+      // Act - DTOに変換
+      const result = await mapper.toDto(mockSearchResult);
+
+      // Assert - タグが見つからない場合、IDをプレースホルダーとして表示
+      expect(result.recipes[0].tags).toEqual([
+        { id: 'unknown-tag-01', name: 'unknown-tag-01', slug: 'unknown-tag-01' },
+        { id: 'unknown-tag-02', name: 'unknown-tag-02', slug: 'unknown-tag-02' },
+      ]);
+      expect(mockTagRepository.findByIds).toHaveBeenCalledWith([
+        'unknown-tag-01',
+        'unknown-tag-02',
+      ]);
+    });
+
+    it('tagIdsが空配列の場合、空配列を返すこと', async () => {
+      // Arrange - タグIDが空の場合のデータを準備
+      const mockSearchResult = {
+        recipes: [
+          {
+            id: { value: 'recipe-01' },
+            title: 'テストレシピ',
+            summary: 'テスト要約',
+            brewingConditions: {
+              roastLevel: 'MEDIUM',
+              grindSize: 'MEDIUM',
+              beanWeight: 20,
+              waterTemp: 95,
+              waterAmount: 300,
+            },
+            equipmentIds: [],
+            tagIds: [],
+            baristaName: 'テスト投稿者',
+          },
+        ],
+        pagination: {
+          currentPage: 1,
+          totalPages: 1,
+          totalItems: 1,
+          itemsPerPage: 10,
+        },
+      };
+
+      mockEquipmentRepository.findByIds.mockResolvedValue([]);
+      mockTagRepository.findByIds.mockResolvedValue([]);
+
+      // Act - DTOに変換
+      const result = await mapper.toDto(mockSearchResult);
+
+      // Assert - 空配列が返される
+      expect(result.recipes[0].tags).toEqual([]);
+      expect(mockTagRepository.findByIds).toHaveBeenCalledWith([]);
+    });
+  });
+
+  describe('baristaName マッピング', () => {
+    it('baristaName が正しくマッピングされること', async () => {
+      // Arrange - baristaNameを持つレシピデータを準備
+      const mockSearchResult = {
+        recipes: [
+          {
+            id: { value: 'recipe-01' },
+            title: 'テストレシピ',
+            summary: 'テスト要約',
+            brewingConditions: {
+              roastLevel: 'MEDIUM',
+              grindSize: 'MEDIUM',
+              beanWeight: 20,
+              waterTemp: 95,
+              waterAmount: 300,
+            },
+            equipmentIds: [],
+            tagIds: [],
+            baristaName: '山田太郎',
+          },
+        ],
+        pagination: {
+          currentPage: 1,
+          totalPages: 1,
+          totalItems: 1,
+          itemsPerPage: 10,
+        },
+      };
+
+      mockEquipmentRepository.findByIds.mockResolvedValue([]);
+      mockTagRepository.findByIds.mockResolvedValue([]);
+
+      // Act - DTOに変換
+      const result = await mapper.toDto(mockSearchResult);
+
+      // Assert - baristaNameが正しくマッピングされていることを検証
+      expect(result.recipes[0].baristaName).toBe('山田太郎');
     });
   });
 });

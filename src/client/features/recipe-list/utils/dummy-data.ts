@@ -1,8 +1,5 @@
 import type { RoastLevel } from '@prisma/client';
 
-import type { Recipe } from '../types/recipe';
-import type { RecipeCardDisplay } from '../types/recipe-display';
-
 /**
  * 焙煎度別のタグプール
  * 浅煎りはフルーティ・酸味系、深煎りはビター・コク系の傾向
@@ -166,18 +163,4 @@ export function generateDummyAuthor(recipeId: string): string {
   const hash = simpleHash(recipeId);
   const index = hash % AUTHOR_NAMES.length;
   return AUTHOR_NAMES[index];
-}
-
-/**
- * RecipeをRecipeCardDisplayに拡張する
- * Phase 1では tags と authorName はダミーデータとして生成
- * @param recipe - 元のRecipeオブジェクト
- * @returns 拡張されたRecipeCardDisplayオブジェクト
- */
-export function enrichRecipeWithDummyData(recipe: Recipe): RecipeCardDisplay {
-  return {
-    ...recipe,
-    tags: generateDummyTags(recipe.id, recipe.roastLevel),
-    authorName: generateDummyAuthor(recipe.id),
-  };
 }

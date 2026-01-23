@@ -120,6 +120,7 @@ export class SearchRecipesController {
         grindSize: (size) => size as GrindSize,
         equipment: (item) => item,
         equipmentType: (item) => item,
+        tags: (item) => item,
       },
 
       // JSON形式パラメータ
@@ -170,6 +171,7 @@ export class SearchRecipesController {
         grindSize: validatedParams.grindSize,
         equipment: validatedParams.equipment,
         equipmentType: validatedParams.equipmentType,
+        tags: validatedParams.tags,
         beanWeight: validatedParams.beanWeight,
         waterTemp: validatedParams.waterTemp,
         waterAmount: validatedParams.waterAmount,
