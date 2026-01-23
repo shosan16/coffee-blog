@@ -8,9 +8,17 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/client/shared/shadcn/
 
 import { useTagOverflow } from '../hooks/useTagOverflow';
 
+/**
+ * タグ情報の型
+ */
+type TagInfo = {
+  id: string;
+  name: string;
+};
+
 type RecipeTagListProps = {
   /** レシピの特徴や味わいを表すタグ */
-  tags: string[];
+  tags: TagInfo[];
   /** 最大表示タグ数（デフォルト: 6） */
   maxVisible?: number;
 };
@@ -24,32 +32,36 @@ type RecipeTagListProps = {
 export default function RecipeTagList({ tags, maxVisible = 6 }: RecipeTagListProps) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const { visibleTags, hiddenTags, hasOverflow } = useTagOverflow(tags, maxVisible);
+  const tagNames = tags.map((tag) => tag.name);
+  const { visibleTags, hasOverflow } = useTagOverflow(tagNames, maxVisible);
 
   if (tags.length === 0) {
     return null;
   }
 
-  const handleTagClick = (tag: string, event: React.MouseEvent) => {
+  const handleTagClick = (tagId: string, event: React.MouseEvent) => {
     event.stopPropagation();
     event.preventDefault();
-    router.push(`/?tags=${encodeURIComponent(tag)}`);
+    router.push(`/?tags=${encodeURIComponent(tagId)}`);
   };
+
+  // visibleTags/hiddenTagsのインデックスから元のタグ情報を取得
+  const visibleTagInfos = tags.slice(0, visibleTags.length);
+  const hiddenTagInfos = tags.slice(visibleTags.length);
 
   return (
     <div className="relative min-h-[56px]">
       <div className="flex flex-wrap gap-1.5">
-        {/* 表示されるタグ（将来的にAPIからタグを取得した際に重複の可能性があるためindexを使用） */}
-        {visibleTags.map((tag, idx) => (
+        {/* 表示されるタグ */}
+        {visibleTagInfos.map((tag) => (
           <button
-            // eslint-disable-next-line react/no-array-index-key
-            key={`${tag}-${idx}`}
+            key={tag.id}
             type="button"
-            onClick={(e) => handleTagClick(tag, e)}
-            aria-label={`${tag}でフィルター`}
+            onClick={(e) => handleTagClick(tag.id, e)}
+            aria-label={`${tag.name}でフィルター`}
             className="rounded bg-gray-100 px-2.5 py-1 text-[11px] text-gray-600 transition-colors hover:bg-gray-800 hover:text-white"
           >
-            {tag}
+            {tag.name}
           </button>
         ))}
 
@@ -65,7 +77,7 @@ export default function RecipeTagList({ tags, maxVisible = 6 }: RecipeTagListPro
                 }}
                 className="inline-flex items-center gap-1 rounded bg-gray-200 px-2.5 py-1 text-[11px] text-gray-500 transition-colors hover:bg-gray-600 hover:text-white"
               >
-                他{hiddenTags.length}件
+                他{hiddenTagInfos.length}件
                 <ChevronDown
                   className={`h-3 w-3 transition-transform ${isOpen ? 'rotate-180' : ''}`}
                 />
@@ -77,19 +89,18 @@ export default function RecipeTagList({ tags, maxVisible = 6 }: RecipeTagListPro
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex flex-wrap gap-1.5">
-                {hiddenTags.map((tag, idx) => (
+                {hiddenTagInfos.map((tag) => (
                   <button
-                    // eslint-disable-next-line react/no-array-index-key
-                    key={`${tag}-${idx}`}
+                    key={tag.id}
                     type="button"
                     onClick={(e) => {
-                      handleTagClick(tag, e);
+                      handleTagClick(tag.id, e);
                       setIsOpen(false);
                     }}
-                    aria-label={`${tag}でフィルター`}
+                    aria-label={`${tag.name}でフィルター`}
                     className="rounded bg-gray-100 px-2.5 py-1 text-[11px] text-gray-600 transition-colors hover:bg-gray-800 hover:text-white"
                   >
-                    {tag}
+                    {tag.name}
                   </button>
                 ))}
               </div>

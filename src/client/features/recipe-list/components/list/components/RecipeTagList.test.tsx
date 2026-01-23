@@ -10,6 +10,11 @@ vi.mock('next/navigation', () => ({
   }),
 }));
 
+/**
+ * テスト用のタグ情報を生成するヘルパー関数
+ */
+const createTag = (id: string, name: string) => ({ id, name });
+
 describe('RecipeTagList', () => {
   beforeEach(() => {
     mockPush.mockClear();
@@ -22,7 +27,11 @@ describe('RecipeTagList', () => {
   describe('タグが最大表示数以内の場合', () => {
     it('全タグが表示される', () => {
       // Arrange
-      const tags = ['フルーティ', '酸味強め', 'シングルオリジン'];
+      const tags = [
+        createTag('1', 'フルーティ'),
+        createTag('2', '酸味強め'),
+        createTag('3', 'シングルオリジン'),
+      ];
 
       // Act
       render(<RecipeTagList tags={tags} />);
@@ -35,7 +44,7 @@ describe('RecipeTagList', () => {
 
     it('「他N件」ボタンが表示されない', () => {
       // Arrange
-      const tags = ['タグ1', 'タグ2', 'タグ3'];
+      const tags = [createTag('1', 'タグ1'), createTag('2', 'タグ2'), createTag('3', 'タグ3')];
 
       // Act
       render(<RecipeTagList tags={tags} />);
@@ -48,7 +57,16 @@ describe('RecipeTagList', () => {
   describe('タグが最大表示数を超える場合', () => {
     it('「他N件」ボタンが表示される', () => {
       // Arrange
-      const tags = ['タグ1', 'タグ2', 'タグ3', 'タグ4', 'タグ5', 'タグ6', 'タグ7', 'タグ8'];
+      const tags = [
+        createTag('1', 'タグ1'),
+        createTag('2', 'タグ2'),
+        createTag('3', 'タグ3'),
+        createTag('4', 'タグ4'),
+        createTag('5', 'タグ5'),
+        createTag('6', 'タグ6'),
+        createTag('7', 'タグ7'),
+        createTag('8', 'タグ8'),
+      ];
 
       // Act
       render(<RecipeTagList tags={tags} maxVisible={6} />);
@@ -59,7 +77,15 @@ describe('RecipeTagList', () => {
 
     it('オーバーフローしたタグは直接表示されない', () => {
       // Arrange
-      const tags = ['タグ1', 'タグ2', 'タグ3', 'タグ4', 'タグ5', 'タグ6', 'タグ7'];
+      const tags = [
+        createTag('1', 'タグ1'),
+        createTag('2', 'タグ2'),
+        createTag('3', 'タグ3'),
+        createTag('4', 'タグ4'),
+        createTag('5', 'タグ5'),
+        createTag('6', 'タグ6'),
+        createTag('7', 'タグ7'),
+      ];
 
       // Act
       render(<RecipeTagList tags={tags} maxVisible={6} />);
@@ -73,37 +99,37 @@ describe('RecipeTagList', () => {
   });
 
   describe('タグクリック時', () => {
-    it('正しいURLにナビゲートする', () => {
+    it('タグIDでフィルターURLにナビゲートする', () => {
       // Arrange
-      const tags = ['フルーティ', '酸味強め'];
+      const tags = [createTag('tag-123', 'フルーティ'), createTag('tag-456', '酸味強め')];
 
       // Act
       render(<RecipeTagList tags={tags} />);
       const tagButton = screen.getByText('フルーティ');
       fireEvent.click(tagButton);
 
-      // Assert
-      expect(mockPush).toHaveBeenCalledWith('/?tags=%E3%83%95%E3%83%AB%E3%83%BC%E3%83%86%E3%82%A3');
+      // Assert - タグIDでナビゲートされる
+      expect(mockPush).toHaveBeenCalledWith('/?tags=tag-123');
     });
 
-    it('タグクリック時に正しいタグ名でフィルターURLにナビゲートする', () => {
+    it('クリックしたタグのIDが正しくURLに設定される', () => {
       // Arrange
-      const tags = ['タグA', 'タグB', 'タグC'];
+      const tags = [createTag('1', 'タグA'), createTag('2', 'タグB'), createTag('3', 'タグC')];
 
       // Act
       render(<RecipeTagList tags={tags} />);
       const tagButton = screen.getByText('タグB');
       fireEvent.click(tagButton);
 
-      // Assert
-      expect(mockPush).toHaveBeenCalledWith('/?tags=%E3%82%BF%E3%82%B0B');
+      // Assert - タグBのIDである'2'でナビゲートされる
+      expect(mockPush).toHaveBeenCalledWith('/?tags=2');
     });
   });
 
   describe('タグが空の場合', () => {
     it('何も表示されない', () => {
       // Arrange
-      const tags: string[] = [];
+      const tags: Array<{ id: string; name: string }> = [];
 
       // Act
       const { container } = render(<RecipeTagList tags={tags} />);
@@ -116,7 +142,7 @@ describe('RecipeTagList', () => {
   describe('アクセシビリティ', () => {
     it('タグボタンに適切なaria-labelが設定されている', () => {
       // Arrange
-      const tags = ['フルーティ'];
+      const tags = [createTag('1', 'フルーティ')];
 
       // Act
       render(<RecipeTagList tags={tags} />);

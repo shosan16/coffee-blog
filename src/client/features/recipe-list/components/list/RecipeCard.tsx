@@ -21,8 +21,6 @@ type RecipeCardProps = {
 export default function RecipeCard({ recipe }: RecipeCardProps) {
   const sideLineColor = getRoastLevelColor(recipe.roastLevel);
   const roastLabel = getRoastLevelLabel(recipe.roastLevel);
-  // RecipeTagSummary[] から表示用の string[] に変換
-  const tagNames = recipe.tags.map((tag) => tag.name);
 
   return (
     <Link href={`/recipes/${recipe.id}`} className="block h-full">
@@ -56,7 +54,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
         </div>
 
         {/* タグリスト */}
-        <RecipeTagList tags={tagNames} />
+        <RecipeTagList tags={recipe.tags} />
 
         {/* 投稿者情報 */}
         {recipe.baristaName && (
