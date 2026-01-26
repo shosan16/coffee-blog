@@ -32,7 +32,7 @@ export default function RecipeHeader({ recipe, title }: RecipeHeaderProps) {
               {recipe.tags.map((tag) => (
                 <div
                   key={tag.id}
-                  className="border-border bg-background text-muted-foreground inline-flex items-center rounded-full border px-3 py-1.5 text-sm"
+                  className="border-border bg-muted text-muted-foreground inline-flex items-center rounded-full border px-3 py-1.5 text-sm"
                   title={`タグ: ${tag.name}`}
                 >
                   {tag.name}
