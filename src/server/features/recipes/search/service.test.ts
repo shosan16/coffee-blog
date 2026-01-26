@@ -336,7 +336,7 @@ describe('SearchRecipesService', () => {
       expect(orderBy.title).toBe('desc');
     });
 
-    it('ソート指定がない場合はIDで昇順ソートされる', async () => {
+    it('ソート指定がない場合は公開日で降順ソートされる（新着順）', async () => {
       // Arrange - 準備： ソート指定なしの検索パラメータを設定
       const searchParams = createSearchParams();
       mockPrisma.post.count.mockResolvedValue(0);
@@ -345,9 +345,9 @@ describe('SearchRecipesService', () => {
       // Act - 実行： ソート指定なしで検索を実行
       await service.searchRecipes(searchParams);
 
-      // Assert - 確認： ORDER BY句にデフォルトのID昇順条件が含まれる
+      // Assert - 確認： ORDER BY句にデフォルトのpublishedAt降順条件が含まれる
       const orderBy = mockPrisma.post.findMany.mock.calls[0][0].orderBy;
-      expect(orderBy.id).toBe('asc');
+      expect(orderBy.publishedAt).toBe('desc');
     });
   });
 

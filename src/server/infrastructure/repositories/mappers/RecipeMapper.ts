@@ -231,8 +231,15 @@ export class RecipeMapper {
    * @returns Prisma OrderBy句
    */
   static toOrderBy(
-    sortBy: 'id' | 'title' | 'viewCount' | 'createdAt' | 'updatedAt' | 'publishedAt' = 'id',
-    sortOrder: 'asc' | 'desc' = 'asc'
+    sortBy:
+      | 'id'
+      | 'title'
+      | 'viewCount'
+      | 'createdAt'
+      | 'updatedAt'
+      | 'publishedAt'
+      | 'roastLevel' = 'publishedAt',
+    sortOrder: 'asc' | 'desc' = 'desc'
   ): Record<string, 'asc' | 'desc'> {
     return {
       [sortBy]: sortOrder,

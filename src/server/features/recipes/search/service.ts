@@ -57,6 +57,7 @@ export class SearchRecipesService {
           | 'createdAt'
           | 'updatedAt'
           | 'publishedAt'
+          | 'roastLevel'
           | undefined,
         order: params.order,
       };

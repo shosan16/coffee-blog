@@ -79,7 +79,9 @@
       "Bash(npx prisma generate:*)",
       "mcp__serena__initial_instructions",
       "Bash(npm run db:generate:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(xargs ls:*)",
+      "Bash(git commit:*)"
     ],
     "deny": []
   }

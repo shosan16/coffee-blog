@@ -80,7 +80,14 @@ export type SearchRecipesInput = {
     readonly min?: number;
     readonly max?: number;
   };
-  readonly sort?: 'id' | 'title' | 'viewCount' | 'createdAt' | 'updatedAt' | 'publishedAt';
+  readonly sort?:
+    | 'id'
+    | 'title'
+    | 'viewCount'
+    | 'createdAt'
+    | 'updatedAt'
+    | 'publishedAt'
+    | 'roastLevel';
   readonly order?: 'asc' | 'desc';
 };
 

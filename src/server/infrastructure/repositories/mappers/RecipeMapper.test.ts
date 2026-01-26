@@ -331,7 +331,7 @@ describe('RecipeMapper', () => {
       // Assert - 変換結果を確認
       expect(orderBy1).toEqual({ title: 'asc' });
       expect(orderBy2).toEqual({ viewCount: 'desc' });
-      expect(orderBy3).toEqual({ id: 'asc' });
+      expect(orderBy3).toEqual({ publishedAt: 'desc' });
     });
   });
 });

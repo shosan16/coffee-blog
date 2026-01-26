@@ -1,8 +1,9 @@
 'use client';
 
 import { Search } from 'lucide-react';
-import { useMemo, memo } from 'react';
+import { useMemo, memo, useCallback } from 'react';
 
+import SortSelect from '@/client/features/recipe-list/components/sort/SortSelect';
 import { useRecipeQuery } from '@/client/features/recipe-list/hooks/useRecipeQuery';
 
 type SearchResultsHeaderProps = {
@@ -16,7 +17,7 @@ type SearchResultsHeaderProps = {
  * 検索結果表示用のヘッダーコンポーネント
  *
  * 検索結果数、現在の検索キーワード、アクティブフィルターの
- * 概要表示を行う。
+ * 概要表示とソート機能を提供する。
  *
  * @example
  * ```tsx
@@ -27,7 +28,7 @@ function SearchResultsHeader({
   resultCount,
   className,
 }: SearchResultsHeaderProps): React.JSX.Element {
-  const { searchValue } = useRecipeQuery();
+  const { searchValue, filters, applyFilters } = useRecipeQuery();
 
   // 検索結果のテキスト
   const resultText = useMemo(() => {
@@ -44,6 +45,14 @@ function SearchResultsHeader({
     }
   }, [resultCount, searchValue]);
 
+  // ソート変更ハンドラ
+  const handleSortChange = useCallback(
+    (sort: string, order: 'asc' | 'desc') => {
+      applyFilters({ sort, order });
+    },
+    [applyFilters]
+  );
+
   return (
     <div
       className={`border-border bg-background/70 sticky top-0 z-10 h-18 border-b backdrop-blur-sm ${className ?? ''}`}
@@ -58,6 +67,15 @@ function SearchResultsHeader({
                 <span className="text-foreground text-sm font-medium">{resultText}</span>
               </>
             )}
+          </div>
+
+          {/* ソートセレクト */}
+          <div className="flex items-center gap-2">
+            <SortSelect
+              currentSort={filters.sort}
+              currentOrder={filters.order}
+              onSortChange={handleSortChange}
+            />
           </div>
         </div>
       </div>

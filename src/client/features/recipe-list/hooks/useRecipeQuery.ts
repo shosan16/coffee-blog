@@ -3,9 +3,14 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import type { RecipeFilters } from '@/client/features/recipe-list/types/api';
+import {
+  buildNavigationUrl,
+  countActiveFilters,
+  removeItemFromArrayFilter,
+  type RecipeFilters,
+  updateFilterValue,
+} from '@/client/features/recipe-list/hooks/filterHelpers';
 import { parseFiltersFromSearchParams } from '@/client/features/recipe-list/utils/filter';
-import { buildQueryParams } from '@/client/shared/api/request';
 
 /**
  * レシピ検索・フィルタリング機能を統合管理するフック
@@ -28,6 +33,7 @@ export type UseRecipeQueryReturn = {
   setSearchValue: (value: string) => void;
   setFilter: <K extends keyof RecipeFilters>(key: K, value: RecipeFilters[K]) => void;
   removeFilter: <K extends keyof RecipeFilters>(key: K, itemToRemove?: string) => void;
+  applyFilters: (filters: Partial<RecipeFilters>) => void;
   apply: () => void;
   reset: () => void;
   clearSearch: () => void;
@@ -36,24 +42,6 @@ export type UseRecipeQueryReturn = {
   isLoading: boolean;
   hasChanges: boolean;
   activeFilterCount: number;
-};
-
-/**
- * 有効な値かどうかを判定する関数
- *
- * フィルター値の有効性を検証し、空の配列や未定義値を無効とする
- * 範囲オブジェクトの場合は min または max のいずれかが定義されていれば有効
- *
- * @param value - 検証対象の値
- * @returns 有効な値の場合は true、無効な場合は false
- */
-const hasValidValue = (value: unknown): boolean => {
-  if (value == null) return false;
-  if (Array.isArray(value)) return value.length > 0;
-  if (typeof value === 'object' && 'min' in value && 'max' in value) {
-    return value.min !== undefined || value.max !== undefined;
-  }
-  return true;
 };
 
 /**
@@ -100,16 +88,7 @@ function useUrlState(): {
 
   const navigateTo = useCallback(
     (filters: RecipeFilters, searchValue: string) => {
-      const searchFilters = { ...filters };
-      if (searchValue.trim()) {
-        searchFilters.search = searchValue.trim();
-      } else {
-        delete searchFilters.search;
-      }
-      searchFilters.page = 1;
-
-      const queryParams = buildQueryParams(searchFilters);
-      const newUrl = queryParams.toString() ? `?${queryParams.toString()}` : '/';
+      const newUrl = buildNavigationUrl(filters, searchValue);
       router.push(newUrl);
     },
     [router]
@@ -146,7 +125,6 @@ function useFormState(
   pendingSearchValue: string;
   setSearchValue: (value: string) => void;
   setFilter: <K extends keyof RecipeFilters>(key: K, value: RecipeFilters[K]) => void;
-  removeFilter: <K extends keyof RecipeFilters>(key: K, itemToRemove?: string) => void;
   resetForm: () => void;
 } {
   const [pendingFilters, setPendingFilters] = useState<RecipeFilters>(() => ({
@@ -166,46 +144,7 @@ function useFormState(
 
   const setFilter = useCallback(
     <K extends keyof RecipeFilters>(key: K, value: RecipeFilters[K]) => {
-      setPendingFilters((prev: RecipeFilters) => {
-        const newFilters = { ...prev };
-
-        if (!hasValidValue(value)) {
-          delete newFilters[key];
-        } else {
-          newFilters[key] = value;
-        }
-
-        if (key !== 'page') {
-          newFilters.page = 1;
-        }
-
-        return newFilters;
-      });
-    },
-    []
-  );
-
-  const removeFilter = useCallback(
-    <K extends keyof RecipeFilters>(key: K, itemToRemove?: string): void => {
-      setPendingFilters((prev: RecipeFilters) => {
-        const newFilters = { ...prev };
-
-        if (itemToRemove && Array.isArray(newFilters[key])) {
-          const currentArray = newFilters[key] as string[];
-          const newArray = currentArray.filter((item) => item !== itemToRemove);
-
-          if (newArray.length > 0) {
-            newFilters[key] = newArray as RecipeFilters[K];
-          } else {
-            delete newFilters[key];
-          }
-        } else {
-          delete newFilters[key];
-        }
-
-        newFilters.page = 1;
-        return newFilters;
-      });
+      setPendingFilters((prev: RecipeFilters) => updateFilterValue(prev, key, value));
     },
     []
   );
@@ -220,7 +159,6 @@ function useFormState(
     pendingSearchValue,
     setSearchValue,
     setFilter,
-    removeFilter,
     resetForm,
   };
 }
@@ -235,14 +173,10 @@ export function useRecipeQuery(): UseRecipeQueryReturn {
   const { currentFilters, currentSearchValue, navigateTo, resetUrl } = useUrlState();
 
   // フォーム状態管理
-  const {
-    pendingFilters,
-    pendingSearchValue,
-    setSearchValue,
-    setFilter,
-    removeFilter: removeFormFilter,
-    resetForm,
-  } = useFormState(currentFilters, currentSearchValue);
+  const { pendingFilters, pendingSearchValue, setSearchValue, setFilter, resetForm } = useFormState(
+    currentFilters,
+    currentSearchValue
+  );
 
   // 変更検出
   const hasChanges = useMemo(() => {
@@ -252,12 +186,7 @@ export function useRecipeQuery(): UseRecipeQueryReturn {
   }, [currentFilters, pendingFilters, currentSearchValue, pendingSearchValue]);
 
   // アクティブフィルター数カウント
-  const activeFilterCount = useMemo(() => {
-    const excludeKeys = ['page', 'limit'];
-    return Object.entries(currentFilters).filter(
-      ([key, value]) => !excludeKeys.includes(key) && hasValidValue(value)
-    ).length;
-  }, [currentFilters]);
+  const activeFilterCount = useMemo(() => countActiveFilters(currentFilters), [currentFilters]);
 
   // 適用関数
   const apply = useCallback((): void => {
@@ -265,6 +194,17 @@ export function useRecipeQuery(): UseRecipeQueryReturn {
       navigateTo(pendingFilters, pendingSearchValue);
     });
   }, [executeWithLoading, pendingFilters, pendingSearchValue, navigateTo]);
+
+  // フィルターを即座に適用（setFilterの非同期問題を回避）
+  const applyFilters = useCallback(
+    (filters: Partial<RecipeFilters>): void => {
+      executeWithLoading(() => {
+        const newFilters = { ...currentFilters, ...filters, page: 1 };
+        navigateTo(newFilters, currentSearchValue);
+      });
+    },
+    [executeWithLoading, currentFilters, currentSearchValue, navigateTo]
+  );
 
   // リセット関数
   const reset = useCallback((): void => {
@@ -274,13 +214,15 @@ export function useRecipeQuery(): UseRecipeQueryReturn {
     });
   }, [executeWithLoading, resetForm, resetUrl]);
 
-  // フィルター削除（即座に適用）
+  // フィルター削除（即座に適用、setStateの非同期問題を回避）
   const removeFilter = useCallback(
     <K extends keyof RecipeFilters>(key: K, itemToRemove?: string): void => {
-      removeFormFilter(key, itemToRemove);
-      apply();
+      executeWithLoading(() => {
+        const newFilters = removeItemFromArrayFilter(currentFilters, key, itemToRemove);
+        navigateTo(newFilters, currentSearchValue);
+      });
     },
-    [removeFormFilter, apply]
+    [executeWithLoading, currentFilters, currentSearchValue, navigateTo]
   );
 
   // 検索クリア
@@ -300,6 +242,7 @@ export function useRecipeQuery(): UseRecipeQueryReturn {
     setSearchValue,
     setFilter,
     removeFilter,
+    applyFilters,
     apply,
     reset,
     clearSearch,

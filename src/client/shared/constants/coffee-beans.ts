@@ -47,7 +47,6 @@ export const getGrindSizeLabel = (value: string | null): string => {
 
 /**
  * 焙煎度ごとのカラーコード
- * mockデザイン（mock/recipe-card.html）で定義されたカラーパレットに準拠
  */
 export const ROAST_LEVEL_COLORS: Record<string, string> = {
   LIGHT: '#e2b714',

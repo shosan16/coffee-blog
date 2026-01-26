@@ -10,7 +10,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cat .claude/commands/tdd.md"
+            "command": "cat .claude/skills/tdd/SKILL.md"
           }
         ]
       }
