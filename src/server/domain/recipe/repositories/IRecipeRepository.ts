@@ -39,7 +39,14 @@ export type RecipeSearchCriteria = {
   readonly isPublished?: boolean;
 
   // ソート条件
-  readonly sortBy?: 'id' | 'title' | 'viewCount' | 'createdAt' | 'updatedAt' | 'publishedAt';
+  readonly sortBy?:
+    | 'id'
+    | 'title'
+    | 'viewCount'
+    | 'createdAt'
+    | 'updatedAt'
+    | 'publishedAt'
+    | 'roastLevel';
   readonly sortOrder?: 'asc' | 'desc';
 
   // ページネーション

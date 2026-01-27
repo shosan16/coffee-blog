@@ -23,6 +23,7 @@ const createMockQueryResult = (
   setSearchValue: vi.fn(),
   setFilter: vi.fn(),
   removeFilter: vi.fn(),
+  applyFilters: vi.fn(),
   apply: vi.fn(),
   reset: vi.fn(),
   clearSearch: vi.fn(),
