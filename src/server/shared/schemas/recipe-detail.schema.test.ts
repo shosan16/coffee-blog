@@ -113,6 +113,22 @@ describe('RecipeStepSchema', () => {
     // Assert
     expect(result.success).toBe(false);
   });
+
+  it('timeSecondsが負の数の場合、パースに失敗すること', () => {
+    // Arrange
+    const invalidStep = {
+      id: 'step-1',
+      stepOrder: 1,
+      timeSeconds: -10,
+      description: '無効なステップ',
+    };
+
+    // Act
+    const result = RecipeStepSchema.safeParse(invalidStep);
+
+    // Assert
+    expect(result.success).toBe(false);
+  });
 });
 
 describe('EquipmentTypeSchema', () => {

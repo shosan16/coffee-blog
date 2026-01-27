@@ -42,9 +42,9 @@ export const RecipeSummarySchema = z
     roastLevel: z.string(),
     /** ドリップ以外の抽出方法では省略可能 */
     grindSize: z.string().optional(),
-    beanWeight: z.number(),
-    waterTemp: z.number(),
-    waterAmount: z.number(),
+    beanWeight: z.number().nonnegative(),
+    waterTemp: z.number().nonnegative(),
+    waterAmount: z.number().nonnegative(),
     tags: z.array(RecipeTagSummarySchema),
     /** バリスタ未設定の場合はnull */
     baristaName: z.string().nullable(),

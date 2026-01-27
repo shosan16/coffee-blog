@@ -208,10 +208,10 @@ import { z } from 'zod';
 
 export const PaginationSchema = z
   .object({
-    page: z.number().int().positive(),
-    limit: z.number().int().positive(),
-    total: z.number().int().nonnegative(),
+    currentPage: z.number().int().positive(),
     totalPages: z.number().int().nonnegative(),
+    totalItems: z.number().int().nonnegative(),
+    itemsPerPage: z.number().int().positive(),
   })
   .strict();
 
