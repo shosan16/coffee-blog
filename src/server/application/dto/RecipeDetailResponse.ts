@@ -6,96 +6,31 @@
  */
 
 import type { PrismaRecipeWithRelations } from '@/server/infrastructure/repositories/mappers/RecipeMapper';
-
-/**
- * バリスタ情報DTO
- */
-export type BaristaDto = {
-  readonly id: string;
-  readonly name: string;
-  readonly affiliation?: string;
-  readonly socialLinks: Array<{
-    readonly id: string;
-    readonly platform: string;
-    readonly url: string;
-  }>;
-};
-
-/**
- * レシピステップDTO
- */
-export type RecipeStepDto = {
-  readonly id: string;
-  readonly stepOrder: number;
-  readonly timeSeconds?: number;
-  readonly description: string;
-};
-
-/**
- * 器具詳細DTO
- */
-export type DetailedEquipmentDto = {
-  readonly id: string;
-  readonly name: string;
-  readonly brand?: string;
-  readonly description?: string;
-  readonly affiliateLink?: string;
-  readonly equipmentType: {
-    readonly id: string;
-    readonly name: string;
-    readonly description?: string;
-  };
-};
-
-/**
- * レシピタグDTO
- */
-export type RecipeTagDto = {
-  readonly id: string;
-  readonly name: string;
-  readonly slug: string;
-};
-
-/**
- * レシピ詳細レスポンスDTO
- */
-export type RecipeDetailDto = {
-  readonly id: string;
-  readonly title: string;
-  readonly summary?: string;
-  readonly remarks?: string;
-  readonly roastLevel: string;
-  readonly grindSize?: string;
-  readonly beanWeight?: number;
-  readonly waterTemp?: number;
-  readonly waterAmount?: number;
-  readonly viewCount: number;
-  readonly isPublished: boolean;
-  readonly publishedAt?: string;
-  readonly createdAt: string;
-  readonly updatedAt: string;
-  readonly barista?: BaristaDto;
-  readonly steps: RecipeStepDto[];
-  readonly equipment: DetailedEquipmentDto[];
-  readonly tags: RecipeTagDto[];
-};
+import type {
+  Barista,
+  RecipeStep,
+  DetailedEquipment,
+  RecipeTag,
+  RecipeDetail,
+} from '@/server/shared/schemas';
 
 /**
  * レシピ詳細レスポンスマッパー
  *
- * PrismaデータとDTOの型安全な変換を提供
+ * PrismaデータとAPIレスポンスの型安全な変換を提供
  */
 export class RecipeDetailResponseMapper {
   /**
-   * PrismaデータからDTOに変換
+   * PrismaデータからAPIレスポンス形式に変換
    *
-   * @param recipe - レシピエンティティ
-   * @param prismaData - Prismaから取得した関連データ
-   * @returns レシピ詳細DTO
-   * @throws Error 無効なエンティティの場合
+   * prismaDataが未指定の場合、barista/equipment/tagsは空配列となる。
+   * 日時はISO 8601文字列に変換され、クライアント側でのタイムゾーン調整が可能。
+   *
+   * @param recipe - レシピエンティティ（ドメイン層）
+   * @param prismaData - 関連データ（取得失敗時はundefined）
+   * @returns APIレスポンス形式のレシピ詳細
    */
-  static toDto(recipe: RecipeEntity, prismaData?: PrismaRecipeWithRelations): RecipeDetailDto {
-    // 型安全な変換
+  static toResponse(recipe: RecipeEntity, prismaData?: PrismaRecipeWithRelations): RecipeDetail {
     return {
       id: recipe.id.value,
       title: recipe.title,
@@ -111,20 +46,20 @@ export class RecipeDetailResponseMapper {
       publishedAt: recipe.publishedAt?.toISOString() ?? undefined,
       createdAt: recipe.createdAt.toISOString(),
       updatedAt: recipe.updatedAt.toISOString(),
-      barista: prismaData?.barista ? this.mapBaristaDto(prismaData.barista) : undefined,
-      steps: this.mapStepsDto(recipe.steps),
-      equipment: prismaData?.equipment ? this.mapEquipmentDto(prismaData.equipment) : [],
-      tags: prismaData?.tags ? this.mapTagsDto(prismaData.tags) : [],
+      barista: prismaData?.barista ? this.mapBarista(prismaData.barista) : undefined,
+      steps: this.mapSteps(recipe.steps),
+      equipment: prismaData?.equipment ? this.mapEquipment(prismaData.equipment) : [],
+      tags: prismaData?.tags ? this.mapTags(prismaData.tags) : [],
     };
   }
 
   /**
-   * バリスタ情報をDTOに変換
+   * バリスタ情報を変換
    *
    * @param prismaBarista - Prismaバリスタデータ
-   * @returns バリスタDTO
+   * @returns バリスタ情報
    */
-  private static mapBaristaDto(prismaBarista: PrismaBaristaWithSocialLinks): BaristaDto {
+  private static mapBarista(prismaBarista: PrismaBaristaWithSocialLinks): Barista {
     return {
       id: prismaBarista.id.toString(),
       name: prismaBarista.name,
@@ -138,12 +73,12 @@ export class RecipeDetailResponseMapper {
   }
 
   /**
-   * レシピステップをDTOに変換
+   * レシピステップを変換
    *
    * @param steps - レシピステップ配列
-   * @returns レシピステップDTO配列
+   * @returns レシピステップ配列
    */
-  private static mapStepsDto(steps: readonly RecipeStepEntity[]): RecipeStepDto[] {
+  private static mapSteps(steps: readonly RecipeStepEntity[]): RecipeStep[] {
     return steps.map((step, index) => ({
       id: `step-${index + 1}`,
       stepOrder: step.stepOrder,
@@ -153,14 +88,12 @@ export class RecipeDetailResponseMapper {
   }
 
   /**
-   * 器具情報をDTOに変換
+   * 器具情報を変換
    *
    * @param prismaEquipment - Prisma器具データ配列
-   * @returns 器具詳細DTO配列
+   * @returns 器具詳細情報配列
    */
-  private static mapEquipmentDto(
-    prismaEquipment: PrismaEquipmentWithType[]
-  ): DetailedEquipmentDto[] {
+  private static mapEquipment(prismaEquipment: PrismaEquipmentWithType[]): DetailedEquipment[] {
     return prismaEquipment.map((equipment) => ({
       id: equipment.id.toString(),
       name: equipment.name,
@@ -176,12 +109,12 @@ export class RecipeDetailResponseMapper {
   }
 
   /**
-   * タグ情報をDTOに変換
+   * タグ情報を変換
    *
    * @param prismaTags - PrismaタグとPostTagの関連データ配列
-   * @returns レシピタグDTO配列
+   * @returns レシピタグ配列
    */
-  private static mapTagsDto(prismaTags: PrismaPostTagWithTag[]): RecipeTagDto[] {
+  private static mapTags(prismaTags: PrismaPostTagWithTag[]): RecipeTag[] {
     return prismaTags.map((postTag) => ({
       id: postTag.tag.id.toString(),
       name: postTag.tag.name,

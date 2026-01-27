@@ -1,8 +1,6 @@
-import type { RoastLevel, GrindSize } from '@prisma/client';
-
 /**
  * クライアント用レシピ詳細型定義
- * サーバー型と同一だが、クライアント側での使用を明示
+ * Prisma enumへの依存を排除し、API境界の型として柔軟性を確保
  */
 
 export type BaristaInfo = {
@@ -54,8 +52,10 @@ export type RecipeDetailInfo = {
   title: string;
   summary?: string;
   remarks?: string;
-  roastLevel: RoastLevel;
-  grindSize?: GrindSize;
+  /** 焙煎レベル（文字列表現） */
+  roastLevel: string;
+  /** 挽き目（オプション、文字列表現） */
+  grindSize?: string;
   beanWeight?: number;
   waterTemp?: number;
   waterAmount?: number;

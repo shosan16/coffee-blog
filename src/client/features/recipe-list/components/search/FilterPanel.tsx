@@ -1,6 +1,5 @@
 'use client';
 
-import type { GrindSize, RoastLevel } from '@prisma/client';
 import { Filter, RotateCcw, X } from 'lucide-react';
 import { memo, useCallback, useEffect, useRef, type JSX } from 'react';
 
@@ -49,14 +48,14 @@ function FilterPanel({ isOpen, onOpenChange, queryResult }: FilterPanelProps): J
   );
 
   const handleRoastLevelChange = useCallback(
-    (roastLevel: RoastLevel[]) => {
+    (roastLevel: string[]) => {
       setFilter('roastLevel', roastLevel);
     },
     [setFilter]
   );
 
   const handleGrindSizeChange = useCallback(
-    (grindSize: GrindSize[]) => {
+    (grindSize: string[]) => {
       setFilter('grindSize', grindSize);
     },
     [setFilter]

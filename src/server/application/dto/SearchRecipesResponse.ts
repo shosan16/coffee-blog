@@ -7,61 +7,12 @@
 
 import type { IEquipmentRepository } from '@/server/domain/recipe/repositories/IEquipmentRepository';
 import type { ITagRepository, TagEntity } from '@/server/domain/recipe/repositories/ITagRepository';
-
-/**
- * タグ要約DTO（検索結果用）
- *
- * レシピ一覧表示に必要な最小限のタグ情報
- * 詳細ページでは別のDTOを使用する
- */
-export type RecipeTagSummaryDto = {
-  readonly id: string;
-  readonly name: string;
-  readonly slug: string;
-};
-
-/**
- * レシピ要約DTO（検索結果用）
- *
- * レシピ一覧ページで表示する要約情報
- * 詳細ページで必要な情報（手順、バリスタ情報等）は含まない
- */
-export type RecipeSummaryDto = {
-  readonly id: string;
-  readonly title: string;
-  readonly summary: string;
-  readonly equipment: string[];
-  readonly roastLevel: string;
-  readonly grindSize?: string;
-  readonly beanWeight: number;
-  readonly waterTemp: number;
-  readonly waterAmount: number;
-  readonly tags: RecipeTagSummaryDto[];
-  readonly baristaName: string | null;
-};
-
-/**
- * ページネーション情報DTO
- */
-export type PaginationDto = {
-  readonly currentPage: number;
-  readonly totalPages: number;
-  readonly totalItems: number;
-  readonly itemsPerPage: number;
-};
-
-/**
- * レシピ検索レスポンスDTO
- */
-export type SearchRecipesResponseDto = {
-  readonly recipes: RecipeSummaryDto[];
-  readonly pagination: PaginationDto;
-};
+import type { RecipeSummary, RecipeListResponse, RecipeTagSummary } from '@/server/shared/schemas';
 
 /**
  * レシピ検索レスポンスマッパー
  *
- * ドメイン検索結果からDTOへの型安全な変換を提供
+ * ドメイン検索結果からAPIレスポンスへの型安全な変換を提供
  */
 export class SearchRecipesResponseMapper {
   constructor(
@@ -70,13 +21,15 @@ export class SearchRecipesResponseMapper {
   ) {}
 
   /**
-   * 検索結果からDTOに変換
+   * 検索結果からAPIレスポンス形式に変換
+   *
+   * 器具情報とタグ情報は一括取得によりN+1問題を回避。
+   * ブランド名がある場合は「ブランド名 器具名」形式で表示。
    *
    * @param result - ドメイン検索結果
-   * @returns 検索レスポンスDTO
-   * @throws Error 無効な検索結果の場合
+   * @returns APIレスポンス形式のレシピ一覧
    */
-  async toDto(result: SearchResultEntity): Promise<SearchRecipesResponseDto> {
+  async toResponse(result: SearchResultEntity): Promise<RecipeListResponse> {
     // すべてのレシピの器具IDを収集
     const allEquipmentIds = result.recipes.flatMap((recipe) => recipe.equipmentIds);
     const uniqueEquipmentIds = [...new Set(allEquipmentIds)];
@@ -95,9 +48,7 @@ export class SearchRecipesResponseMapper {
     const tagMap = new Map(tagList.map((tag) => [tag.id, tag]));
 
     return {
-      recipes: result.recipes.map((recipe) =>
-        this.mapRecipeSummaryDto(recipe, equipmentMap, tagMap)
-      ),
+      recipes: result.recipes.map((recipe) => this.mapRecipeSummary(recipe, equipmentMap, tagMap)),
       pagination: {
         currentPage: result.pagination.currentPage,
         totalPages: result.pagination.totalPages,
@@ -108,19 +59,20 @@ export class SearchRecipesResponseMapper {
   }
 
   /**
-   * レシピエンティティから要約DTOに変換
+   * レシピエンティティから要約形式に変換
+   *
+   * 数値系フィールドは未設定時に0を返却（UI表示の一貫性確保）。
    *
    * @param recipe - レシピエンティティ
    * @param equipmentMap - 器具IDから器具エンティティへのマップ
    * @param tagMap - タグIDからタグエンティティへのマップ
-   * @returns レシピ要約DTO
-   * @throws Error 無効なレシピエンティティの場合
+   * @returns レシピ要約情報
    */
-  private mapRecipeSummaryDto(
+  private mapRecipeSummary(
     recipe: RecipeEntityForSearch,
     equipmentMap: Map<string, { id: string; name: string; brand?: string }>,
     tagMap: Map<string, TagEntity>
-  ): RecipeSummaryDto {
+  ): RecipeSummary {
     const brewingConditions = recipe.brewingConditions;
 
     // 器具IDを器具名に変換
@@ -176,7 +128,6 @@ export class SearchRecipesResponseMapper {
    * タグIDリストをタグ情報リストに変換
    *
    * タグが見つからない場合はIDをそのままプレースホルダーとして返す
-   * （convertEquipmentIdsToNamesと同様のフォールバック動作）
    *
    * @param tagIds - タグIDリスト
    * @param tagMap - タグIDからタグエンティティへのマップ
@@ -185,7 +136,7 @@ export class SearchRecipesResponseMapper {
   private convertTagIdsToTags(
     tagIds: readonly string[],
     tagMap: Map<string, TagEntity>
-  ): RecipeTagSummaryDto[] {
+  ): RecipeTagSummary[] {
     if (!Array.isArray(tagIds)) {
       return [];
     }
