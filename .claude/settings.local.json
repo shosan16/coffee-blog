@@ -81,7 +81,8 @@
       "Bash(npm run db:generate:*)",
       "Bash(git stash:*)",
       "Bash(xargs ls:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(wc:*)"
     ],
     "deny": []
   }

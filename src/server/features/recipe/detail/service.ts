@@ -73,10 +73,10 @@ export async function getRecipeDetail(id: number): Promise<GetRecipeDetailResult
     ]);
 
     // ドメインエンティティとPrismaデータをAPIレスポンス形式に変換
-    const recipeDetail: RecipeDetail = RecipeDetailResponseMapper.toDto(
+    const recipeDetail: RecipeDetail = RecipeDetailResponseMapper.toResponse(
       result.recipe,
       prismaData ?? undefined
-    ) as RecipeDetail;
+    );
 
     return {
       recipe: recipeDetail,

@@ -1,6 +1,5 @@
 'use client';
 
-import type { RoastLevel, GrindSize } from '@prisma/client';
 import { useMemo, useCallback, memo } from 'react';
 
 import RangeSlider from '@/client/features/recipe-list/components/filter/RangeSlider';
@@ -10,13 +9,15 @@ import { ROAST_LEVELS, GRIND_SIZES } from '@/client/shared/constants/coffee-bean
 import Label from '@/client/shared/shadcn/label';
 
 type ConditionFilterProps = {
-  roastLevels: RoastLevel[];
-  grindSizes: GrindSize[];
+  /** 焙煎レベル（文字列配列） */
+  roastLevels: string[];
+  /** 挽き目（文字列配列） */
+  grindSizes: string[];
   beanWeight: { min?: number; max?: number };
   waterTemp: { min?: number; max?: number };
   waterAmount: { min?: number; max?: number };
-  onRoastLevelChange: (levels: RoastLevel[]) => void;
-  onGrindSizeChange: (sizes: GrindSize[]) => void;
+  onRoastLevelChange: (levels: string[]) => void;
+  onGrindSizeChange: (sizes: string[]) => void;
   onBeanWeightChange: (range: { min?: number; max?: number }) => void;
   onWaterTempChange: (range: { min?: number; max?: number }) => void;
   onWaterAmountChange: (range: { min?: number; max?: number }) => void;
@@ -57,7 +58,7 @@ function ConditionFilter({
   // 焙煎度トグルハンドラー（選択/削除を一つの関数で処理）
   const handleRoastLevelToggle = useCallback(
     (item: MultiComboboxItem) => {
-      const roastLevel = item.value as RoastLevel;
+      const roastLevel = item.value ?? item.id;
       const isSelected = roastLevels.includes(roastLevel);
       const newLevels = isSelected
         ? roastLevels.filter((level) => level !== roastLevel)
@@ -70,7 +71,7 @@ function ConditionFilter({
   // 挽き目トグルハンドラー（選択/削除を一つの関数で処理）
   const handleGrindSizeToggle = useCallback(
     (item: MultiComboboxItem) => {
-      const grindSize = item.value as GrindSize;
+      const grindSize = item.value ?? item.id;
       const isSelected = grindSizes.includes(grindSize);
       const newSizes = isSelected
         ? grindSizes.filter((size) => size !== grindSize)

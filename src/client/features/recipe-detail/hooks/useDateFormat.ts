@@ -1,4 +1,4 @@
-import { format, isValid } from 'date-fns';
+import { differenceInCalendarDays, format, isValid } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import { useMemo } from 'react';
 
@@ -88,9 +88,7 @@ export function useDateFormat(): UseDateFormatReturn {
 
           if (!isValid(dateObj)) return null;
 
-          const now = new Date();
-          const diffInMs = now.getTime() - dateObj.getTime();
-          const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+          const diffInDays = differenceInCalendarDays(new Date(), dateObj);
 
           if (diffInDays === 0) return '今日';
           if (diffInDays === -1) return '明日';

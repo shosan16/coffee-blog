@@ -1,28 +1,9 @@
 import type { RoastLevel, GrindSize } from '@prisma/client';
 
-/**
- * タグ要約型
- */
-export type RecipeTagSummary = {
-  id: string;
-  name: string;
-  slug: string;
-};
+import type { RecipeSummary, Pagination } from '@/server/shared/schemas';
 
-// Recipe型の定義（client側の型と一致させる）
-export type Recipe = {
-  id: string;
-  title: string;
-  summary: string;
-  equipment: string[];
-  roastLevel: RoastLevel;
-  grindSize: GrindSize | null;
-  beanWeight: number;
-  waterTemp: number;
-  waterAmount: number;
-  tags: RecipeTagSummary[];
-  baristaName: string | null;
-};
+// スキーマから型をre-export
+export type { RecipeSummary, Pagination, RecipeTagSummary } from '@/server/shared/schemas';
 
 // 範囲フィルター用の型
 export type RangeFilter = {
@@ -49,13 +30,8 @@ export type SearchRecipesParams = {
 
 // 検索結果の型定義
 export type SearchRecipesResult = {
-  recipes: Recipe[];
-  pagination: {
-    currentPage: number;
-    totalPages: number;
-    totalItems: number;
-    itemsPerPage: number;
-  };
+  recipes: RecipeSummary[];
+  pagination: Pagination;
 };
 
 // 器具フィルター条件の型定義

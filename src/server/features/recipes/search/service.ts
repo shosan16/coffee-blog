@@ -1,5 +1,3 @@
-import type { RoastLevel, GrindSize } from '@prisma/client';
-
 import { SearchRecipesResponseMapper } from '@/server/application/dto/SearchRecipesResponse';
 import {
   SearchRecipesUseCase,
@@ -66,7 +64,7 @@ export class SearchRecipesService {
       const result = await useCase.execute(input);
 
       // ドメイン結果をAPIレスポンス形式に変換
-      const responseDto = await responseMapper.toDto(result);
+      const responseDto = await responseMapper.toResponse(result);
 
       timer.end();
       this.logger.info(
@@ -79,23 +77,8 @@ export class SearchRecipesService {
         'Recipe search service completed successfully'
       );
 
-      // 既存の型に合わせて返却
-      return {
-        recipes: responseDto.recipes.map((recipe) => ({
-          id: recipe.id,
-          title: recipe.title,
-          summary: recipe.summary,
-          equipment: recipe.equipment,
-          roastLevel: recipe.roastLevel as RoastLevel,
-          grindSize: recipe.grindSize as GrindSize | null,
-          beanWeight: recipe.beanWeight,
-          waterTemp: recipe.waterTemp,
-          waterAmount: recipe.waterAmount,
-          tags: recipe.tags,
-          baristaName: recipe.baristaName,
-        })),
-        pagination: responseDto.pagination,
-      };
+      // Zodスキーマベースの統一型でそのまま返却
+      return responseDto;
     } catch (error) {
       timer.end();
 

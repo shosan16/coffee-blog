@@ -1,5 +1,3 @@
-import type { RoastLevel, GrindSize } from '@prisma/client';
-
 /**
  * レシピタグ要約型
  *
@@ -12,18 +10,18 @@ export type RecipeTagSummary = {
 };
 
 /**
- * レシピ要約型（一覧表示用）
- *
- * レシピ一覧ページで表示する要約情報
- * 詳細ページで必要な情報（手順、バリスタ情報等）は含まない
+ * レシピ一覧表示用の型定義
+ * Prisma enumへの依存を排除し、API境界の型として柔軟性を確保
  */
 export type Recipe = {
   id: string;
   title: string;
   summary: string;
   equipment: string[];
-  roastLevel: RoastLevel;
-  grindSize: GrindSize | null;
+  /** 焙煎レベル（文字列表現） */
+  roastLevel: string;
+  /** 挽き目（オプション、文字列表現） */
+  grindSize?: string;
   beanWeight: number;
   waterTemp: number;
   waterAmount: number;

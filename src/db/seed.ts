@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker/locale/ja';
 import { PrismaClient, GrindSize, RoastLevel } from '@prisma/client';
+import { subDays } from 'date-fns';
 
 // グローバル変数の宣言
 const globalForPrisma = global as unknown as { prisma?: PrismaClient };
@@ -722,7 +723,7 @@ async function main(): Promise<void> {
   const randomPastDate = (): Date => {
     // 過去1年以内でランダムな日付を生成
     const daysAgo = faker.number.int({ min: 1, max: 365 });
-    return new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
+    return subDays(new Date(), daysAgo);
   };
 
   // 表示名からEnumを取得する関数

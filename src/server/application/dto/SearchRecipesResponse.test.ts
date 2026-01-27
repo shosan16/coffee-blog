@@ -61,7 +61,7 @@ describe('SearchRecipesResponseMapper', () => {
       mockTagRepository.findByIds.mockResolvedValue([]);
 
       // Act - DTOに変換
-      const result = await mapper.toDto(mockSearchResult);
+      const result = await mapper.toResponse(mockSearchResult);
 
       // Assert - 器具IDが器具名に変換されていることを検証
       expect(result.recipes[0].equipment).toEqual(['Hario V60', 'Hario ペーパーフィルター']);
@@ -100,7 +100,7 @@ describe('SearchRecipesResponseMapper', () => {
       mockTagRepository.findByIds.mockResolvedValue([]);
 
       // Act - DTOに変換
-      const result = await mapper.toDto(mockSearchResult);
+      const result = await mapper.toResponse(mockSearchResult);
 
       // Assert - 器具が見つからない場合、IDをそのまま表示
       expect(result.recipes[0].equipment).toEqual(['unknown-01']);
@@ -138,7 +138,7 @@ describe('SearchRecipesResponseMapper', () => {
       mockTagRepository.findByIds.mockResolvedValue([]);
 
       // Act - DTOに変換
-      const result = await mapper.toDto(mockSearchResult);
+      const result = await mapper.toResponse(mockSearchResult);
 
       // Assert - 空配列が返される
       expect(result.recipes[0].equipment).toEqual([]);
@@ -184,7 +184,7 @@ describe('SearchRecipesResponseMapper', () => {
       mockTagRepository.findByIds.mockResolvedValue(mockTags);
 
       // Act - DTOに変換
-      const result = await mapper.toDto(mockSearchResult);
+      const result = await mapper.toResponse(mockSearchResult);
 
       // Assert - タグ情報が正しくマッピングされていることを検証
       expect(result.recipes[0].tags).toEqual([
@@ -226,7 +226,7 @@ describe('SearchRecipesResponseMapper', () => {
       mockTagRepository.findByIds.mockResolvedValue([]);
 
       // Act - DTOに変換
-      const result = await mapper.toDto(mockSearchResult);
+      const result = await mapper.toResponse(mockSearchResult);
 
       // Assert - タグが見つからない場合、IDをプレースホルダーとして表示
       expect(result.recipes[0].tags).toEqual([
@@ -271,7 +271,7 @@ describe('SearchRecipesResponseMapper', () => {
       mockTagRepository.findByIds.mockResolvedValue([]);
 
       // Act - DTOに変換
-      const result = await mapper.toDto(mockSearchResult);
+      const result = await mapper.toResponse(mockSearchResult);
 
       // Assert - 空配列が返される
       expect(result.recipes[0].tags).toEqual([]);
@@ -312,7 +312,7 @@ describe('SearchRecipesResponseMapper', () => {
       mockTagRepository.findByIds.mockResolvedValue([]);
 
       // Act - DTOに変換
-      const result = await mapper.toDto(mockSearchResult);
+      const result = await mapper.toResponse(mockSearchResult);
 
       // Assert - baristaNameが正しくマッピングされていることを検証
       expect(result.recipes[0].baristaName).toBe('山田太郎');

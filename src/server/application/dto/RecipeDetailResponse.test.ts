@@ -28,7 +28,7 @@ const TAG_UPDATED_AT = new Date('2024-01-01T00:00:00.000Z');
 const POST_TAG_CREATED_AT = new Date('2024-01-01T00:00:00.000Z');
 
 describe('RecipeDetailResponseMapper', () => {
-  describe('toDto', () => {
+  describe('toResponse', () => {
     let recipe: Recipe;
     let prismaData: PrismaRecipeWithRelations;
 
@@ -186,7 +186,7 @@ describe('RecipeDetailResponseMapper', () => {
     describe('基本情報の変換', () => {
       it('レシピの基本情報を正しくDTOに変換すること', () => {
         // Act - DTOに変換
-        const dto = RecipeDetailResponseMapper.toDto(recipe, prismaData);
+        const dto = RecipeDetailResponseMapper.toResponse(recipe, prismaData);
 
         // Assert - 基本情報が正しく変換されることを検証
         expect(dto.id).toBe('1');
@@ -208,7 +208,7 @@ describe('RecipeDetailResponseMapper', () => {
         // (beforeEachで設定済み: baristaId: '1')
 
         // Act - DTOに変換
-        const dto = RecipeDetailResponseMapper.toDto(recipe, prismaData);
+        const dto = RecipeDetailResponseMapper.toResponse(recipe, prismaData);
 
         // Assert - バリスタ情報が存在し、Unknown Baristaではないことを検証
         expect(dto.barista).toBeDefined();
@@ -234,7 +234,7 @@ describe('RecipeDetailResponseMapper', () => {
         });
 
         // Act - DTOに変換
-        const dto = RecipeDetailResponseMapper.toDto(recipeWithoutBarista);
+        const dto = RecipeDetailResponseMapper.toResponse(recipeWithoutBarista);
 
         // Assert - バリスタ情報がundefinedであることを検証
         expect(dto.barista).toBeUndefined();
@@ -247,7 +247,7 @@ describe('RecipeDetailResponseMapper', () => {
         // (beforeEachで設定済み: equipmentIds: ['1', '2'])
 
         // Act - DTOに変換
-        const dto = RecipeDetailResponseMapper.toDto(recipe, prismaData);
+        const dto = RecipeDetailResponseMapper.toResponse(recipe, prismaData);
 
         // Assert - 器具情報が存在し、Unknown Equipmentではないことを検証
         expect(dto.equipment).toHaveLength(2);
@@ -276,7 +276,7 @@ describe('RecipeDetailResponseMapper', () => {
         });
 
         // Act - DTOに変換
-        const dto = RecipeDetailResponseMapper.toDto(recipeWithoutEquipment);
+        const dto = RecipeDetailResponseMapper.toResponse(recipeWithoutEquipment);
 
         // Assert - 器具情報が空配列であることを検証
         expect(dto.equipment).toEqual([]);
@@ -289,7 +289,7 @@ describe('RecipeDetailResponseMapper', () => {
         // (beforeEachで設定済み: tagIds: ['1', '2'])
 
         // Act - DTOに変換
-        const dto = RecipeDetailResponseMapper.toDto(recipe, prismaData);
+        const dto = RecipeDetailResponseMapper.toResponse(recipe, prismaData);
 
         // Assert - タグ情報が存在し、Unknown Tagではないことを検証
         expect(dto.tags).toHaveLength(2);
@@ -316,7 +316,7 @@ describe('RecipeDetailResponseMapper', () => {
         });
 
         // Act - DTOに変換
-        const dto = RecipeDetailResponseMapper.toDto(recipeWithoutTags);
+        const dto = RecipeDetailResponseMapper.toResponse(recipeWithoutTags);
 
         // Assert - タグ情報が空配列であることを検証
         expect(dto.tags).toEqual([]);
@@ -326,7 +326,7 @@ describe('RecipeDetailResponseMapper', () => {
     describe('レシピステップの変換', () => {
       it('レシピステップが正しく変換されること', () => {
         // Act - DTOに変換
-        const dto = RecipeDetailResponseMapper.toDto(recipe, prismaData);
+        const dto = RecipeDetailResponseMapper.toResponse(recipe, prismaData);
 
         // Assert - ステップ情報が正しく変換されることを検証
         expect(dto.steps).toHaveLength(2);

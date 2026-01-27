@@ -1,6 +1,10 @@
 import { RoastLevel, GrindSize } from '@prisma/client';
 
-import type { SearchRecipesParams } from '@/server/features/recipes/search/types';
+import type {
+  SearchRecipesParams,
+  RecipeSummary,
+  Pagination,
+} from '@/server/features/recipes/search/types';
 
 // 共通定数
 const TEST_DATE = '2024-01-01T00:00:00Z';
@@ -73,27 +77,16 @@ export function createSearchParams(
 
 /**
  * テスト用のレシピデータを生成する（コントローラーテスト用）
+ * RecipeSummary型に準拠（roastLevel/grindSizeはstring型）
  */
-export function createMockRecipes(count: number = 1): Array<{
-  id: string;
-  title: string;
-  summary: string;
-  equipment: string[];
-  roastLevel: RoastLevel;
-  grindSize: GrindSize;
-  beanWeight: number;
-  waterTemp: number;
-  waterAmount: number;
-  tags: Array<{ id: string; name: string; slug: string }>;
-  baristaName: string;
-}> {
+export function createMockRecipes(count: number = 1): RecipeSummary[] {
   return Array.from({ length: count }, (_, index) => ({
     id: `recipe-${index + 1}`,
     title: `テストレシピ ${index + 1}`,
     summary: `テスト用のレシピ説明 ${index + 1}`,
     equipment: ['V60'],
-    roastLevel: RoastLevel.MEDIUM,
-    grindSize: GrindSize.MEDIUM,
+    roastLevel: 'MEDIUM',
+    grindSize: 'MEDIUM',
     beanWeight: 20,
     waterTemp: 90,
     waterAmount: 300,
@@ -213,31 +206,15 @@ export function createMockPrismaRecipes(count: number = 1): Array<{
 
 /**
  * テスト用の検索結果を生成する
+ * RecipeSummary型とPagination型を使用
  */
 export function createMockSearchResult(
   recipeCount: number = 1,
   currentPage: number = 1,
   totalItems: number = 1
 ): {
-  recipes: Array<{
-    id: string;
-    title: string;
-    summary: string;
-    equipment: string[];
-    roastLevel: RoastLevel;
-    grindSize: GrindSize;
-    beanWeight: number;
-    waterTemp: number;
-    waterAmount: number;
-    tags: Array<{ id: string; name: string; slug: string }>;
-    baristaName: string;
-  }>;
-  pagination: {
-    currentPage: number;
-    totalPages: number;
-    totalItems: number;
-    itemsPerPage: number;
-  };
+  recipes: RecipeSummary[];
+  pagination: Pagination;
 } {
   return {
     recipes: createMockRecipes(recipeCount),

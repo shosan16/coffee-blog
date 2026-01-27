@@ -1,5 +1,3 @@
-import type { RoastLevel, GrindSize } from '@prisma/client';
-
 import type { Recipe } from '@/client/features/recipe-list/types/recipe';
 
 /**
@@ -20,8 +18,10 @@ export type RecipeListResponse = {
 export type RecipeFilters = {
   page?: number;
   limit?: number;
-  roastLevel?: RoastLevel[];
-  grindSize?: GrindSize[];
+  /** 焙煎レベルフィルター（文字列配列） */
+  roastLevel?: string[];
+  /** 挽き目フィルター（文字列配列） */
+  grindSize?: string[];
   equipment?: string[];
   equipmentType?: string[];
   tags?: string[];
