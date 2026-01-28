@@ -26,7 +26,6 @@ color: yellow
 
 ## 設計参照
 
-- `.workspace/design.md` が存在する場合は、設計方針との整合性を確認する
 - `.workspace/mocks/` にモックファイルがある場合は、UI実装との整合性を確認する
 
 ## 出力形式
