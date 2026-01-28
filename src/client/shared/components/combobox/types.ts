@@ -1,10 +1,12 @@
+import type { SelectSize } from '../../styles/select-styles';
+
 export type ComboboxOptionType = {
   readonly value: string;
   readonly label: string;
   readonly disabled?: boolean;
 };
 
-export type ComboboxSize = 'sm' | 'md' | 'lg';
+export type ComboboxSize = SelectSize;
 export type ComboboxWidth = 'auto' | 'full';
 
 export type ComboboxProps = {

@@ -83,7 +83,7 @@ const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
       error = false,
       className,
       width = 'full',
-      size: _size = 'md',
+      size = 'md',
       'data-testid': testId,
       ...props
     },
@@ -142,6 +142,7 @@ const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
           clearable={clearable}
           disabled={disabled}
           error={error}
+          size={size}
           ariaAttributes={ariaAttributes.input}
           onInputChange={comboboxState.actions.setSearchValue}
           onKeyDown={handleKeyDown}

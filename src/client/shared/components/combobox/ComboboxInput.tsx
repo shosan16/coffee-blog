@@ -5,6 +5,8 @@ import { useCallback, useMemo, memo } from 'react';
 
 import { cn } from '@/client/lib/tailwind';
 
+import { SELECT_SIZES, type SelectSize } from '../../styles/select-styles';
+
 import type { ComboboxOptionType } from './types';
 
 type ComboboxInputProps = {
@@ -16,6 +18,7 @@ type ComboboxInputProps = {
   readonly clearable: boolean;
   readonly disabled: boolean;
   readonly error: boolean;
+  readonly size?: SelectSize;
   readonly ariaAttributes: Record<string, unknown>;
   readonly onInputChange: (value: string) => void;
   readonly onKeyDown: (e: React.KeyboardEvent) => void;
@@ -33,6 +36,7 @@ function ComboboxInput({
   clearable,
   disabled,
   error,
+  size = 'md',
   ariaAttributes,
   onInputChange,
   onKeyDown,
@@ -66,31 +70,34 @@ function ComboboxInput({
   const containerClassName = useMemo(
     () =>
       cn(
-        'relative flex items-center border-2 rounded-md bg-card transition-colors',
-        'border-primary/30 shadow-sm',
+        'relative flex items-center rounded-md bg-card transition-colors',
+        SELECT_SIZES[size],
+        // 統一ボーダー
+        'border-2 border-primary/30',
+        // ホバー
         'hover:border-primary/50',
+        // フォーカス
         'focus-within:border-primary focus-within:ring-ring/20 focus-within:ring-2',
+        // エラー
         error && 'border-destructive ring-destructive/20',
+        // 無効
         disabled && 'opacity-50 cursor-not-allowed border-border',
         !disabled && 'cursor-text'
       ),
-    [error, disabled]
+    [error, disabled, size]
   );
 
   const inputClassName = useMemo(
     () =>
       cn(
-        'flex-1 bg-transparent px-3 py-2 text-sm outline-none',
+        'flex-1 bg-transparent outline-none',
         'placeholder:text-muted-foreground',
         disabled && 'cursor-not-allowed'
       ),
     [disabled]
   );
 
-  const chevronClassName = useMemo(
-    () => cn('size-4 text-muted-foreground transition-transform', isOpen && 'rotate-180'),
-    [isOpen]
-  );
+  const chevronClassName = 'size-4 text-muted-foreground';
 
   return (
     <div className={containerClassName} onClick={onInputClick}>
@@ -106,7 +113,7 @@ function ComboboxInput({
         {...ariaAttributes}
       />
 
-      <div className="flex items-center gap-1 pr-3">
+      <div className="flex items-center gap-1">
         {clearable && selectedOption && !disabled && (
           <button
             type="button"

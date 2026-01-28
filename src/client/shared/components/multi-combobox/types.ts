@@ -2,6 +2,8 @@
  * MultiComboboxコンポーネントで使用される型定義
  */
 
+import type { SelectSize } from '../../styles/select-styles';
+
 /**
  * MultiComboboxコンポーネントで使用される選択可能なアイテムの型定義
  */
@@ -46,6 +48,8 @@ export type MultiComboboxProps = {
   dropdownClassName?: string;
   /** 選択済みアイテムが空の場合の最小の高さを維持するかどうか */
   keepMinHeight?: boolean;
+  /** サイズバリアント */
+  size?: SelectSize;
   /** 最大選択可能数（オプション） */
   maxItems?: number;
   /** モーダル表示時の自動フォーカスによるユーザー体験の阻害を防止するフラグ */

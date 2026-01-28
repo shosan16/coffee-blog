@@ -5,6 +5,7 @@ import { X, ChevronDown } from 'lucide-react';
 
 import { cn } from '@/client/lib/tailwind';
 import { Badge } from '@/client/shared/shadcn/badge';
+import { SELECT_MIN_HEIGHTS, SELECT_SIZES } from '@/client/shared/styles/select-styles';
 
 import { useMultiCombobox } from './hooks/useMultiCombobox';
 import type { MultiComboboxProps } from './types';
@@ -53,6 +54,7 @@ export default function MultiCombobox({
   inputClassName,
   dropdownClassName,
   keepMinHeight = true,
+  size = 'md',
   maxItems,
   autoFocus = true,
   ...props
@@ -97,13 +99,21 @@ export default function MultiCombobox({
             aria-haspopup="listbox"
             aria-controls={listboxId}
             className={cn(
-              'border-primary/30 bg-card min-h-9 w-full cursor-text rounded-md border-2 px-3 py-2 text-sm shadow-sm transition-[color,box-shadow]',
+              // ベーススタイル
+              'bg-card w-full cursor-text rounded-md shadow-sm transition-[color,box-shadow]',
+              // サイズ（min-height、padding、font-size）
+              SELECT_MIN_HEIGHTS[size],
+              SELECT_SIZES[size].replace(/h-\d+/, ''),
+              // 統一ボーダー
+              'border-primary/30 border-2',
+              // ホバー
               'hover:border-primary/50',
+              // フォーカス
               'focus-within:border-primary focus-within:ring-ring/20 focus-within:ring-2',
+              // エラー
               'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
-              disabled && 'border-border cursor-not-allowed opacity-50',
-              keepMinHeight && selectedItems.length === 0 && 'min-h-9',
-              className
+              // 無効
+              disabled && 'border-border cursor-not-allowed opacity-50'
             )}
             onClick={handleTriggerClick}
           >
