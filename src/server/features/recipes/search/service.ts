@@ -28,14 +28,12 @@ export class SearchRecipesService {
     try {
       this.logger.info({ params }, 'Starting recipe search service');
 
-      // 依存性注入：リポジトリとユースケースの設定
       const recipeRepository = new PrismaRecipeRepository(prisma);
       const equipmentRepository = new PrismaEquipmentRepository(prisma);
       const tagRepository = new PrismaTagRepository(prisma);
       const useCase = new SearchRecipesUseCase(recipeRepository);
       const responseMapper = new SearchRecipesResponseMapper(equipmentRepository, tagRepository);
 
-      // パラメータ変換（外部境界からユースケース入力へ）
       const input = {
         page: params.page,
         limit: params.limit,
@@ -60,10 +58,8 @@ export class SearchRecipesService {
         order: params.order,
       };
 
-      // ユースケース実行
       const result = await useCase.execute(input);
 
-      // ドメイン結果をAPIレスポンス形式に変換
       const responseDto = await responseMapper.toResponse(result);
 
       timer.end();
@@ -77,7 +73,6 @@ export class SearchRecipesService {
         'Recipe search service completed successfully'
       );
 
-      // Zodスキーマベースの統一型でそのまま返却
       return responseDto;
     } catch (error) {
       timer.end();
@@ -87,7 +82,6 @@ export class SearchRecipesService {
           { error: error.message, code: error.code },
           'Recipe search use case error'
         );
-        // ユースケースエラーをそのまま再スロー
         throw error;
       }
 

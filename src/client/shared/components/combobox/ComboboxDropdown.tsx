@@ -34,7 +34,6 @@ function ComboboxDropdown({
   listRef,
   getOptionAriaAttributes,
 }: ComboboxDropdownProps): React.JSX.Element | null {
-  // オプションのマウスエンターハンドラー
   const createOptionMouseEnterHandler = useCallback(
     (index: number) => {
       return () => onOptionMouseEnter(index);
@@ -42,7 +41,6 @@ function ComboboxDropdown({
     [onOptionMouseEnter]
   );
 
-  // ドロップダウンのスタイルクラス
   const dropdownClassName = useMemo(
     () =>
       cn(
@@ -53,7 +51,6 @@ function ComboboxDropdown({
     []
   );
 
-  // 早期リターン
   if (!isOpen) {
     return null;
   }

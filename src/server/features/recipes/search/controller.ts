@@ -21,7 +21,6 @@ export class SearchRecipesController {
    * URLパラメータを検索パラメータに変換する
    */
   private parseSearchParams(searchParams: URLSearchParams): Record<string, unknown> {
-    // クライアントサイドと同じロジックを使用してパラメータを解析
     const parseFiltersFromSearchParams = <T extends Record<string, unknown>>(
       searchParams: URLSearchParams | null,
       config: {
@@ -39,7 +38,6 @@ export class SearchRecipesController {
         return filters;
       }
 
-      // 文字列パラメータの処理
       config.stringParams?.forEach((param) => {
         const value = searchParams.get(param);
         if (value) {
@@ -47,7 +45,6 @@ export class SearchRecipesController {
         }
       });
 
-      // 数値パラメータの処理
       config.numberParams?.forEach((param) => {
         const value = searchParams.get(param);
         if (value) {
@@ -58,7 +55,6 @@ export class SearchRecipesController {
         }
       });
 
-      // 真偽値パラメータの処理
       config.booleanParams?.forEach((param) => {
         const value = searchParams.get(param);
         if (value !== null) {
@@ -66,7 +62,6 @@ export class SearchRecipesController {
         }
       });
 
-      // 配列パラメータの処理
       if (config.arrayParams) {
         Object.entries(config.arrayParams).forEach(([param, converter]) => {
           const value = searchParams.get(param);
@@ -76,7 +71,6 @@ export class SearchRecipesController {
         });
       }
 
-      // JSON形式のパラメータの処理
       config.jsonParams?.forEach((param) => {
         const value = searchParams.get(param);
         if (value) {
@@ -88,7 +82,6 @@ export class SearchRecipesController {
         }
       });
 
-      // 列挙型パラメータの処理
       if (config.enumParams) {
         Object.entries(config.enumParams).forEach(([param, allowedValues]) => {
           const value = searchParams.get(param);
@@ -101,20 +94,12 @@ export class SearchRecipesController {
       return filters;
     };
 
-    // クライアントサイドと同じ設定でパラメータを解析
     return parseFiltersFromSearchParams<Record<string, unknown>>(searchParams, {
-      // 数値パラメータ
       numberParams: ['page', 'limit'],
-
-      // 文字列パラメータ
       stringParams: ['search', 'sort'],
-
-      // 列挙型パラメータ
       enumParams: {
         order: ['asc', 'desc'],
       },
-
-      // 配列パラメータ
       arrayParams: {
         roastLevel: (level) => level as RoastLevel,
         grindSize: (size) => size as GrindSize,
@@ -122,8 +107,6 @@ export class SearchRecipesController {
         equipmentType: (item) => item,
         tags: (item) => item,
       },
-
-      // JSON形式パラメータ
       jsonParams: ['beanWeight', 'waterTemp', 'waterAmount'],
     });
   }
@@ -148,7 +131,6 @@ export class SearchRecipesController {
       const parsedParams = this.parseSearchParams(searchParams);
       logger.debug({ parsedParams, requestId }, 'Parameters parsed and transformed');
 
-      // パラメータのバリデーション
       const validationResult = searchRecipesQuerySchema.safeParse(parsedParams);
       if (!validationResult.success) {
         logger.warn(
@@ -163,7 +145,6 @@ export class SearchRecipesController {
       const validatedParams = validationResult.data;
       logger.debug({ validatedParams, requestId }, 'Parameters validated successfully');
 
-      // 検索パラメータの型変換
       const searchParamsTyped: SearchRecipesParams = {
         page: validatedParams.page,
         limit: validatedParams.limit,
@@ -181,7 +162,6 @@ export class SearchRecipesController {
       };
       logger.debug({ searchParamsTyped, requestId }, 'Final search parameters prepared');
 
-      // 検索実行
       logger.info({ requestId }, 'Executing recipe search');
       const result = await this.searchRecipesService.searchRecipes(searchParamsTyped);
 
@@ -198,7 +178,6 @@ export class SearchRecipesController {
 
       timer.end();
 
-      // レスポンス作成（リクエストIDヘッダーを追加）
       return NextResponse.json(
         {
           recipes: result.recipes,
@@ -243,7 +222,6 @@ export class SearchRecipesController {
         'Request validation failed'
       );
 
-      // Zodエラーをフィールドエラー形式に変換
       const fieldErrors = error.errors.map((err) => ({
         field: err.path.join('.'),
         message: err.message,
@@ -261,7 +239,6 @@ export class SearchRecipesController {
       });
     }
 
-    // JSON解析エラーのハンドリング
     if (error instanceof SyntaxError) {
       logger.warn(
         {
@@ -282,7 +259,6 @@ export class SearchRecipesController {
       });
     }
 
-    // その他のエラー
     logger.error(
       {
         err: error,

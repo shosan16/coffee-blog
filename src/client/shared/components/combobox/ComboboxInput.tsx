@@ -40,7 +40,6 @@ function ComboboxInput({
   onClear,
   inputRef,
 }: ComboboxInputProps): React.JSX.Element {
-  // 入力値の変更ハンドラー
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       onInputChange(e.target.value);
@@ -48,7 +47,6 @@ function ComboboxInput({
     [onInputChange]
   );
 
-  // クリアボタンのクリックハンドラー
   const handleClearClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
@@ -57,17 +55,14 @@ function ComboboxInput({
     [onClear]
   );
 
-  // 表示する値を計算
   const displayValue = useMemo(() => {
     return isOpen ? value : (selectedOption?.label ?? '');
   }, [isOpen, value, selectedOption?.label]);
 
-  // 表示するプレースホルダーを計算
   const displayPlaceholder = useMemo(() => {
     return isOpen ? searchPlaceholder : (selectedOption?.label ?? placeholder);
   }, [isOpen, searchPlaceholder, selectedOption?.label, placeholder]);
 
-  // コンテナのスタイルクラス
   const containerClassName = useMemo(
     () =>
       cn(
@@ -82,7 +77,6 @@ function ComboboxInput({
     [error, disabled]
   );
 
-  // 入力フィールドのスタイルクラス
   const inputClassName = useMemo(
     () =>
       cn(
@@ -93,7 +87,6 @@ function ComboboxInput({
     [disabled]
   );
 
-  // シェブロンアイコンのスタイルクラス
   const chevronClassName = useMemo(
     () => cn('size-4 text-muted-foreground transition-transform', isOpen && 'rotate-180'),
     [isOpen]

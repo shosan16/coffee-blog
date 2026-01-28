@@ -62,7 +62,6 @@ export class MemoryRecipeRepository implements IRecipeRepository {
   async search(criteria: RecipeSearchCriteria): Promise<RecipeSearchResult> {
     let filteredRecipes = Array.from(this.recipes.values());
 
-    // テキスト検索
     if (criteria.searchTerm) {
       const searchTerm = criteria.searchTerm.toLowerCase();
       filteredRecipes = filteredRecipes.filter((recipe) => {
@@ -74,7 +73,6 @@ export class MemoryRecipeRepository implements IRecipeRepository {
       });
     }
 
-    // 基本フィルター
     if (criteria.roastLevel?.length) {
       filteredRecipes = filteredRecipes.filter((recipe) =>
         (criteria.roastLevel ?? []).includes(recipe.brewingConditions.roastLevel)
@@ -89,7 +87,6 @@ export class MemoryRecipeRepository implements IRecipeRepository {
       );
     }
 
-    // 範囲フィルター
     if (criteria.beanWeight) {
       filteredRecipes = filteredRecipes.filter((recipe) => {
         const beanWeight = recipe.brewingConditions.beanWeight;
@@ -126,7 +123,6 @@ export class MemoryRecipeRepository implements IRecipeRepository {
       });
     }
 
-    // 関連エンティティフィルター
     if (criteria.equipmentIds?.length) {
       filteredRecipes = filteredRecipes.filter((recipe) =>
         (criteria.equipmentIds ?? []).some((equipmentId) =>
@@ -152,7 +148,6 @@ export class MemoryRecipeRepository implements IRecipeRepository {
       );
     }
 
-    // ソート
     const sortBy = criteria.sortBy ?? 'createdAt';
     const sortOrder = criteria.sortOrder ?? 'desc';
 
@@ -198,7 +193,6 @@ export class MemoryRecipeRepository implements IRecipeRepository {
       }
     });
 
-    // ページネーション
     const totalItems = filteredRecipes.length;
     const totalPages = Math.ceil(totalItems / criteria.limit);
     const startIndex = (criteria.page - 1) * criteria.limit;
@@ -274,7 +268,6 @@ export class MemoryRecipeRepository implements IRecipeRepository {
       return this.recipes.size;
     }
 
-    // 検索結果の数を取得
     const result = await this.search({
       ...criteria,
       page: 1,

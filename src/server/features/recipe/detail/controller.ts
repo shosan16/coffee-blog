@@ -29,10 +29,8 @@ export async function handleGetRecipeDetail(
   try {
     logger.info({ requestId, recipeId: params.id }, 'Starting recipe detail request processing');
 
-    // レシピIDバリデーション
     const numericId = validateRecipeId(params.id);
 
-    // レシピ詳細取得
     const result = await getRecipeDetail(numericId);
 
     logger.info(
@@ -48,7 +46,6 @@ export async function handleGetRecipeDetail(
       'Recipe detail retrieval completed successfully'
     );
 
-    // レスポンスヘッダーを設定
     const headers = RequestId.addToHeaders(
       {
         'X-View-Count': result.newViewCount.toString(),
@@ -61,7 +58,6 @@ export async function handleGetRecipeDetail(
       headers,
     });
   } catch (error) {
-    // RecipeDetailError の場合は適切なステータスコードでレスポンス
     if (error instanceof RecipeDetailError) {
       logger.error(
         {
@@ -103,7 +99,6 @@ export async function handleGetRecipeDetail(
       });
     }
 
-    // 予期しないエラーの場合は500エラー
     logger.error(
       {
         err: error,
