@@ -121,7 +121,7 @@ export default function MultiCombobox({
                     disabled={disabled}
                     aria-label={`${item.label}を削除`}
                   >
-                    <X className="h-3 w-3" />
+                    <X className="size-3" />
                   </button>
                 </Badge>
               ))}
