@@ -5,7 +5,10 @@ import { X, ChevronDown } from 'lucide-react';
 
 import { cn } from '@/client/lib/tailwind';
 import { Badge } from '@/client/shared/shadcn/badge';
-import { SELECT_MIN_HEIGHTS, SELECT_SIZES } from '@/client/shared/styles/select-styles';
+import {
+  SELECT_MIN_HEIGHTS,
+  SELECT_SIZES_WITHOUT_HEIGHT,
+} from '@/client/shared/styles/select-styles';
 
 import { useMultiCombobox } from './hooks/useMultiCombobox';
 import type { MultiComboboxProps } from './types';
@@ -103,7 +106,7 @@ export default function MultiCombobox({
               'bg-card w-full cursor-text rounded-md shadow-sm transition-[color,box-shadow]',
               // サイズ（min-height、padding、font-size）
               SELECT_MIN_HEIGHTS[size],
-              SELECT_SIZES[size].replace(/h-\d+/, ''),
+              SELECT_SIZES_WITHOUT_HEIGHT[size],
               // 統一ボーダー
               'border-primary/30 border-2',
               // ホバー

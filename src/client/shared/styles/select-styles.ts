@@ -26,6 +26,16 @@ export const SELECT_MIN_HEIGHTS: Record<SelectSize, string> = {
 };
 
 /**
+ * 高さを含まないサイズ定義
+ * MultiComboboxなど可変高さのコンポーネント用
+ */
+export const SELECT_SIZES_WITHOUT_HEIGHT: Record<SelectSize, string> = {
+  sm: 'px-2.5 text-xs',
+  md: 'px-3 text-sm',
+  lg: 'px-3.5 text-base',
+};
+
+/**
  * セレクトトリガー（ボタン部分）の共通スタイルを生成
  *
  * @param size - サイズバリアント（デフォルト: 'md'）
@@ -66,41 +76,6 @@ export function selectTriggerStyles(size: SelectSize = 'md', className?: string)
     'data-[placeholder]:text-muted-foreground',
 
     // 追加クラス
-    className
-  );
-}
-
-/**
- * ドロップダウンコンテナのスタイル
- *
- * @param className - 追加のクラス名
- * @returns マージされたTailwindクラス文字列
- */
-export function selectDropdownStyles(className?: string): string {
-  return cn(
-    'bg-popover text-popover-foreground',
-    'border rounded-md shadow-md',
-    'overflow-hidden',
-    className
-  );
-}
-
-/**
- * ドロップダウンオプションのスタイル
- *
- * @param className - 追加のクラス名
- * @returns マージされたTailwindクラス文字列
- */
-export function selectOptionStyles(className?: string): string {
-  return cn(
-    'relative flex w-full items-center',
-    'cursor-pointer select-none',
-    'px-2 py-1.5',
-    'text-sm',
-    'outline-none',
-    'hover:bg-accent hover:text-accent-foreground',
-    'focus:bg-accent focus:text-accent-foreground',
-    'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
     className
   );
 }

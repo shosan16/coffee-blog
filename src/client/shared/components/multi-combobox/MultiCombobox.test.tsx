@@ -25,6 +25,47 @@ afterEach(() => {
 });
 
 describe('MultiCombobox', () => {
+  describe('サイズバリアント', () => {
+    it('size="sm" でレンダリングする', () => {
+      // Arrange - smサイズでMultiComboboxをレンダリング
+      const { container } = render(<MultiCombobox {...defaultProps} size="sm" />);
+
+      // Act - トリガー要素を取得
+      const trigger = container.querySelector('[role="combobox"]');
+
+      // Assert - smサイズのスタイルが適用されていることを検証
+      expect(trigger).toHaveClass('min-h-8');
+      expect(trigger).toHaveClass('px-2.5');
+      expect(trigger).toHaveClass('text-xs');
+    });
+
+    it('size="md" がデフォルトでレンダリングされる', () => {
+      // Arrange - sizeを指定せずにMultiComboboxをレンダリング
+      const { container } = render(<MultiCombobox {...defaultProps} />);
+
+      // Act - トリガー要素を取得
+      const trigger = container.querySelector('[role="combobox"]');
+
+      // Assert - mdサイズ（デフォルト）のスタイルが適用されていることを検証
+      expect(trigger).toHaveClass('min-h-9');
+      expect(trigger).toHaveClass('px-3');
+      expect(trigger).toHaveClass('text-sm');
+    });
+
+    it('size="lg" でレンダリングする', () => {
+      // Arrange - lgサイズでMultiComboboxをレンダリング
+      const { container } = render(<MultiCombobox {...defaultProps} size="lg" />);
+
+      // Act - トリガー要素を取得
+      const trigger = container.querySelector('[role="combobox"]');
+
+      // Assert - lgサイズのスタイルが適用されていることを検証
+      expect(trigger).toHaveClass('min-h-10');
+      expect(trigger).toHaveClass('px-3.5');
+      expect(trigger).toHaveClass('text-base');
+    });
+  });
+
   describe('初回クリック動作', () => {
     it('1回目のトリガークリックで選択肢が正常に表示される', async () => {
       const onSelect = vi.fn();
