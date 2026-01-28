@@ -93,6 +93,50 @@ describe('Combobox', () => {
     });
   });
 
+  describe('サイズバリアント', () => {
+    it('size="sm" でレンダリングする', () => {
+      // Arrange - smサイズでComboboxをレンダリング
+      render(<Combobox {...defaultProps} size="sm" data-testid="test-combobox" />);
+
+      // Act - Combobox入力要素の親（スタイル適用先）を取得
+      const input = getComboboxInput();
+      const container = input.parentElement;
+
+      // Assert - smサイズのスタイルが適用されていることを検証
+      expect(container).toHaveClass('h-8');
+      expect(container).toHaveClass('px-2.5');
+      expect(container).toHaveClass('text-xs');
+    });
+
+    it('size="md" がデフォルトでレンダリングされる', () => {
+      // Arrange - sizeを指定せずにComboboxをレンダリング
+      render(<Combobox {...defaultProps} data-testid="test-combobox" />);
+
+      // Act - Combobox入力要素の親（スタイル適用先）を取得
+      const input = getComboboxInput();
+      const container = input.parentElement;
+
+      // Assert - mdサイズ（デフォルト）のスタイルが適用されていることを検証
+      expect(container).toHaveClass('h-9');
+      expect(container).toHaveClass('px-3');
+      expect(container).toHaveClass('text-sm');
+    });
+
+    it('size="lg" でレンダリングする', () => {
+      // Arrange - lgサイズでComboboxをレンダリング
+      render(<Combobox {...defaultProps} size="lg" data-testid="test-combobox" />);
+
+      // Act - Combobox入力要素の親（スタイル適用先）を取得
+      const input = getComboboxInput();
+      const container = input.parentElement;
+
+      // Assert - lgサイズのスタイルが適用されていることを検証
+      expect(container).toHaveClass('h-10');
+      expect(container).toHaveClass('px-3.5');
+      expect(container).toHaveClass('text-base');
+    });
+  });
+
   describe('ドロップダウン開閉', () => {
     it('入力フィールドをクリックしてドロップダウンを開く', async () => {
       // Arrange - ユーザーイベントとComboboxをセットアップ
