@@ -99,7 +99,6 @@ export function useDateFormat(): UseDateFormatReturn {
           if (diffInDays < -7 && diffInDays >= -30)
             return `${Math.floor(Math.abs(diffInDays) / 7)}週間後`;
 
-          // それ以外は通常の日付表示
           return format(dateObj, 'yyyy年M月d日', { locale: ja });
         } catch {
           return null;

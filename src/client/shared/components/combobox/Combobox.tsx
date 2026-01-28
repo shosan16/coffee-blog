@@ -93,10 +93,8 @@ const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
     const inputRef = useRef<HTMLInputElement>(null);
     const listRef = useRef<HTMLUListElement>(null);
 
-    // Refを統合
     useImperativeHandle(ref, () => comboboxRef.current as HTMLDivElement, []);
 
-    // メインロジック
     const comboboxState = useCombobox({
       options,
       value,
@@ -104,7 +102,6 @@ const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
       onInputChange,
     });
 
-    // キーボードナビゲーション
     const { handleKeyDown } = useComboboxKeyboard({
       isOpen: comboboxState.isOpen,
       focusedIndex: comboboxState.focusedIndex,
@@ -113,27 +110,22 @@ const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
       disabled,
     });
 
-    // 外部クリック検知
     useClickOutside(comboboxRef, comboboxState.actions.close);
 
-    // イベントハンドラー
     const { handleInputClick, handleClear, handleOptionClick } = useComboboxHandlers(
       comboboxState,
       inputRef,
       disabled
     );
 
-    // フォーカスされたアイテムをスクロール表示
     useScrollIntoView(comboboxState.focusedIndex, listRef);
 
-    // アクセシビリティ属性
     const ids = useMemo(() => generateComboboxIds(testId), [testId]);
     const ariaAttributes = useMemo(
       () => getAriaAttributes(comboboxState, ids),
       [comboboxState, ids]
     );
 
-    // スタイルクラス
     const containerClassName = useMemo(
       () => cn('relative', width === 'full' ? 'w-full' : 'w-auto', className),
       [width, className]

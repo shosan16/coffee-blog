@@ -6,22 +6,18 @@ export function buildQueryParams<T extends Record<string, unknown>>(
 ): URLSearchParams {
   const params = new URLSearchParams();
 
-  // オブジェクトのエントリを反復処理
   Object.entries(filters).forEach(([key, value]) => {
     if (value === undefined || value === null) {
       return;
     }
 
     if (Array.isArray(value)) {
-      // 配列は文字列としてシリアル化
       if (value.length > 0) {
         params.set(key, value.join(','));
       }
     } else if (typeof value === 'object') {
-      // オブジェクトはJSONとしてシリアル化
       params.set(key, JSON.stringify(value));
     } else {
-      // プリミティブ値はそのまま文字列化
       params.set(key, String(value));
     }
   });
@@ -43,7 +39,6 @@ export async function apiRequest<T>(endpoint: string, options: ApiRequestOptions
   try {
     const { params, ...requestOptions } = options;
 
-    // ベースURLの設定
     const baseUrl =
       typeof window !== 'undefined'
         ? window.location.origin // ブラウザ環境
@@ -51,14 +46,11 @@ export async function apiRequest<T>(endpoint: string, options: ApiRequestOptions
 
     let urlObj: URL;
     try {
-      // endpointが既に完全なURLの場合
       urlObj = new URL(endpoint);
     } catch {
-      // endpointが相対パスの場合
       urlObj = new URL(endpoint, baseUrl);
     }
 
-    // クエリパラメータの追加
     if (params) {
       const queryParams = buildQueryParams(params);
       queryParams.forEach((value, key) => {
@@ -75,7 +67,6 @@ export async function apiRequest<T>(endpoint: string, options: ApiRequestOptions
     });
 
     if (!response.ok) {
-      // エラーレスポンスをJSON解析して投げる
       const errorData = await response.json().catch(() => ({
         message: 'APIからのレスポンスが正常ではありません',
       }));

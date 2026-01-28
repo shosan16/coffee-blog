@@ -36,10 +36,8 @@ export function useMultiCombobox({
   const [inputValue, setInputValue] = useState('');
   const listboxId = useId();
 
-  // フォーカス管理
   const focusManagement = useFocusManagement({ autoFocus, disabled });
 
-  // アイテム管理
   const itemManagement = useItemManagement({
     items,
     selectedItems,
@@ -54,7 +52,6 @@ export function useMultiCombobox({
     inputRef: focusManagement.inputRef,
   });
 
-  // キーボードナビゲーション
   const keyboardNavigation = useKeyboardNavigation({
     disabled,
     open,
@@ -68,7 +65,6 @@ export function useMultiCombobox({
     handleDeleteItem: itemManagement.handleDeleteItem,
   });
 
-  // ドロップダウン開閉に必要なクリックハンドラーを拡張
   const handleInputClick = useCallback(
     (e: React.MouseEvent) => {
       if (disabled) return;

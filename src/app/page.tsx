@@ -1,6 +1,7 @@
 import { Coffee } from 'lucide-react';
 import type { ReadonlyURLSearchParams } from 'next/navigation';
 
+import { ActiveFilters } from '@/client/features/recipe-list/components/filter';
 import SearchResultsHeader from '@/client/features/recipe-list/components/layout/SearchResultsHeader';
 import RecipeList from '@/client/features/recipe-list/components/list/RecipeList';
 import HeroSearchSection from '@/client/features/recipe-list/components/search/HeroSearchSection';
@@ -35,6 +36,9 @@ export default async function Home({
     <div className="bg-background min-h-screen">
       {/* Hero Search Section */}
       <HeroSearchSection initialResultCount={initialData.pagination.totalItems} />
+
+      {/* Active Filters */}
+      <ActiveFilters />
 
       {/* Search Results Header */}
       <SearchResultsHeader resultCount={initialData.pagination.totalItems} />

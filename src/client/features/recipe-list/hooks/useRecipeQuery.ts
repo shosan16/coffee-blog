@@ -132,7 +132,6 @@ function useFormState(
   }));
   const [pendingSearchValue, setPendingSearchValue] = useState(initialSearchValue);
 
-  // URL状態が変わったら同期
   useEffect(() => {
     setPendingFilters({ ...initialFilters });
     setPendingSearchValue(initialSearchValue);
@@ -166,29 +165,23 @@ function useFormState(
 export function useRecipeQuery(): UseRecipeQueryReturn {
   const [isLoading, setIsLoading] = useState(false);
 
-  // ローディング操作の共通化
   const executeWithLoading = useLoadingOperation(setIsLoading);
 
-  // URL状態管理
   const { currentFilters, currentSearchValue, navigateTo, resetUrl } = useUrlState();
 
-  // フォーム状態管理
   const { pendingFilters, pendingSearchValue, setSearchValue, setFilter, resetForm } = useFormState(
     currentFilters,
     currentSearchValue
   );
 
-  // 変更検出
   const hasChanges = useMemo(() => {
     const searchChanged = currentSearchValue !== pendingSearchValue;
     const filtersChanged = JSON.stringify(currentFilters) !== JSON.stringify(pendingFilters);
     return filtersChanged || searchChanged;
   }, [currentFilters, pendingFilters, currentSearchValue, pendingSearchValue]);
 
-  // アクティブフィルター数カウント
   const activeFilterCount = useMemo(() => countActiveFilters(currentFilters), [currentFilters]);
 
-  // 適用関数
   const apply = useCallback((): void => {
     executeWithLoading(() => {
       navigateTo(pendingFilters, pendingSearchValue);
@@ -206,7 +199,6 @@ export function useRecipeQuery(): UseRecipeQueryReturn {
     [executeWithLoading, currentFilters, currentSearchValue, navigateTo]
   );
 
-  // リセット関数
   const reset = useCallback((): void => {
     executeWithLoading(() => {
       resetForm();
@@ -225,7 +217,6 @@ export function useRecipeQuery(): UseRecipeQueryReturn {
     [executeWithLoading, currentFilters, currentSearchValue, navigateTo]
   );
 
-  // 検索クリア
   const clearSearch = useCallback((): void => {
     executeWithLoading(() => {
       const filtersWithoutSearch = { ...pendingFilters };

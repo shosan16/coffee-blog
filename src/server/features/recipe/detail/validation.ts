@@ -18,21 +18,17 @@ import { RecipeDetailError } from './types';
  * @throws {RecipeDetailError} 無効なIDの場合
  */
 export function validateRecipeId(id: string): number {
-  // 空文字列チェック
   if (!id || id.trim() === '') {
     throw new RecipeDetailError('Invalid recipe ID', 'INVALID_ID', 400);
   }
 
-  // 正の整数パターンチェック（先頭0を除く）
   const pattern = /^[1-9][0-9]*$/;
   if (!pattern.test(id)) {
     throw new RecipeDetailError('Invalid recipe ID', 'INVALID_ID', 400);
   }
 
-  // 数値変換
   const numericId = parseInt(id, 10);
 
-  // 安全な整数範囲チェック
   if (!Number.isSafeInteger(numericId)) {
     throw new RecipeDetailError('Invalid recipe ID', 'INVALID_ID', 400);
   }

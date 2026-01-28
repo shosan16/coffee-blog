@@ -47,7 +47,6 @@ export class RecipeMapper {
    */
   private static safeBigIntConvert(value: string): bigint {
     try {
-      // 数値文字列の場合のみBigIntに変換
       const numValue = Number(value);
       if (isNaN(numValue)) {
         return BigInt(0); // デフォルト値として0を返す
@@ -65,10 +64,8 @@ export class RecipeMapper {
    * @returns Recipe Domain Entity
    */
   static toDomain(prismaPost: PrismaRecipeWithRelations): Recipe {
-    // RecipeIdの作成
     const recipeId = RecipeId.fromString(prismaPost.id.toString());
 
-    // BrewingConditionsの作成
     const brewingConditions = BrewingConditions.create({
       roastLevel: prismaPost.roastLevel,
       grindSize: prismaPost.grindSize ?? undefined,
@@ -77,7 +74,6 @@ export class RecipeMapper {
       waterTemp: prismaPost.waterTemp ?? undefined,
     });
 
-    // RecipeStepの変換
     const sortedSteps = [...prismaPost.steps].sort((a, b) => a.stepOrder - b.stepOrder);
     const steps: RecipeStep[] = sortedSteps.map((step) => ({
       stepOrder: step.stepOrder,
@@ -85,13 +81,10 @@ export class RecipeMapper {
       timeSeconds: step.timeSeconds ?? undefined,
     }));
 
-    // 器具IDの抽出
     const equipmentIds = prismaPost.equipment.map((equipment) => equipment.id.toString());
 
-    // タグIDの抽出
     const tagIds = prismaPost.tags.map((postTag) => postTag.tag.id.toString());
 
-    // Domainエンティティの再構築
     return Recipe.reconstruct({
       id: recipeId,
       title: prismaPost.title,
@@ -132,7 +125,6 @@ export class RecipeMapper {
   }): Record<string, unknown> {
     const where: Record<string, unknown> = {};
 
-    // テキスト検索
     if (criteria.searchTerm) {
       where.OR = [
         { title: { contains: criteria.searchTerm, mode: 'insensitive' } },
@@ -141,7 +133,6 @@ export class RecipeMapper {
       ];
     }
 
-    // 基本フィルター
     if (criteria.roastLevel?.length) {
       where.roastLevel = { in: criteria.roastLevel };
     }
@@ -149,12 +140,10 @@ export class RecipeMapper {
       where.grindSize = { in: criteria.grindSize };
     }
 
-    // 範囲フィルター
     this.addRangeFilter(where, 'beanWeight', criteria.beanWeight);
     this.addRangeFilter(where, 'waterTemp', criteria.waterTemp);
     this.addRangeFilter(where, 'waterAmount', criteria.waterAmount);
 
-    // 関連エンティティフィルター
     const andConditions: Array<Record<string, unknown>> = [];
 
     if (criteria.equipmentNames?.length) {
@@ -195,7 +184,6 @@ export class RecipeMapper {
       where.baristaId = this.safeBigIntConvert(criteria.baristaId);
     }
 
-    // 状態フィルター
     if (criteria.isPublished !== undefined) {
       where.isPublished = criteria.isPublished;
     }

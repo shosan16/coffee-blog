@@ -18,12 +18,10 @@ export function parseFiltersFromSearchParams<T extends Record<string, unknown>>(
 ): Partial<T> {
   const filters = {} as Partial<T>;
 
-  // searchParamsがnullの場合は空のフィルターを返す
   if (!searchParams) {
     return filters;
   }
 
-  // 文字列パラメータの処理
   config.stringParams?.forEach((param) => {
     const value = searchParams.get(param);
     if (value) {
@@ -31,7 +29,6 @@ export function parseFiltersFromSearchParams<T extends Record<string, unknown>>(
     }
   });
 
-  // 数値パラメータの処理
   config.numberParams?.forEach((param) => {
     const value = searchParams.get(param);
     if (value) {
@@ -42,7 +39,6 @@ export function parseFiltersFromSearchParams<T extends Record<string, unknown>>(
     }
   });
 
-  // 真偽値パラメータの処理
   config.booleanParams?.forEach((param) => {
     const value = searchParams.get(param);
     if (value !== null) {
@@ -50,7 +46,6 @@ export function parseFiltersFromSearchParams<T extends Record<string, unknown>>(
     }
   });
 
-  // 配列パラメータの処理
   if (config.arrayParams) {
     Object.entries(config.arrayParams).forEach(([param, converter]) => {
       const value = searchParams.get(param);
@@ -60,7 +55,6 @@ export function parseFiltersFromSearchParams<T extends Record<string, unknown>>(
     });
   }
 
-  // JSON形式のパラメータの処理
   config.jsonParams?.forEach((param) => {
     const value = searchParams.get(param);
     if (value) {
@@ -72,7 +66,6 @@ export function parseFiltersFromSearchParams<T extends Record<string, unknown>>(
     }
   });
 
-  // 列挙型パラメータの処理
   if (config.enumParams) {
     Object.entries(config.enumParams).forEach(([param, allowedValues]) => {
       const value = searchParams.get(param);

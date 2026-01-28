@@ -21,12 +21,10 @@ export const useCombobox = ({
   const [searchValue, setSearchValue] = useState('');
   const [focusedIndex, setFocusedIndex] = useState(INITIAL_FOCUSED_INDEX);
 
-  // 選択されたオプションを取得
   const selectedOption = useMemo(() => {
     return options.find((option) => option.value === value);
   }, [options, value]);
 
-  // フィルタリングされたオプション
   const filteredOptions = useMemo(() => {
     if (!searchValue.trim()) return options;
 
@@ -34,12 +32,10 @@ export const useCombobox = ({
     return options.filter((option) => option.label.toLowerCase().includes(searchTerm));
   }, [options, searchValue]);
 
-  // 検索値の変更を親に通知
   useEffect(() => {
     onInputChange?.(searchValue);
   }, [searchValue, onInputChange]);
 
-  // アクション関数群
   const handleOpen = useCallback((): void => {
     setIsOpen(true);
   }, []);
@@ -64,7 +60,6 @@ export const useCombobox = ({
 
   const handleSetSearchValue = useCallback((newValue: string): void => {
     setSearchValue(newValue);
-    // 検索時にフォーカスをリセット
     setFocusedIndex(INITIAL_FOCUSED_INDEX);
   }, []);
 
@@ -78,7 +73,6 @@ export const useCombobox = ({
     setFocusedIndex(INITIAL_FOCUSED_INDEX);
   }, [onValueChange]);
 
-  // アクションオブジェクト
   const actions = useMemo(
     () => ({
       open: handleOpen,
@@ -98,7 +92,6 @@ export const useCombobox = ({
     ]
   );
 
-  // 派生状態
   const hasValue = Boolean(selectedOption);
   const isEmpty = filteredOptions.length === 0;
 
