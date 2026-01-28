@@ -87,10 +87,7 @@ function ComboboxInput({
     [disabled]
   );
 
-  const chevronClassName = useMemo(
-    () => cn('size-4 text-muted-foreground transition-transform', isOpen && 'rotate-180'),
-    [isOpen]
-  );
+  const chevronClassName = 'size-4 text-muted-foreground';
 
   return (
     <div className={containerClassName} onClick={onInputClick}>

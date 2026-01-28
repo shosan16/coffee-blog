@@ -144,7 +144,7 @@ export default function MultiCombobox({
                 />
               </div>
             </div>
-            <ChevronDown className="text-muted-foreground absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2" />
+            <ChevronDown className="text-muted-foreground absolute top-1/2 right-3 size-4 -translate-y-1/2" />
           </div>
         </Popover.Trigger>
 
