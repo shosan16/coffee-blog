@@ -21,10 +21,6 @@ describe('RecipeSummarySchema', () => {
         summary: 'バランスの取れたV60レシピ',
         equipment: ['Hario V60', 'ペーパーフィルター'],
         roastLevel: 'MEDIUM',
-        grindSize: 'MEDIUM',
-        beanWeight: 20,
-        waterTemp: 92,
-        waterAmount: 300,
         tags: [{ id: '1', name: 'フルーティ', slug: 'fruity' }],
         baristaName: 'テスト投稿者',
       };
@@ -39,31 +35,6 @@ describe('RecipeSummarySchema', () => {
       }
     });
 
-    it('grindSizeがundefinedでもパースできること', () => {
-      // Arrange - grindSizeがないレシピ要約情報
-      const recipeWithoutGrindSize = {
-        id: 'recipe-2',
-        title: 'シンプルレシピ',
-        summary: '挽き目指定なしのレシピ',
-        equipment: ['ドリッパー'],
-        roastLevel: 'LIGHT',
-        beanWeight: 18,
-        waterTemp: 95,
-        waterAmount: 250,
-        tags: [],
-        baristaName: null,
-      };
-
-      // Act - スキーマでパース
-      const result = RecipeSummarySchema.safeParse(recipeWithoutGrindSize);
-
-      // Assert - パース成功を検証
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data.grindSize).toBeUndefined();
-      }
-    });
-
     it('空の器具配列でもパースできること', () => {
       // Arrange - 器具が空のレシピ要約情報
       const recipeWithEmptyEquipment = {
@@ -72,9 +43,6 @@ describe('RecipeSummarySchema', () => {
         summary: '器具を指定していないレシピ',
         equipment: [],
         roastLevel: 'DARK',
-        beanWeight: 22,
-        waterTemp: 88,
-        waterAmount: 280,
         tags: [],
         baristaName: '山田太郎',
       };
@@ -98,9 +66,6 @@ describe('RecipeSummarySchema', () => {
         summary: 'テスト',
         equipment: [],
         roastLevel: 'MEDIUM',
-        beanWeight: 20,
-        waterTemp: 90,
-        waterAmount: 300,
         tags: [],
         baristaName: null,
       };
@@ -120,9 +85,6 @@ describe('RecipeSummarySchema', () => {
         summary: 'テスト',
         equipment: [],
         roastLevel: 'MEDIUM',
-        beanWeight: 20,
-        waterTemp: 90,
-        waterAmount: 300,
         tags: [],
         baristaName: null,
         unknownProp: 'should fail',
@@ -135,17 +97,14 @@ describe('RecipeSummarySchema', () => {
       expect(result.success).toBe(false);
     });
 
-    it('beanWeightが文字列の場合、パースに失敗すること', () => {
-      // Arrange - beanWeightが文字列のレシピ要約情報
+    it('roastLevelが数値の場合、パースに失敗すること', () => {
+      // Arrange - roastLevelが数値のレシピ要約情報
       const invalidRecipe = {
         id: 'recipe-1',
         title: 'テストレシピ',
         summary: 'テスト',
         equipment: [],
-        roastLevel: 'MEDIUM',
-        beanWeight: '20g',
-        waterTemp: 90,
-        waterAmount: 300,
+        roastLevel: 123,
         tags: [],
         baristaName: null,
       };
@@ -167,10 +126,6 @@ describe('RecipeSummarySchema', () => {
         summary: 'テスト',
         equipment: ['V60'],
         roastLevel: 'MEDIUM',
-        grindSize: 'MEDIUM',
-        beanWeight: 20,
-        waterTemp: 90,
-        waterAmount: 300,
         tags: [{ id: '1', name: 'ナッツ', slug: 'nuts' }],
         baristaName: 'テスト投稿者',
       };
@@ -179,7 +134,7 @@ describe('RecipeSummarySchema', () => {
       expect(typeof recipe.id).toBe('string');
       expect(typeof recipe.title).toBe('string');
       expect(Array.isArray(recipe.equipment)).toBe(true);
-      expect(typeof recipe.beanWeight).toBe('number');
+      expect(typeof recipe.roastLevel).toBe('string');
       expect(Array.isArray(recipe.tags)).toBe(true);
     });
   });
@@ -197,10 +152,6 @@ describe('RecipeListResponseSchema', () => {
             summary: 'バランスの取れたV60レシピ',
             equipment: ['Hario V60'],
             roastLevel: 'MEDIUM',
-            grindSize: 'MEDIUM',
-            beanWeight: 20,
-            waterTemp: 92,
-            waterAmount: 300,
             tags: [{ id: '1', name: 'バランス', slug: 'balance' }],
             baristaName: '鈴木一郎',
           },
@@ -271,9 +222,6 @@ describe('RecipeListResponseSchema', () => {
             summary: 'テスト',
             equipment: [],
             roastLevel: 'MEDIUM',
-            beanWeight: 20,
-            waterTemp: 90,
-            waterAmount: 300,
             tags: [],
             baristaName: null,
           },
@@ -305,9 +253,6 @@ describe('RecipeListResponseSchema', () => {
             summary: 'テスト',
             equipment: [],
             roastLevel: 'MEDIUM',
-            beanWeight: 20,
-            waterTemp: 90,
-            waterAmount: 300,
             tags: [],
             baristaName: null,
           },

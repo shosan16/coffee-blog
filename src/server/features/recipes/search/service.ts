@@ -39,13 +39,9 @@ export class SearchRecipesService {
         limit: params.limit,
         search: params.search,
         roastLevel: params.roastLevel,
-        grindSize: params.grindSize,
         equipment: params.equipment,
         equipmentType: params.equipmentType,
         tags: params.tags,
-        beanWeight: params.beanWeight,
-        waterTemp: params.waterTemp,
-        waterAmount: params.waterAmount,
         sort: params.sort as
           | 'id'
           | 'title'

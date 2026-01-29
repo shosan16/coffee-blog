@@ -20,11 +20,6 @@ export type Recipe = {
   equipment: string[];
   /** 焙煎レベル（文字列表現） */
   roastLevel: string;
-  /** 挽き目（オプション、文字列表現） */
-  grindSize?: string;
-  beanWeight: number;
-  waterTemp: number;
-  waterAmount: number;
   tags: RecipeTagSummary[];
   baristaName: string | null;
 };

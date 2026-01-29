@@ -1,4 +1,4 @@
-import { RoastLevel, GrindSize } from '@prisma/client';
+import { RoastLevel } from '@prisma/client';
 import type { ReadonlyURLSearchParams } from 'next/navigation';
 import { describe, it, expect } from 'vitest';
 
@@ -21,10 +21,7 @@ describe('parseFiltersFromSearchParams', () => {
         sort: 'createdAt',
         order: 'desc',
         roastLevel: 'LIGHT,MEDIUM',
-        grindSize: 'FINE,MEDIUM_FINE',
         equipment: 'HARIO V60,CHEMEX',
-        beanWeight: '{"min":15,"max":25}',
-        waterTemp: '{"min":85,"max":95}',
       });
 
       // Act - 実行：フィルター条件を解析
@@ -38,10 +35,7 @@ describe('parseFiltersFromSearchParams', () => {
         sort: 'createdAt',
         order: 'desc',
         roastLevel: [RoastLevel.LIGHT, RoastLevel.MEDIUM],
-        grindSize: [GrindSize.FINE, GrindSize.MEDIUM_FINE],
         equipment: ['HARIO V60', 'CHEMEX'],
-        beanWeight: { min: 15, max: 25 },
-        waterTemp: { min: 85, max: 95 },
       });
     });
 
@@ -98,7 +92,6 @@ describe('parseFiltersFromSearchParams', () => {
       // Arrange - 準備：配列パラメータを含むSearchParamsを作成
       const searchParams = createSearchParams({
         roastLevel: 'LIGHT,MEDIUM,DARK',
-        grindSize: 'FINE,COARSE',
         equipment: 'HARIO V60,CHEMEX,Kalita Wave',
       });
 
@@ -108,25 +101,7 @@ describe('parseFiltersFromSearchParams', () => {
       // Assert - 確認：配列が正しく解析されることを検証
       expect(result).toEqual({
         roastLevel: [RoastLevel.LIGHT, RoastLevel.MEDIUM, RoastLevel.DARK],
-        grindSize: [GrindSize.FINE, GrindSize.COARSE],
         equipment: ['HARIO V60', 'CHEMEX', 'Kalita Wave'],
-      });
-    });
-
-    it('JSONパラメータが正しく解析される', () => {
-      // Arrange - 準備：有効なJSONパラメータを含むSearchParamsを作成
-      const searchParams = createSearchParams({
-        beanWeight: '{"min":18,"max":22}',
-        waterTemp: '{"min":90,"max":96}',
-      });
-
-      // Act - 実行：フィルター条件を解析
-      const result = parseFiltersFromSearchParams(searchParams);
-
-      // Assert - 確認：JSONが正しく解析されることを検証
-      expect(result).toEqual({
-        beanWeight: { min: 18, max: 22 },
-        waterTemp: { min: 90, max: 96 },
       });
     });
 
@@ -151,29 +126,6 @@ describe('parseFiltersFromSearchParams', () => {
         ],
       });
     });
-
-    it('すべてのGrindSize列挙値が正しく解析される', () => {
-      // Arrange - 準備：すべてのGrindSize値を含むSearchParamsを作成
-      const searchParams = createSearchParams({
-        grindSize: 'EXTRA_FINE,FINE,MEDIUM_FINE,MEDIUM,MEDIUM_COARSE,COARSE,EXTRA_COARSE',
-      });
-
-      // Act - 実行：フィルター条件を解析
-      const result = parseFiltersFromSearchParams(searchParams);
-
-      // Assert - 確認：すべてのGrindSize値が正しく解析されることを検証
-      expect(result).toEqual({
-        grindSize: [
-          GrindSize.EXTRA_FINE,
-          GrindSize.FINE,
-          GrindSize.MEDIUM_FINE,
-          GrindSize.MEDIUM,
-          GrindSize.MEDIUM_COARSE,
-          GrindSize.COARSE,
-          GrindSize.EXTRA_COARSE,
-        ],
-      });
-    });
   });
 
   describe('異常系: 不正な値の処理', () => {
@@ -188,20 +140,6 @@ describe('parseFiltersFromSearchParams', () => {
       const result = parseFiltersFromSearchParams(searchParams);
 
       // Assert - 確認：不正な数値は無視されることを検証
-      expect(result).toEqual({});
-    });
-
-    it('不正なJSONパラメータは無視される', () => {
-      // Arrange - 準備：不正なJSONを含むSearchParamsを作成
-      const searchParams = createSearchParams({
-        beanWeight: 'invalid json',
-        waterTemp: '{"min":90', // 不完全なJSON
-      });
-
-      // Act - 実行：フィルター条件を解析
-      const result = parseFiltersFromSearchParams(searchParams);
-
-      // Assert - 確認：不正なJSONは無視されることを検証
       expect(result).toEqual({});
     });
 
@@ -255,21 +193,6 @@ describe('parseFiltersFromSearchParams', () => {
       // Assert - 確認：すべての値が配列として解析されることを検証（型アサーションのため）
       expect(result).toEqual({
         roastLevel: ['LIGHT', 'INVALID_ROAST', 'MEDIUM', 'UNKNOWN'],
-      });
-    });
-
-    it('不正なGrindSize値を含む配列もそのまま解析される（型アサーションのため）', () => {
-      // Arrange - 準備：有効・無効なGrindSize値が混在するSearchParamsを作成
-      const searchParams = createSearchParams({
-        grindSize: 'FINE,INVALID_GRIND,COARSE,UNKNOWN',
-      });
-
-      // Act - 実行：フィルター条件を解析
-      const result = parseFiltersFromSearchParams(searchParams);
-
-      // Assert - 確認：すべての値が配列として解析されることを検証（型アサーションのため）
-      expect(result).toEqual({
-        grindSize: ['FINE', 'INVALID_GRIND', 'COARSE', 'UNKNOWN'],
       });
     });
   });
@@ -340,23 +263,6 @@ describe('parseFiltersFromSearchParams', () => {
       expect(result).toEqual({});
     });
 
-    it('複雑なJSONオブジェクトが正しく解析される', () => {
-      // Arrange - 準備：複雑なJSONオブジェクトを含むSearchParamsを作成
-      const searchParams = createSearchParams({
-        beanWeight: '{"min":0,"max":100}',
-        waterTemp: '{"min":60,"max":100}',
-      });
-
-      // Act - 実行：フィルター条件を解析
-      const result = parseFiltersFromSearchParams(searchParams);
-
-      // Assert - 確認：複雑なJSONが正しく解析されることを検証
-      expect(result).toEqual({
-        beanWeight: { min: 0, max: 100 },
-        waterTemp: { min: 60, max: 100 },
-      });
-    });
-
     it('特殊文字を含む文字列パラメータが正しく処理される', () => {
       // Arrange - 準備：特殊文字を含む文字列パラメータを含むSearchParamsを作成
       const searchParams = createSearchParams({
@@ -400,8 +306,6 @@ describe('parseFiltersFromSearchParams', () => {
         sort: '', // 無効（空文字列）
         order: 'asc', // 有効
         roastLevel: 'LIGHT,INVALID,MEDIUM', // 型アサーションのためすべて含まれる
-        beanWeight: '{"min":15,"max":25}', // 有効
-        waterTemp: 'invalid json', // 無効
       });
 
       // Act - 実行：フィルター条件を解析
@@ -413,7 +317,6 @@ describe('parseFiltersFromSearchParams', () => {
         search: 'coffee',
         order: 'asc',
         roastLevel: ['LIGHT', 'INVALID', 'MEDIUM'],
-        beanWeight: { min: 15, max: 25 },
       });
     });
   });

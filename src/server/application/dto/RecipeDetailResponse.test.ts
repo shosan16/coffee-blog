@@ -37,10 +37,6 @@ describe('RecipeDetailResponseMapper', () => {
       const id = RecipeId.fromString('1');
       const brewingConditions = BrewingConditions.create({
         roastLevel: 'MEDIUM',
-        grindSize: 'MEDIUM',
-        beanWeight: 20,
-        waterTemp: 92,
-        waterAmount: 300,
       });
 
       recipe = Recipe.reconstruct({
@@ -193,10 +189,6 @@ describe('RecipeDetailResponseMapper', () => {
         expect(dto.title).toBe('V60 Medium Roast');
         expect(dto.summary).toBe('Balanced V60 recipe');
         expect(dto.roastLevel).toBe('MEDIUM');
-        expect(dto.grindSize).toBe('MEDIUM');
-        expect(dto.beanWeight).toBe(20);
-        expect(dto.waterTemp).toBe(92);
-        expect(dto.waterAmount).toBe(300);
         expect(dto.viewCount).toBe(100);
         expect(dto.isPublished).toBe(true);
       });

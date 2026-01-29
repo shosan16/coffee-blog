@@ -37,10 +37,6 @@ export class RecipeDetailResponseMapper {
       summary: recipe.summary ?? undefined,
       remarks: recipe.remarks ?? undefined,
       roastLevel: recipe.brewingConditions.roastLevel,
-      grindSize: recipe.brewingConditions.grindSize ?? undefined,
-      beanWeight: recipe.brewingConditions.beanWeight ?? undefined,
-      waterTemp: recipe.brewingConditions.waterTemp ?? undefined,
-      waterAmount: recipe.brewingConditions.waterAmount ?? undefined,
       viewCount: recipe.viewCount,
       isPublished: recipe.isPublished,
       publishedAt: recipe.publishedAt?.toISOString() ?? undefined,
@@ -141,10 +137,6 @@ type RecipeEntity = {
   readonly remarks?: string;
   readonly brewingConditions: {
     readonly roastLevel: string;
-    readonly grindSize?: string;
-    readonly beanWeight?: number;
-    readonly waterTemp?: number;
-    readonly waterAmount?: number;
   };
   readonly viewCount: number;
   readonly isPublished: boolean;

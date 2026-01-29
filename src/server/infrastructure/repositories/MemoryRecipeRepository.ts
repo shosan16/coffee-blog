@@ -79,50 +79,6 @@ export class MemoryRecipeRepository implements IRecipeRepository {
       );
     }
 
-    if (criteria.grindSize?.length) {
-      filteredRecipes = filteredRecipes.filter(
-        (recipe) =>
-          recipe.brewingConditions.grindSize &&
-          (criteria.grindSize ?? []).includes(recipe.brewingConditions.grindSize)
-      );
-    }
-
-    if (criteria.beanWeight) {
-      filteredRecipes = filteredRecipes.filter((recipe) => {
-        const beanWeight = recipe.brewingConditions.beanWeight;
-        if (beanWeight === undefined) return false;
-
-        return (
-          (criteria.beanWeight?.min === undefined || beanWeight >= criteria.beanWeight.min) &&
-          (criteria.beanWeight?.max === undefined || beanWeight <= criteria.beanWeight.max)
-        );
-      });
-    }
-
-    if (criteria.waterTemp) {
-      filteredRecipes = filteredRecipes.filter((recipe) => {
-        const waterTemp = recipe.brewingConditions.waterTemp;
-        if (waterTemp === undefined) return false;
-
-        return (
-          (criteria.waterTemp?.min === undefined || waterTemp >= criteria.waterTemp.min) &&
-          (criteria.waterTemp?.max === undefined || waterTemp <= criteria.waterTemp.max)
-        );
-      });
-    }
-
-    if (criteria.waterAmount) {
-      filteredRecipes = filteredRecipes.filter((recipe) => {
-        const waterAmount = recipe.brewingConditions.waterAmount;
-        if (waterAmount === undefined) return false;
-
-        return (
-          (criteria.waterAmount?.min === undefined || waterAmount >= criteria.waterAmount.min) &&
-          (criteria.waterAmount?.max === undefined || waterAmount <= criteria.waterAmount.max)
-        );
-      });
-    }
-
     if (criteria.equipmentIds?.length) {
       filteredRecipes = filteredRecipes.filter((recipe) =>
         (criteria.equipmentIds ?? []).some((equipmentId) =>

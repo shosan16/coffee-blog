@@ -85,7 +85,8 @@
       "Bash(wc:*)",
       "Bash(lsof:*)",
       "mcp__context7__query-docs",
-      "WebFetch(domain:www.radix-ui.com)"
+      "WebFetch(domain:www.radix-ui.com)",
+      "Skill(commit-commands:commit)"
     ],
     "deny": []
   }

@@ -1,4 +1,4 @@
-import { RoastLevel, GrindSize } from '@prisma/client';
+import { RoastLevel } from '@prisma/client';
 import { renderHook, waitFor } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
@@ -23,10 +23,6 @@ const createMockRecipe = (overrides: Partial<Recipe> = {}): Recipe => ({
   summary: '濃厚なエスプレッソのレシピ',
   equipment: ['エスプレッソマシン'],
   roastLevel: RoastLevel.DARK,
-  grindSize: GrindSize.FINE,
-  beanWeight: 18,
-  waterTemp: 93,
-  waterAmount: 36,
   tags: [{ id: '1', name: 'エスプレッソ', slug: 'espresso' }],
   baristaName: 'テスト投稿者',
   ...overrides,
@@ -100,10 +96,7 @@ describe('useRecipes', () => {
         page: 2,
         limit: 5,
         roastLevel: [RoastLevel.MEDIUM],
-        grindSize: [GrindSize.MEDIUM],
         equipment: ['HARIO V60'],
-        beanWeight: { min: 15, max: 20 },
-        waterTemp: { min: 90, max: 95 },
         search: 'ドリップ',
         sort: 'title',
         order: 'asc',
@@ -301,7 +294,6 @@ describe('useRecipes', () => {
         page: 1,
         limit: 10,
         roastLevel: [RoastLevel.MEDIUM],
-        grindSize: [GrindSize.MEDIUM],
       });
       const mockResponse = createMockRecipeResponse();
       mockFetchRecipes.mockResolvedValue(mockResponse);

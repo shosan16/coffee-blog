@@ -148,9 +148,6 @@ describe('SearchRecipesUseCase', () => {
         title: 'Light Roast Recipe',
         brewingConditions: BrewingConditions.create({
           roastLevel: 'LIGHT',
-          grindSize: 'MEDIUM',
-          beanWeight: 15,
-          waterAmount: 250,
         }),
         viewCount: 100,
         isPublished: true,
@@ -163,9 +160,6 @@ describe('SearchRecipesUseCase', () => {
         title: 'Medium Roast Recipe',
         brewingConditions: BrewingConditions.create({
           roastLevel: 'MEDIUM',
-          grindSize: 'FINE',
-          beanWeight: 20,
-          waterAmount: 300,
         }),
         viewCount: 150,
         isPublished: true,
@@ -178,9 +172,6 @@ describe('SearchRecipesUseCase', () => {
         title: 'Dark Roast Recipe',
         brewingConditions: BrewingConditions.create({
           roastLevel: 'DARK',
-          grindSize: 'COARSE',
-          beanWeight: 18,
-          waterAmount: 280,
         }),
         viewCount: 120,
         isPublished: true,
@@ -195,9 +186,7 @@ describe('SearchRecipesUseCase', () => {
       const input: SearchRecipesInput = {
         page: 1,
         limit: 10,
-        roastLevel: ['LIGHT', 'MEDIUM'],
-        grindSize: ['MEDIUM'],
-        beanWeight: { min: 10, max: 20 },
+        roastLevel: ['LIGHT'],
       };
 
       // Act - 実行：ユースケースの実行
@@ -207,7 +196,6 @@ describe('SearchRecipesUseCase', () => {
       expect(result.recipes).toHaveLength(1);
       expect(result.recipes[0].title).toBe('Light Roast Recipe');
       expect(result.recipes[0].brewingConditions.roastLevel).toBe('LIGHT');
-      expect(result.recipes[0].brewingConditions.grindSize).toBe('MEDIUM');
     });
   });
 
@@ -266,42 +254,6 @@ describe('SearchRecipesUseCase', () => {
         }
       }
     });
-
-    it('範囲フィルターが無効な場合にINVALID_PARAMSエラーが発生すること', async () => {
-      // Arrange - 準備：無効な範囲フィルター
-      const invalidInputs: SearchRecipesInput[] = [
-        {
-          page: 1,
-          limit: 10,
-          beanWeight: { min: -5, max: 20 }, // 負の最小値
-        },
-        {
-          page: 1,
-          limit: 10,
-          waterTemp: { min: 90, max: -10 }, // 負の最大値
-        },
-        {
-          page: 1,
-          limit: 10,
-          waterAmount: { min: 300, max: 200 }, // 最小値 > 最大値
-        },
-      ];
-
-      // Act & Assert - 実行と確認：各無効入力でエラーが発生することを確認
-      for (const input of invalidInputs) {
-        await expect(useCase.execute(input)).rejects.toThrow(SearchRecipesUseCaseError);
-
-        try {
-          await useCase.execute(input);
-        } catch (error) {
-          expect(error).toBeInstanceOf(SearchRecipesUseCaseError);
-          if (error instanceof SearchRecipesUseCaseError) {
-            expect(error.code).toBe('INVALID_PARAMS');
-            expect(error.statusCode).toBe(400);
-          }
-        }
-      }
-    });
   });
 
   describe('データ変換テスト', () => {
@@ -312,10 +264,6 @@ describe('SearchRecipesUseCase', () => {
         title: 'Test Recipe',
         brewingConditions: BrewingConditions.create({
           roastLevel: 'MEDIUM',
-          grindSize: 'MEDIUM',
-          beanWeight: 15,
-          waterTemp: 92,
-          waterAmount: 250,
         }),
         equipmentIds: ['drip-01', 'filter-02'],
         viewCount: 100,
@@ -331,12 +279,8 @@ describe('SearchRecipesUseCase', () => {
         limit: 5,
         search: 'Test',
         roastLevel: ['MEDIUM'],
-        grindSize: ['MEDIUM'],
         equipment: ['drip-01', 'filter-02'],
         equipmentType: ['dripper', 'filter'],
-        beanWeight: { min: 10, max: 20 },
-        waterTemp: { min: 85, max: 95 },
-        waterAmount: { min: 200, max: 300 },
         sort: 'viewCount',
         order: 'desc',
       };

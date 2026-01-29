@@ -1,4 +1,4 @@
-import { RoastLevel, GrindSize } from '@prisma/client';
+import { RoastLevel } from '@prisma/client';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { SearchRecipesService } from '@/server/features/recipes/search/service';
@@ -137,22 +137,6 @@ describe('SearchRecipesService', () => {
       expect(whereClause.roastLevel.in).toEqual([RoastLevel.MEDIUM, RoastLevel.DARK]);
     });
 
-    it('挽き目でフィルタリングできる', async () => {
-      // Arrange - 準備： 挽き目フィルターを含む検索パラメータを設定
-      const searchParams = createSearchParams({
-        grindSize: [GrindSize.MEDIUM, GrindSize.FINE],
-      });
-      mockPrisma.post.count.mockResolvedValue(0);
-      mockPrisma.post.findMany.mockResolvedValue([]);
-
-      // Act - 実行： 挽き目フィルター付きで検索を実行
-      await service.searchRecipes(searchParams);
-
-      // Assert - 確認： WHERE句に挽き目条件が含まれる
-      const whereClause = mockPrisma.post.findMany.mock.calls[0][0].where;
-      expect(whereClause.grindSize.in).toEqual([GrindSize.MEDIUM, GrindSize.FINE]);
-    });
-
     it('器具名でフィルタリングできる', async () => {
       // Arrange - 準備： 器具フィルターを含む検索パラメータを設定
       const searchParams = createSearchParams({
@@ -170,40 +154,6 @@ describe('SearchRecipesService', () => {
       expect(whereClause.AND[0].equipment.some.name.in).toEqual(['V60', 'Chemex']);
     });
 
-    it('豆の重量範囲でフィルタリングできる', async () => {
-      // Arrange - 準備： 豆の重量範囲フィルターを含む検索パラメータを設定
-      const searchParams = createSearchParams({
-        beanWeight: { min: 15, max: 25 },
-      });
-      mockPrisma.post.count.mockResolvedValue(0);
-      mockPrisma.post.findMany.mockResolvedValue([]);
-
-      // Act - 実行： 豆の重量範囲フィルター付きで検索を実行
-      await service.searchRecipes(searchParams);
-
-      // Assert - 確認： WHERE句に豆の重量範囲条件が含まれる
-      const whereClause = mockPrisma.post.findMany.mock.calls[0][0].where;
-      expect(whereClause.beanWeight.gte).toBe(15);
-      expect(whereClause.beanWeight.lte).toBe(25);
-    });
-
-    it('水温範囲でフィルタリングできる', async () => {
-      // Arrange - 準備： 水温範囲フィルターを含む検索パラメータを設定
-      const searchParams = createSearchParams({
-        waterTemp: { min: 85, max: 95 },
-      });
-      mockPrisma.post.count.mockResolvedValue(0);
-      mockPrisma.post.findMany.mockResolvedValue([]);
-
-      // Act - 実行： 水温範囲フィルター付きで検索を実行
-      await service.searchRecipes(searchParams);
-
-      // Assert - 確認： WHERE句に水温範囲条件が含まれる
-      const whereClause = mockPrisma.post.findMany.mock.calls[0][0].where;
-      expect(whereClause.waterTemp.gte).toBe(85);
-      expect(whereClause.waterTemp.lte).toBe(95);
-    });
-
     it('複数の条件を組み合わせてフィルタリングできる', async () => {
       // Arrange - 準備： すべてのフィルター条件を含む検索パラメータを設定
       const searchParams = createFullSearchParams();
@@ -216,30 +166,8 @@ describe('SearchRecipesService', () => {
       // Assert - 確認： WHERE句にすべてのフィルター条件が含まれる
       const whereClause = mockPrisma.post.findMany.mock.calls[0][0].where;
       expect(whereClause.roastLevel.in).toEqual([RoastLevel.MEDIUM]);
-      expect(whereClause.grindSize.in).toEqual([GrindSize.MEDIUM]);
       expect(whereClause.AND).toBeDefined();
       expect(whereClause.AND[0].equipment.some.name.in).toEqual(['1']);
-      expect(whereClause.beanWeight.gte).toBe(15);
-      expect(whereClause.beanWeight.lte).toBe(25);
-      expect(whereClause.waterTemp.gte).toBe(85);
-      expect(whereClause.waterTemp.lte).toBe(95);
-    });
-
-    it('水量範囲でフィルタリングできる', async () => {
-      // Arrange - 準備： 水量範囲フィルターを含む検索パラメータを設定
-      const searchParams = createSearchParams({
-        waterAmount: { min: 200, max: 300 },
-      });
-      mockPrisma.post.count.mockResolvedValue(0);
-      mockPrisma.post.findMany.mockResolvedValue([]);
-
-      // Act - 実行： 水量範囲フィルター付きで検索を実行
-      await service.searchRecipes(searchParams);
-
-      // Assert - 確認： WHERE句に水量範囲条件が含まれる
-      const whereClause = mockPrisma.post.findMany.mock.calls[0][0].where;
-      expect(whereClause.waterAmount.gte).toBe(200);
-      expect(whereClause.waterAmount.lte).toBe(300);
     });
 
     it('器具タイプでフィルタリングできる', async () => {
@@ -379,9 +307,6 @@ describe('SearchRecipesService', () => {
 
       // Assert - 確認： null値が適切なデフォルト値に変換されている
       expect(result.recipes[0].summary).toBe('');
-      expect(result.recipes[0].beanWeight).toBe(0);
-      expect(result.recipes[0].waterTemp).toBe(0);
-      expect(result.recipes[0].waterAmount).toBe(0);
     });
 
     it('器具名が配列として正しく変換される', async () => {

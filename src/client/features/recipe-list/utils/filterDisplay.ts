@@ -1,16 +1,16 @@
 import type { RecipeFilters } from '@/client/features/recipe-list/types/api';
-import { getGrindSizeLabel, getRoastLevelLabel } from '@/client/shared/constants/coffee-beans';
+import { getRoastLevelLabel } from '@/client/shared/constants/coffee-beans';
 
 /**
  * フィルターのカテゴリ
  * UIでのスタイリングやグループ化に使用
  */
-export type FilterCategory = 'roastLevel' | 'grindSize' | 'equipment' | 'tags' | 'search' | 'range';
+export type FilterCategory = 'roastLevel' | 'equipment' | 'tags' | 'search';
 
 /**
  * フィルター表示アイテムの型定義
  *
- * @property key - フィルターのキー（roastLevel, grindSize 等）
+ * @property key - フィルターのキー（roastLevel, equipment 等）
  * @property label - 表示用ラベル
  * @property itemValue - 配列フィルターの個別値（削除時に使用）
  * @property isSearch - 検索フィルターかどうか
@@ -24,53 +24,12 @@ export type FilterDisplayItem = {
   category: FilterCategory;
 };
 
-/**
- * 範囲フィルターを表示用文字列にフォーマットする
- *
- * @param label - 表示ラベル（粉量、湯温、水量）
- * @param range - 範囲オブジェクト（min, max）
- * @param unit - 単位（g, ℃, ml）
- * @returns フォーマット済み文字列、または範囲が指定されていない場合は null
- */
-export function formatRangeDisplay(
-  label: string,
-  range: { min?: number; max?: number } | undefined,
-  unit: string
-): string | null {
-  if (!range) return null;
-  const { min, max } = range;
-
-  if (min !== undefined && max !== undefined) {
-    return `${label}: ${min}-${max}${unit}`;
-  }
-  if (min !== undefined) {
-    return `${label}: ${min}${unit}〜`;
-  }
-  if (max !== undefined) {
-    return `${label}: 〜${max}${unit}`;
-  }
-  return null;
-}
-
-/** 範囲フィルターの設定 */
-type RangeFilterConfig = {
-  key: keyof Pick<RecipeFilters, 'beanWeight' | 'waterTemp' | 'waterAmount'>;
-  label: string;
-  unit: string;
-};
-
-const RANGE_FILTER_CONFIGS: RangeFilterConfig[] = [
-  { key: 'beanWeight', label: '粉量', unit: 'g' },
-  { key: 'waterTemp', label: '湯温', unit: '℃' },
-  { key: 'waterAmount', label: '水量', unit: 'ml' },
-];
-
 /** 配列フィルターのラベル変換関数の型 */
 type LabelConverter = (value: string) => string;
 
 /** 配列フィルターの設定 */
 type ArrayFilterConfig = {
-  key: keyof Pick<RecipeFilters, 'roastLevel' | 'grindSize' | 'equipment' | 'tags'>;
+  key: keyof Pick<RecipeFilters, 'roastLevel' | 'equipment' | 'tags'>;
   getLabel: LabelConverter;
   category: FilterCategory;
 };
@@ -80,11 +39,6 @@ const ARRAY_FILTER_CONFIGS: ArrayFilterConfig[] = [
     key: 'roastLevel',
     getLabel: (v) => getRoastLevelLabel(v as Parameters<typeof getRoastLevelLabel>[0]),
     category: 'roastLevel',
-  },
-  {
-    key: 'grindSize',
-    getLabel: (v) => getGrindSizeLabel(v as Parameters<typeof getGrindSizeLabel>[0]),
-    category: 'grindSize',
   },
   { key: 'equipment', getLabel: (v) => v, category: 'equipment' },
   { key: 'tags', getLabel: (v) => v, category: 'tags' },
@@ -113,14 +67,6 @@ export function buildFilterDisplayItems(filters: RecipeFilters): FilterDisplayIt
           category: config.category,
         });
       }
-    }
-  }
-
-  // 範囲フィルターを処理
-  for (const config of RANGE_FILTER_CONFIGS) {
-    const rangeLabel = formatRangeDisplay(config.label, filters[config.key], config.unit);
-    if (rangeLabel) {
-      items.push({ key: config.key, label: rangeLabel, category: 'range' });
     }
   }
 

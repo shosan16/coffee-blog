@@ -71,8 +71,7 @@ describe('ActiveFilters', () => {
     mockUseRecipeQuery.mockReturnValue({
       ...defaultMockReturn,
       filters: {
-        roastLevel: ['LIGHT'],
-        grindSize: ['MEDIUM'],
+        roastLevel: ['LIGHT', 'MEDIUM'],
       },
     });
 
@@ -81,7 +80,7 @@ describe('ActiveFilters', () => {
 
     // Assert
     expect(screen.getByText('浅煎り')).toBeInTheDocument();
-    expect(screen.getByText('中挽き')).toBeInTheDocument();
+    expect(screen.getByText('中煎り')).toBeInTheDocument();
     expect(screen.getByText('すべてクリア')).toBeInTheDocument();
   });
 

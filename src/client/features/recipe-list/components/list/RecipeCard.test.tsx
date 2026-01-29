@@ -17,10 +17,6 @@ const createMockRecipe = (overrides?: Partial<Recipe>): Recipe => ({
   summary: 'テスト用のレシピ説明文です。',
   equipment: ['V60', 'ペーパーフィルター'],
   roastLevel: 'MEDIUM',
-  grindSize: 'MEDIUM_FINE',
-  beanWeight: 20,
-  waterTemp: 92,
-  waterAmount: 300,
   tags: [
     { id: '1', name: 'ナッツ', slug: 'nuts' },
     { id: '2', name: 'チョコレート', slug: 'chocolate' },

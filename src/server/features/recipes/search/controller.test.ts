@@ -1,4 +1,4 @@
-import { RoastLevel, GrindSize } from '@prisma/client';
+import { RoastLevel } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -6,7 +6,6 @@ import { SearchRecipesController } from '@/server/features/recipes/search/contro
 import { SearchRecipesService } from '@/server/features/recipes/search/service';
 import {
   createSearchRequest,
-  createSearchRequestWithJsonParams,
   createMockSearchResult,
 } from '@/server/features/recipes/search/test-helpers';
 
@@ -154,11 +153,11 @@ describe('SearchRecipesController', () => {
       );
     });
 
-    it('JSON形式のパラメータを正しく解析できる', async () => {
-      // Arrange - 準備：JSON形式のパラメータを含むリクエストを作成
-      const request = createSearchRequestWithJsonParams({
-        beanWeight: { min: 15, max: 25 },
-        waterTemp: { min: 85, max: 95 },
+    it('複数の器具フィルターを正しく解析できる', async () => {
+      // Arrange - 準備：複数の器具パラメータを含むリクエストを作成
+      const request = createSearchRequest({
+        equipment: ['V60', 'Chemex'],
+        equipmentType: ['ドリッパー'],
       });
       const mockResult = createMockSearchResult(2);
       mockService.searchRecipes.mockResolvedValue(mockResult);
@@ -166,11 +165,11 @@ describe('SearchRecipesController', () => {
       // Act - 実行：検索リクエストを処理
       await controller.handleSearchRecipes(request);
 
-      // Assert - 確認：JSON形式パラメータが正しく解析されてサービスに渡される
+      // Assert - 確認：器具パラメータが正しく解析されてサービスに渡される
       expect(mockService.searchRecipes).toHaveBeenCalledWith(
         expect.objectContaining({
-          beanWeight: { min: 15, max: 25 },
-          waterTemp: { min: 85, max: 95 },
+          equipment: ['V60', 'Chemex'],
+          equipmentType: ['ドリッパー'],
         })
       );
     });
@@ -183,7 +182,6 @@ describe('SearchRecipesController', () => {
         page: 1,
         limit: 10,
         roastLevel: [RoastLevel.MEDIUM],
-        grindSize: [GrindSize.FINE],
       });
       const mockResult = createMockSearchResult(5);
       mockService.searchRecipes.mockResolvedValue(mockResult);
@@ -330,14 +328,11 @@ describe('SearchRecipesController', () => {
   describe('複雑な検索シナリオ', () => {
     it('全ての検索パラメータを組み合わせた検索が正常に動作する', async () => {
       // Arrange - 準備：全パラメータを含む複雑なリクエストを作成
-      const request = createSearchRequestWithJsonParams({
+      const request = createSearchRequest({
         page: 2,
         limit: 5,
         roastLevel: [RoastLevel.LIGHT, RoastLevel.MEDIUM],
-        grindSize: [GrindSize.FINE],
         equipment: ['V60', 'Chemex'],
-        beanWeight: { min: 15, max: 25 },
-        waterTemp: { min: 85, max: 95 },
         search: 'ハンドドリップ',
         sort: 'title',
         order: 'asc',
@@ -354,10 +349,7 @@ describe('SearchRecipesController', () => {
           page: 2,
           limit: 5,
           roastLevel: [RoastLevel.LIGHT, RoastLevel.MEDIUM],
-          grindSize: [GrindSize.FINE],
           equipment: ['V60', 'Chemex'],
-          beanWeight: { min: 15, max: 25 },
-          waterTemp: { min: 85, max: 95 },
           search: 'ハンドドリップ',
           sort: 'title',
           order: 'asc',

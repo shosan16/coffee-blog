@@ -133,11 +133,6 @@ export const RecipeDetailSchema = z
     summary: z.string().optional(),
     remarks: z.string().optional(),
     roastLevel: z.string(),
-    /** ドリップ以外の抽出方法では省略可能 */
-    grindSize: z.string().optional(),
-    beanWeight: z.number().nonnegative().optional(),
-    waterTemp: z.number().nonnegative().optional(),
-    waterAmount: z.number().nonnegative().optional(),
     viewCount: z.number().int().nonnegative(),
     isPublished: z.boolean(),
     publishedAt: z.string().datetime().optional(),

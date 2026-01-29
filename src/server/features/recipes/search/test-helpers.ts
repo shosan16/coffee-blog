@@ -61,13 +61,9 @@ export function createSearchParams(
     page: 1,
     limit: 10,
     roastLevel: undefined,
-    grindSize: undefined,
     equipment: undefined,
     equipmentType: undefined,
     tags: undefined,
-    beanWeight: undefined,
-    waterTemp: undefined,
-    waterAmount: undefined,
     search: undefined,
     sort: undefined,
     order: undefined,
@@ -77,7 +73,7 @@ export function createSearchParams(
 
 /**
  * テスト用のレシピデータを生成する（コントローラーテスト用）
- * RecipeSummary型に準拠（roastLevel/grindSizeはstring型）
+ * RecipeSummary型に準拠
  */
 export function createMockRecipes(count: number = 1): RecipeSummary[] {
   return Array.from({ length: count }, (_, index) => ({
@@ -86,10 +82,6 @@ export function createMockRecipes(count: number = 1): RecipeSummary[] {
     summary: `テスト用のレシピ説明 ${index + 1}`,
     equipment: ['V60'],
     roastLevel: 'MEDIUM',
-    grindSize: 'MEDIUM',
-    beanWeight: 20,
-    waterTemp: 90,
-    waterAmount: 300,
     tags: [{ id: '1', name: 'ハンドドリップ', slug: 'hand-drip' }],
     baristaName: 'テスト投稿者',
   }));
@@ -235,13 +227,9 @@ export function createFullSearchParams(): SearchRecipesParams {
     page: 1,
     limit: 10,
     roastLevel: [RoastLevel.MEDIUM],
-    grindSize: [GrindSize.MEDIUM],
     equipment: ['1'], // 数値IDを文字列で表現
     equipmentType: ['1'], // 数値IDを文字列で表現
     tags: ['1', '2'], // タグIDを文字列で表現
-    beanWeight: { min: 15, max: 25 },
-    waterTemp: { min: 85, max: 95 },
-    waterAmount: { min: 200, max: 300 },
     search: 'ハンド',
     sort: 'title',
     order: 'asc',
