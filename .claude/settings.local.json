@@ -82,7 +82,10 @@
       "Bash(git stash:*)",
       "Bash(xargs ls:*)",
       "Bash(git commit:*)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(lsof:*)",
+      "mcp__context7__query-docs",
+      "WebFetch(domain:www.radix-ui.com)"
     ],
     "deny": []
   }

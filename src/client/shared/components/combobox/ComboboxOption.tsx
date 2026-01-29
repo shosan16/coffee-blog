@@ -24,7 +24,7 @@ export default function ComboboxOption({
     <li
       {...ariaAttributes}
       className={cn(
-        'cursor-pointer px-3 py-2 text-sm select-none',
+        'cursor-pointer px-3 py-2 text-left text-sm select-none',
         'hover:bg-accent hover:text-accent-foreground',
         'focus:bg-accent focus:text-accent-foreground',
         isSelected && 'bg-accent text-accent-foreground',

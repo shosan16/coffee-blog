@@ -45,6 +45,7 @@ next-env.d.ts
 
 # MCP
 .serena
+.playwright-mcp
 
 # Workspace (temporary design files)
 .workspace/
