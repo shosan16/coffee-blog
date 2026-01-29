@@ -313,4 +313,47 @@ describe('MultiCombobox', () => {
       expect(container.querySelector('[role="option"]')).not.toBeInTheDocument();
     });
   });
+
+  describe('スタイル', () => {
+    it('ドロップダウンがトリガー要素と同じ幅を持つためのスタイルが適用されている', async () => {
+      const { container } = render(<MultiCombobox {...defaultProps} />);
+
+      // ドロップダウンを開く
+      const input = container.querySelector('input[type="text"]');
+      if (input) {
+        fireEvent.click(input);
+      }
+
+      // ドロップダウンが開くのを待つ
+      await waitFor(() => {
+        expect(screen.getByText('ライト')).toBeInTheDocument();
+      });
+
+      // ドロップダウン要素を取得（Portal内にあるのでdocument.bodyから検索）
+      const dropdown = document.body.querySelector('[role="listbox"]');
+      expect(dropdown).toBeInTheDocument();
+
+      // w-[var(--radix-popover-trigger-width)]クラスが適用されていることを確認
+      expect(dropdown).toHaveClass('w-[var(--radix-popover-trigger-width)]');
+    });
+
+    it('ドロップダウン項目のテキストが左寄せである', async () => {
+      const { container } = render(<MultiCombobox {...defaultProps} />);
+
+      // ドロップダウンを開く
+      const input = container.querySelector('input[type="text"]');
+      if (input) {
+        fireEvent.click(input);
+      }
+
+      // ドロップダウンが開くのを待つ
+      await waitFor(() => {
+        expect(screen.getByText('ライト')).toBeInTheDocument();
+      });
+
+      // オプション項目を取得
+      const option = screen.getByRole('option', { name: 'ライト' });
+      expect(option).toHaveClass('text-left');
+    });
+  });
 });

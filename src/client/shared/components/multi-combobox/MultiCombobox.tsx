@@ -102,8 +102,7 @@ export default function MultiCombobox({
               'focus-within:border-primary focus-within:ring-ring/20 focus-within:ring-2',
               'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
               disabled && 'border-border cursor-not-allowed opacity-50',
-              keepMinHeight && selectedItems.length === 0 && 'min-h-9',
-              className
+              keepMinHeight && selectedItems.length === 0 && 'min-h-9'
             )}
             onClick={handleTriggerClick}
           >
@@ -154,11 +153,13 @@ export default function MultiCombobox({
             role="listbox"
             data-filter-dropdown
             className={cn(
-              'bg-popover text-popover-foreground animate-in fade-in-0 zoom-in-95 z-50 max-h-72 w-[--radix-popover-trigger-width] overflow-hidden rounded-md border p-0 shadow-md',
+              'bg-popover text-popover-foreground animate-in fade-in-0 zoom-in-95 z-50 max-h-72 w-[var(--radix-popover-trigger-width)] overflow-hidden rounded-md border p-0 shadow-md',
               dropdownClassName
             )}
+            side="bottom"
             align="start"
             sideOffset={4}
+            avoidCollisions={false}
           >
             <div className="max-h-72 overflow-auto">
               {dropdownHelpMessage && (
@@ -183,7 +184,7 @@ export default function MultiCombobox({
                   role="option"
                   aria-selected="false"
                   className={cn(
-                    'relative flex w-full cursor-pointer items-center rounded-sm px-3 py-2 text-sm',
+                    'relative flex w-full cursor-pointer items-center rounded-sm px-3 py-2 text-left text-sm',
                     'hover:bg-accent hover:text-accent-foreground',
                     item.disabled &&
                       'cursor-not-allowed opacity-50 hover:bg-transparent hover:text-current'

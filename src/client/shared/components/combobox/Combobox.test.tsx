@@ -369,6 +369,22 @@ describe('Combobox', () => {
     });
   });
 
+  describe('スタイル', () => {
+    it('ドロップダウン項目のテキストが左寄せである', async () => {
+      // Arrange - ユーザーイベントとComboboxをセットアップ
+      const user = userEvent.setup();
+      render(<Combobox {...defaultProps} data-testid="test-combobox" />);
+
+      // Act - 入力フィールドをクリックしてドロップダウンを開く
+      const input = getComboboxInput();
+      await user.click(input);
+
+      // Assert - オプション要素にtext-leftクラスが適用されていることを検証
+      const option = screen.getByRole('option', { name: 'Option 1' });
+      expect(option).toHaveClass('text-left');
+    });
+  });
+
   describe('アクセシビリティ', () => {
     it('適切なARIA属性を設定', () => {
       // Arrange - Comboboxをレンダリング
