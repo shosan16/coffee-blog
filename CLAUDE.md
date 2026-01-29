@@ -20,11 +20,6 @@ Next.js 15 + TypeScript のコーヒーレシピブログアプリケーショ�
 - `npm run test` - テスト実行
 - `npm run build` - ビルド
 
-## MCP設定
-
-- **Serena MCP**: コード分析・編集には必ず使用
-- **Context7 MCP**: 外部ライブラリ参照時は `use context7` を追加
-
 ## 言語設定
 
 - 日本語で回答
@@ -36,9 +31,11 @@ YOU MUST: 以下のワークフローは例外なく全てのコード変更に�
 
 1. **探索**: `/context-prime` を実行し、コードを探索
 2. **設計**: `Task tool` で `architect` エージェントを呼び出し、現状分析・設計・実装計画を立案
-3. **実装**: `Task tool` で `frontend-developer` または `backend-developer` エージェントを呼び出し、TDD で実装
-4. **レビュー**: `Task tool` で `code-reviewer` エージェントを呼び出し、品質確認
-5. **完了**: check-all、コミット、PR 作成
+3. **実装・レビューサイクル**: 以下を品質基準を満たすまで繰り返す
+   - **実装**: `Task tool` で `frontend-developer` または `backend-developer` エージェントを呼び出し、TDD で実装
+   - **レビュー**: `Task tool` で `code-reviewer`、`qa-engineer`、`tech-writer` エージェントを呼び出し、品質確認
+   - **判定**: 指摘事項があれば実装に戻る。なければ次へ
+4. **完了**: check-all、コミット、PR 作成
 
 ### 役割分担
 
