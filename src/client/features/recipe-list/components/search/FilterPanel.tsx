@@ -54,34 +54,6 @@ function FilterPanel({ isOpen, onOpenChange, queryResult }: FilterPanelProps): J
     [setFilter]
   );
 
-  const handleGrindSizeChange = useCallback(
-    (grindSize: string[]) => {
-      setFilter('grindSize', grindSize);
-    },
-    [setFilter]
-  );
-
-  const handleBeanWeightChange = useCallback(
-    (beanWeight: { min?: number; max?: number }) => {
-      setFilter('beanWeight', beanWeight);
-    },
-    [setFilter]
-  );
-
-  const handleWaterTempChange = useCallback(
-    (waterTemp: { min?: number; max?: number }) => {
-      setFilter('waterTemp', waterTemp);
-    },
-    [setFilter]
-  );
-
-  const handleWaterAmountChange = useCallback(
-    (waterAmount: { min?: number; max?: number }) => {
-      setFilter('waterAmount', waterAmount);
-    },
-    [setFilter]
-  );
-
   // パネル外クリックで閉じる（UX向上のため）
   useEffect(() => {
     if (!isOpen) {
@@ -143,27 +115,15 @@ function FilterPanel({ isOpen, onOpenChange, queryResult }: FilterPanelProps): J
       </div>
 
       <div className="flex-1 space-y-6 overflow-y-auto px-6 py-6">
-        <div>
-          <EquipmentFilter
-            selectedEquipment={pendingFilters.equipment ?? []}
-            onChange={handleEquipmentChange}
-          />
-        </div>
+        <ConditionFilter
+          roastLevels={pendingFilters.roastLevel ?? []}
+          onRoastLevelChange={handleRoastLevelChange}
+        />
 
-        <div>
-          <ConditionFilter
-            roastLevels={pendingFilters.roastLevel ?? []}
-            grindSizes={pendingFilters.grindSize ?? []}
-            beanWeight={pendingFilters.beanWeight ?? {}}
-            waterTemp={pendingFilters.waterTemp ?? {}}
-            waterAmount={pendingFilters.waterAmount ?? {}}
-            onRoastLevelChange={handleRoastLevelChange}
-            onGrindSizeChange={handleGrindSizeChange}
-            onBeanWeightChange={handleBeanWeightChange}
-            onWaterTempChange={handleWaterTempChange}
-            onWaterAmountChange={handleWaterAmountChange}
-          />
-        </div>
+        <EquipmentFilter
+          selectedEquipment={pendingFilters.equipment ?? []}
+          onChange={handleEquipmentChange}
+        />
       </div>
 
       <div className="space-y-3 border-t px-6 py-4">

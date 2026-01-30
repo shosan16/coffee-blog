@@ -15,10 +15,6 @@ const createMockQueryResult = (
   pendingFilters: {
     equipment: [],
     roastLevel: [],
-    grindSize: [],
-    beanWeight: {},
-    waterTemp: {},
-    waterAmount: {},
   },
   setSearchValue: vi.fn(),
   setFilter: vi.fn(),

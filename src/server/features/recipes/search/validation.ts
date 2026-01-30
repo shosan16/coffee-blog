@@ -1,4 +1,4 @@
-import { RoastLevel, GrindSize } from '@prisma/client';
+import { RoastLevel } from '@prisma/client';
 import { z } from 'zod';
 
 // 検索クエリパラメータのバリデーションスキーマ
@@ -7,31 +7,9 @@ export const searchRecipesQuerySchema = z
     page: z.coerce.number().min(1).default(1),
     limit: z.coerce.number().min(1).max(100).default(20),
     roastLevel: z.array(z.nativeEnum(RoastLevel)).optional(),
-    grindSize: z.array(z.nativeEnum(GrindSize)).optional(),
     equipment: z.array(z.string()).optional(),
     equipmentType: z.array(z.string()).optional(),
     tags: z.array(z.string()).optional(),
-    beanWeight: z
-      .object({
-        min: z.number().optional(),
-        max: z.number().optional(),
-      })
-      .strict()
-      .optional(),
-    waterTemp: z
-      .object({
-        min: z.number().optional(),
-        max: z.number().optional(),
-      })
-      .strict()
-      .optional(),
-    waterAmount: z
-      .object({
-        min: z.number().optional(),
-        max: z.number().optional(),
-      })
-      .strict()
-      .optional(),
     search: z.string().optional(),
     sort: z.string().optional(),
     order: z.enum(['asc', 'desc']).optional(),

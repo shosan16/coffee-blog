@@ -1,8 +1,8 @@
 import type { NextResponse } from 'next/server';
 
-import type { RecipeListResponse } from '@/client/features/recipe-list/types/api';
 import { SearchRecipesController } from '@/server/features/recipes/search/controller';
 import type { ErrorResponse } from '@/server/shared/api-error';
+import type { RecipeListResponse } from '@/server/shared/schemas';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 60;

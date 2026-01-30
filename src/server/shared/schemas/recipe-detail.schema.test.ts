@@ -216,10 +216,6 @@ describe('RecipeDetailSchema', () => {
         summary: 'バランスの取れたV60レシピ',
         remarks: '蒸らし時間に注意',
         roastLevel: 'MEDIUM',
-        grindSize: 'MEDIUM',
-        beanWeight: 20,
-        waterTemp: 92,
-        waterAmount: 300,
         viewCount: 100,
         isPublished: true,
         publishedAt: '2024-01-01T00:00:00.000Z',
@@ -282,7 +278,6 @@ describe('RecipeDetailSchema', () => {
       if (result.success) {
         expect(result.data.summary).toBeUndefined();
         expect(result.data.barista).toBeUndefined();
-        expect(result.data.beanWeight).toBeUndefined();
       }
     });
   });

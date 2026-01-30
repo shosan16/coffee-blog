@@ -11,10 +11,6 @@ const createMockRecipe = (id: string, title: string): Recipe => ({
   summary: 'テスト用のレシピ説明文です。',
   equipment: ['V60', 'ペーパーフィルター'],
   roastLevel: 'MEDIUM',
-  grindSize: 'MEDIUM_FINE',
-  beanWeight: 20,
-  waterTemp: 92,
-  waterAmount: 300,
   tags: [{ id: '1', name: 'テスト', slug: 'test' }],
   baristaName: 'テスト投稿者',
 });

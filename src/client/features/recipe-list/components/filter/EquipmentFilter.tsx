@@ -7,17 +7,15 @@ import { useEquipment } from '@/client/shared/hooks/useEquipment';
 import Label from '@/client/shared/shadcn/label';
 import { formatEquipmentName } from '@/client/shared/utils/equipmentApi';
 
-// 表示対象の3種類のみ
+// 表示対象の2種類のみ（ペーパーフィルターはフィルタリング対象から除外）
 const EQUIPMENT_TYPES = [
   { id: 'grinder', label: 'コーヒーミル' },
   { id: 'dripper', label: 'ドリッパー' },
-  { id: 'filter', label: 'ペーパーフィルター' },
 ] as const;
 
 type EquipmentSelection = {
   grinder?: string;
   dripper?: string;
-  filter?: string;
 };
 
 type EquipmentFilterProps = {
@@ -48,14 +46,11 @@ function EquipmentFilter({
       // 各器具タイプのオプションをチェックして、どのタイプに属するかを判定
       const grinderItem = equipmentData.grinder.find((item) => item.name === equipmentName);
       const dripperItem = equipmentData.dripper.find((item) => item.name === equipmentName);
-      const filterItem = equipmentData.filter.find((item) => item.name === equipmentName);
 
       if (grinderItem) {
         selection.grinder = equipmentName;
       } else if (dripperItem) {
         selection.dripper = equipmentName;
-      } else if (filterItem) {
-        selection.filter = equipmentName;
       }
     });
 
@@ -97,7 +92,6 @@ function EquipmentFilter({
   if (equipmentLoading) {
     return (
       <div className={`space-y-6 ${className}`}>
-        <Label className="text-foreground text-sm font-medium">抽出器具</Label>
         <div className="text-muted-foreground text-sm">器具データを読み込み中...</div>
       </div>
     );
@@ -107,7 +101,6 @@ function EquipmentFilter({
   if (equipmentError) {
     return (
       <div className={`space-y-6 ${className}`}>
-        <Label className="text-foreground text-sm font-medium">抽出器具</Label>
         <div className="text-destructive text-sm">
           器具データの読み込みに失敗しました: {equipmentError}
         </div>
@@ -119,7 +112,6 @@ function EquipmentFilter({
   if (!equipmentData) {
     return (
       <div className={`space-y-6 ${className}`}>
-        <Label className="text-foreground text-sm font-medium">抽出器具</Label>
         <div className="text-muted-foreground text-sm">器具データが利用できません</div>
       </div>
     );
@@ -127,15 +119,13 @@ function EquipmentFilter({
 
   return (
     <div className={`space-y-6 ${className}`}>
-      <Label className="text-foreground text-sm font-medium">抽出器具</Label>
-
       {EQUIPMENT_TYPES.map((equipmentType) => {
         const selectedValue = equipmentSelection[equipmentType.id as keyof EquipmentSelection];
         const options = getEquipmentOptions(equipmentType.id as keyof EquipmentSelection);
 
         return (
           <div key={equipmentType.id} className="space-y-2">
-            <Label className="text-muted-foreground text-xs">{equipmentType.label}</Label>
+            <Label className="text-foreground text-sm font-medium">{equipmentType.label}</Label>
 
             <Combobox
               options={options}

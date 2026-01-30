@@ -61,8 +61,6 @@ export class SearchRecipesResponseMapper {
   /**
    * レシピエンティティから要約形式に変換
    *
-   * 数値系フィールドは未設定時に0を返却（UI表示の一貫性確保）。
-   *
    * @param recipe - レシピエンティティ
    * @param equipmentMap - 器具IDから器具エンティティへのマップ
    * @param tagMap - タグIDからタグエンティティへのマップ
@@ -87,10 +85,6 @@ export class SearchRecipesResponseMapper {
       summary: recipe.summary ?? '',
       equipment: equipmentNames,
       roastLevel: brewingConditions.roastLevel,
-      grindSize: brewingConditions.grindSize ?? undefined,
-      beanWeight: brewingConditions.beanWeight ?? 0,
-      waterTemp: brewingConditions.waterTemp ?? 0,
-      waterAmount: brewingConditions.waterAmount ?? 0,
       tags,
       baristaName: recipe.baristaName,
     };
@@ -184,10 +178,6 @@ type RecipeEntityForSearch = {
   readonly summary?: string;
   readonly brewingConditions: {
     readonly roastLevel: string;
-    readonly grindSize?: string;
-    readonly beanWeight?: number;
-    readonly waterTemp?: number;
-    readonly waterAmount?: number;
   };
   readonly equipmentIds: readonly string[];
   readonly tagIds: readonly string[];

@@ -259,9 +259,6 @@ describe('RecipeMapper', () => {
       const criteria = {
         searchTerm: 'コーヒー',
         roastLevel: [RoastLevel.MEDIUM, RoastLevel.DARK],
-        grindSize: [GrindSize.MEDIUM],
-        beanWeight: { min: 15, max: 25 },
-        waterTemp: { min: 80, max: 95 },
         equipmentNames: ['V60', 'Chemex'],
         tagIds: ['1'],
         baristaId: '1',
@@ -285,10 +282,6 @@ describe('RecipeMapper', () => {
       });
 
       expect(where.roastLevel).toEqual({ in: [RoastLevel.MEDIUM, RoastLevel.DARK] });
-      expect(where.grindSize).toEqual({ in: [GrindSize.MEDIUM] });
-
-      expect(where.beanWeight).toEqual({ gte: 15, lte: 25 });
-      expect(where.waterTemp).toEqual({ gte: 80, lte: 95 });
 
       expect(where.AND).toBeDefined();
       expect((where.AND as unknown[])[0]).toEqual({

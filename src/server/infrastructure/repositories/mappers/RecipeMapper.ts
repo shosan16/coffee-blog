@@ -6,7 +6,6 @@
 
 import type {
   RoastLevel,
-  GrindSize,
   Post,
   Step,
   Equipment,
@@ -113,10 +112,6 @@ export class RecipeMapper {
   static toWhereClause(criteria: {
     searchTerm?: string;
     roastLevel?: RoastLevel[];
-    grindSize?: GrindSize[];
-    beanWeight?: { min?: number; max?: number };
-    waterTemp?: { min?: number; max?: number };
-    waterAmount?: { min?: number; max?: number };
     equipmentNames?: string[];
     equipmentTypeNames?: string[];
     tagIds?: string[];
@@ -136,13 +131,6 @@ export class RecipeMapper {
     if (criteria.roastLevel?.length) {
       where.roastLevel = { in: criteria.roastLevel };
     }
-    if (criteria.grindSize?.length) {
-      where.grindSize = { in: criteria.grindSize };
-    }
-
-    this.addRangeFilter(where, 'beanWeight', criteria.beanWeight);
-    this.addRangeFilter(where, 'waterTemp', criteria.waterTemp);
-    this.addRangeFilter(where, 'waterAmount', criteria.waterAmount);
 
     const andConditions: Array<Record<string, unknown>> = [];
 
@@ -189,26 +177,6 @@ export class RecipeMapper {
     }
 
     return where;
-  }
-
-  /**
-   * 個別の範囲フィルターを追加
-   */
-  private static addRangeFilter(
-    where: Record<string, unknown>,
-    field: string,
-    range?: { min?: number; max?: number }
-  ): void {
-    if (range) {
-      const fieldValue: Record<string, unknown> = {};
-      if (range.min !== undefined) {
-        fieldValue.gte = range.min;
-      }
-      if (range.max !== undefined) {
-        fieldValue.lte = range.max;
-      }
-      where[field] = fieldValue;
-    }
   }
 
   /**

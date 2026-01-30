@@ -1,14 +1,14 @@
-import type { RoastLevel, GrindSize } from '@prisma/client';
+import type { RoastLevel } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
-import type { RecipeListResponse } from '@/client/features/recipe-list/types/api';
 import { SearchRecipesService } from '@/server/features/recipes/search/service';
 import type { SearchRecipesParams } from '@/server/features/recipes/search/types';
 import { searchRecipesQuerySchema } from '@/server/features/recipes/search/validation';
 import { ApiError, type ErrorResponse } from '@/server/shared/api-error';
 import { createRequestLogger, measurePerformance } from '@/server/shared/logger';
 import { RequestId } from '@/server/shared/request-id';
+import type { RecipeListResponse } from '@/server/shared/schemas';
 
 export class SearchRecipesController {
   private readonly searchRecipesService: SearchRecipesService;
@@ -102,12 +102,10 @@ export class SearchRecipesController {
       },
       arrayParams: {
         roastLevel: (level) => level as RoastLevel,
-        grindSize: (size) => size as GrindSize,
         equipment: (item) => item,
         equipmentType: (item) => item,
         tags: (item) => item,
       },
-      jsonParams: ['beanWeight', 'waterTemp', 'waterAmount'],
     });
   }
 
@@ -149,13 +147,9 @@ export class SearchRecipesController {
         page: validatedParams.page,
         limit: validatedParams.limit,
         roastLevel: validatedParams.roastLevel,
-        grindSize: validatedParams.grindSize,
         equipment: validatedParams.equipment,
         equipmentType: validatedParams.equipmentType,
         tags: validatedParams.tags,
-        beanWeight: validatedParams.beanWeight,
-        waterTemp: validatedParams.waterTemp,
-        waterAmount: validatedParams.waterAmount,
         search: validatedParams.search,
         sort: validatedParams.sort,
         order: validatedParams.order,

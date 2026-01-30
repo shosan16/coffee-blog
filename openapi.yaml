@@ -21,52 +21,9 @@ paths:
         - $ref: '#/components/parameters/LimitParam'
         - $ref: '#/components/parameters/SearchParam'
         - $ref: '#/components/parameters/RoastLevelParam'
-        - $ref: '#/components/parameters/GrindSizeParam'
         - $ref: '#/components/parameters/EquipmentParam'
         - $ref: '#/components/parameters/EquipmentTypeParam'
         - $ref: '#/components/parameters/TagsParam'
-        - name: beanWeightMin
-          in: query
-          description: 豆の重量最小値（グラム）
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-        - name: beanWeightMax
-          in: query
-          description: 豆の重量最大値（グラム）
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-        - name: waterTempMin
-          in: query
-          description: 湯温最小値（摂氏）
-          schema:
-            type: integer
-            minimum: 60
-            maximum: 100
-        - name: waterTempMax
-          in: query
-          description: 湯温最大値（摂氏）
-          schema:
-            type: integer
-            minimum: 60
-            maximum: 100
-        - name: waterAmountMin
-          in: query
-          description: 湯量最小値（グラム）
-          schema:
-            type: integer
-            minimum: 50
-            maximum: 1000
-        - name: waterAmountMax
-          in: query
-          description: 湯量最大値（グラム）
-          schema:
-            type: integer
-            minimum: 50
-            maximum: 1000
         - $ref: '#/components/parameters/SortParam'
         - $ref: '#/components/parameters/OrderParam'
       responses:
@@ -96,10 +53,6 @@ paths:
                         summary: 'フルーティーで華やかな酸味が特徴的なエチオピア産コーヒー'
                         equipment: ['V60', 'コーヒーミル', 'ペーパーフィルター']
                         roastLevel: 'LIGHT_MEDIUM'
-                        grindSize: 'MEDIUM_FINE'
-                        beanWeight: 20
-                        waterTemp: 92
-                        waterAmount: 300
                         remarks: '特に蒸らし時間に注意。豆の膨らみを見て判断する。'
                         createdAt: '2025-06-20T10:30:00Z'
                         updatedAt: '2025-06-20T10:30:00Z'
@@ -345,18 +298,6 @@ components:
         items:
           $ref: '#/components/schemas/RoastLevel'
 
-    GrindSizeParam:
-      name: grindSize
-      in: query
-      description: 挽き目のフィルタ（カンマ区切りで複数指定可能）
-      required: false
-      style: form
-      explode: false
-      schema:
-        type: array
-        items:
-          $ref: '#/components/schemas/GrindSize'
-
     EquipmentParam:
       name: equipment
       in: query
@@ -575,32 +516,6 @@ components:
           nullable: true
         roastLevel:
           $ref: '#/components/schemas/RoastLevel'
-        grindSize:
-          allOf:
-            - $ref: '#/components/schemas/GrindSize'
-          nullable: true
-          description: 豆の挽き目（nullの場合あり）
-        beanWeight:
-          type: integer
-          description: 豆の重量（グラム）
-          minimum: 1
-          maximum: 100
-          example: 20
-          nullable: true
-        waterTemp:
-          type: integer
-          description: 湯温（摂氏）
-          minimum: 60
-          maximum: 100
-          example: 92
-          nullable: true
-        waterAmount:
-          type: integer
-          description: 湯量（グラム）
-          minimum: 50
-          maximum: 1000
-          example: 300
-          nullable: true
         remarks:
           type: string
           description: 備考・コメント
@@ -665,32 +580,6 @@ components:
           nullable: true
         roastLevel:
           $ref: '#/components/schemas/RoastLevel'
-        grindSize:
-          allOf:
-            - $ref: '#/components/schemas/GrindSize'
-          nullable: true
-          description: 豆の挽き目（nullの場合あり）
-        beanWeight:
-          type: integer
-          description: 豆の重量（グラム）
-          minimum: 1
-          maximum: 100
-          example: 20
-          nullable: true
-        waterTemp:
-          type: integer
-          description: 湯温（摂氏）
-          minimum: 60
-          maximum: 100
-          example: 92
-          nullable: true
-        waterAmount:
-          type: integer
-          description: 湯量（グラム）
-          minimum: 50
-          maximum: 1000
-          example: 300
-          nullable: true
         remarks:
           type: string
           description: 備考・コメント
@@ -850,19 +739,6 @@ components:
         - FRENCH
       example: LIGHT_MEDIUM
 
-    GrindSize:
-      type: string
-      description: コーヒー豆の挽き目
-      enum:
-        - EXTRA_FINE
-        - FINE
-        - MEDIUM_FINE
-        - MEDIUM
-        - MEDIUM_COARSE
-        - COARSE
-        - EXTRA_COARSE
-      example: MEDIUM_FINE
-
     RecipeDetail:
       type: object
       description: レシピ詳細情報（バリスタ、手順、器具、タグを含む）
@@ -900,32 +776,6 @@ components:
           nullable: true
         roastLevel:
           $ref: '#/components/schemas/RoastLevel'
-        grindSize:
-          allOf:
-            - $ref: '#/components/schemas/GrindSize'
-          nullable: true
-          description: 豆の挽き目（nullの場合あり）
-        beanWeight:
-          type: integer
-          description: 豆の重量（グラム）
-          minimum: 1
-          maximum: 100
-          example: 20
-          nullable: true
-        waterTemp:
-          type: integer
-          description: 湯温（摂氏）
-          minimum: 60
-          maximum: 100
-          example: 92
-          nullable: true
-        waterAmount:
-          type: integer
-          description: 湯量（グラム）
-          minimum: 50
-          maximum: 1000
-          example: 300
-          nullable: true
         viewCount:
           type: integer
           description: ビュー数

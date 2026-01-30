@@ -8,7 +8,7 @@
  * 4. 検索結果の返却
  */
 
-import type { RoastLevel, GrindSize } from '@prisma/client';
+import type { RoastLevel } from '@prisma/client';
 
 import type {
   IRecipeRepository,
@@ -64,22 +64,9 @@ export type SearchRecipesInput = {
   readonly limit: number;
   readonly search?: string;
   readonly roastLevel?: RoastLevel[];
-  readonly grindSize?: GrindSize[];
   readonly equipment?: string[];
   readonly equipmentType?: string[];
   readonly tags?: string[];
-  readonly beanWeight?: {
-    readonly min?: number;
-    readonly max?: number;
-  };
-  readonly waterTemp?: {
-    readonly min?: number;
-    readonly max?: number;
-  };
-  readonly waterAmount?: {
-    readonly min?: number;
-    readonly max?: number;
-  };
   readonly sort?:
     | 'id'
     | 'title'
@@ -156,43 +143,6 @@ export class SearchRecipesUseCase {
         limit: input.limit,
       });
     }
-
-    // 数値範囲バリデーション
-    this.validateRangeFilter(input.beanWeight, '豆の重量');
-    this.validateRangeFilter(input.waterTemp, '水温');
-    this.validateRangeFilter(input.waterAmount, '水量');
-  }
-
-  /**
-   * 範囲フィルターのバリデーション
-   * DRY原則：共通のバリデーションロジック
-   */
-  private validateRangeFilter(
-    range: { min?: number; max?: number } | undefined,
-    fieldName: string
-  ): void {
-    if (!range) return;
-
-    if (range.min !== undefined && range.min < 0) {
-      throw SearchRecipesUseCaseError.invalidParams(
-        `${fieldName}の最小値は0以上である必要があります`,
-        { fieldName, min: range.min }
-      );
-    }
-
-    if (range.max !== undefined && range.max < 0) {
-      throw SearchRecipesUseCaseError.invalidParams(
-        `${fieldName}の最大値は0以上である必要があります`,
-        { fieldName, max: range.max }
-      );
-    }
-
-    if (range.min !== undefined && range.max !== undefined && range.min > range.max) {
-      throw SearchRecipesUseCaseError.invalidParams(
-        `${fieldName}の最小値は最大値以下である必要があります`,
-        { fieldName, min: range.min, max: range.max }
-      );
-    }
   }
 
   /**
@@ -205,13 +155,9 @@ export class SearchRecipesUseCase {
       limit: input.limit,
       searchTerm: input.search,
       roastLevel: input.roastLevel,
-      grindSize: input.grindSize,
       equipmentNames: input.equipment,
       equipmentTypeNames: input.equipmentType,
       tagIds: input.tags,
-      beanWeight: input.beanWeight,
-      waterTemp: input.waterTemp,
-      waterAmount: input.waterAmount,
       sortBy: input.sort,
       sortOrder: input.order,
     };

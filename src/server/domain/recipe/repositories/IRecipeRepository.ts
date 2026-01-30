@@ -1,4 +1,4 @@
-import type { RoastLevel, GrindSize } from '@prisma/client';
+import type { RoastLevel } from '@prisma/client';
 
 import type { Recipe } from '../entities/recipe';
 import type { RecipeId } from '../value-objects/RecipeId';
@@ -12,21 +12,6 @@ export type RecipeSearchCriteria = {
 
   // 基本フィルター
   readonly roastLevel?: RoastLevel[];
-  readonly grindSize?: GrindSize[];
-
-  // 範囲フィルター
-  readonly beanWeight?: {
-    readonly min?: number;
-    readonly max?: number;
-  };
-  readonly waterTemp?: {
-    readonly min?: number;
-    readonly max?: number;
-  };
-  readonly waterAmount?: {
-    readonly min?: number;
-    readonly max?: number;
-  };
 
   // 関連エンティティフィルター
   readonly equipmentIds?: string[];

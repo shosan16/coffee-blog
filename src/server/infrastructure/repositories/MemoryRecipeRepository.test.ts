@@ -1,4 +1,4 @@
-import { RoastLevel, GrindSize } from '@prisma/client';
+import { RoastLevel } from '@prisma/client';
 import { describe, it, expect, beforeEach } from 'vitest';
 
 import { Recipe, type RecipeStep } from '@/server/domain/recipe/entities/recipe';
@@ -34,10 +34,6 @@ describe('MemoryRecipeRepository', () => {
     const recipeId = RecipeId.fromString('1');
     const brewingConditions = BrewingConditions.create({
       roastLevel: RoastLevel.MEDIUM,
-      grindSize: GrindSize.MEDIUM,
-      beanWeight: 20,
-      waterAmount: 300,
-      waterTemp: 90,
     });
 
     const steps: RecipeStep[] = [
@@ -153,10 +149,6 @@ describe('MemoryRecipeRepository', () => {
         summary: 'エスプレッソの作り方',
         brewingConditions: BrewingConditions.create({
           roastLevel: RoastLevel.DARK,
-          grindSize: GrindSize.FINE,
-          beanWeight: 18,
-          waterAmount: 270,
-          waterTemp: 93,
         }),
         baristaId: '1',
         viewCount: 0,
@@ -175,10 +167,6 @@ describe('MemoryRecipeRepository', () => {
         summary: 'ハンドドリップの作り方',
         brewingConditions: BrewingConditions.create({
           roastLevel: RoastLevel.MEDIUM,
-          grindSize: GrindSize.MEDIUM,
-          beanWeight: 20,
-          waterAmount: 300,
-          waterTemp: 88,
         }),
         baristaId: '2',
         viewCount: 0,
@@ -242,22 +230,6 @@ describe('MemoryRecipeRepository', () => {
       // Assert - 検索結果を確認
       expect(result.recipes).toHaveLength(1);
       expect(result.recipes[0].brewingConditions.roastLevel).toBe(RoastLevel.DARK);
-    });
-
-    it('範囲フィルターが正しく動作すること', async () => {
-      // Arrange - 豆の重量範囲フィルターを準備
-      const criteria: RecipeSearchCriteria = {
-        beanWeight: { min: 15, max: 19 },
-        page: 1,
-        limit: 10,
-      };
-
-      // Act - 検索を実行
-      const result = await repository.search(criteria);
-
-      // Assert - 検索結果を確認
-      expect(result.recipes).toHaveLength(1);
-      expect(result.recipes[0].brewingConditions.beanWeight).toBe(18);
     });
 
     it('バリスタフィルターが正しく動作すること', async () => {

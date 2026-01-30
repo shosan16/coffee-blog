@@ -48,34 +48,6 @@ function RecipeFilter({ className = '' }: RecipeFilterProps): React.JSX.Element 
     [setFilter]
   );
 
-  const handleGrindSizeChange = useCallback(
-    (sizes: string[]): void => {
-      setFilter('grindSize', sizes);
-    },
-    [setFilter]
-  );
-
-  const handleBeanWeightChange = useCallback(
-    (range: { min?: number; max?: number }): void => {
-      setFilter('beanWeight', range);
-    },
-    [setFilter]
-  );
-
-  const handleWaterTempChange = useCallback(
-    (range: { min?: number; max?: number }): void => {
-      setFilter('waterTemp', range);
-    },
-    [setFilter]
-  );
-
-  const handleWaterAmountChange = useCallback(
-    (range: { min?: number; max?: number }): void => {
-      setFilter('waterAmount', range);
-    },
-    [setFilter]
-  );
-
   return (
     <div className={className}>
       {/* フィルター開閉ボタン（モバイル用） */}
@@ -114,24 +86,16 @@ function RecipeFilter({ className = '' }: RecipeFilterProps): React.JSX.Element 
               </div>
             )}
 
+            {/* 焙煎度フィルター */}
+            <ConditionFilter
+              roastLevels={pendingFilters.roastLevel ?? []}
+              onRoastLevelChange={handleRoastLevelChange}
+            />
+
             {/* 器具フィルター */}
             <EquipmentFilter
               selectedEquipment={pendingFilters.equipment ?? []}
               onChange={handleEquipmentChange}
-            />
-
-            {/* 抽出条件フィルター */}
-            <ConditionFilter
-              roastLevels={pendingFilters.roastLevel ?? []}
-              grindSizes={pendingFilters.grindSize ?? []}
-              beanWeight={pendingFilters.beanWeight ?? {}}
-              waterTemp={pendingFilters.waterTemp ?? {}}
-              waterAmount={pendingFilters.waterAmount ?? {}}
-              onRoastLevelChange={handleRoastLevelChange}
-              onGrindSizeChange={handleGrindSizeChange}
-              onBeanWeightChange={handleBeanWeightChange}
-              onWaterTempChange={handleWaterTempChange}
-              onWaterAmountChange={handleWaterAmountChange}
             />
 
             {/* 絞り込みボタン */}

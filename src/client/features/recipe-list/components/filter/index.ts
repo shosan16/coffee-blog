@@ -2,5 +2,4 @@ export { default as ActiveFilters } from '@/client/features/recipe-list/componen
 export { default as ConditionFilter } from '@/client/features/recipe-list/components/filter/ConditionFilter';
 export { default as EquipmentFilter } from '@/client/features/recipe-list/components/filter/EquipmentFilter';
 export { getFilterTagStyle } from '@/client/features/recipe-list/components/filter/filterTagStyles';
-export { default as RangeSlider } from '@/client/features/recipe-list/components/filter/RangeSlider';
 export { default as RecipeFilter } from '@/client/features/recipe-list/components/filter/RecipeFilter';

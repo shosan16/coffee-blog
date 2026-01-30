@@ -1,4 +1,4 @@
-import type { RoastLevel, GrindSize } from '@prisma/client';
+import type { RoastLevel } from '@prisma/client';
 import type { ReadonlyURLSearchParams } from 'next/navigation';
 
 import type { RecipeFilters } from '@/client/features/recipe-list/types/api';
@@ -69,14 +69,10 @@ function parseEnumParams(searchParams: ReadonlyURLSearchParams): Pick<RecipeFilt
  */
 function parseArrayParams(
   searchParams: ReadonlyURLSearchParams
-): Pick<RecipeFilters, 'roastLevel' | 'grindSize' | 'equipment' | 'equipmentType' | 'tags'> {
-  const result: Pick<
-    RecipeFilters,
-    'roastLevel' | 'grindSize' | 'equipment' | 'equipmentType' | 'tags'
-  > = {};
+): Pick<RecipeFilters, 'roastLevel' | 'equipment' | 'equipmentType' | 'tags'> {
+  const result: Pick<RecipeFilters, 'roastLevel' | 'equipment' | 'equipmentType' | 'tags'> = {};
   const arrayParams = {
     roastLevel: (level: string): RoastLevel => level as RoastLevel,
-    grindSize: (size: string): GrindSize => size as GrindSize,
     equipment: (item: string): string => item,
     equipmentType: (item: string): string => item,
     tags: (item: string): string => item,
@@ -87,29 +83,6 @@ function parseArrayParams(
     if (!value) continue;
 
     (result as Record<string, unknown>)[param] = value.split(',').map(converter);
-  }
-
-  return result;
-}
-
-/**
- * JSON形式のパラメータの解析
- */
-function parseJsonParams(
-  searchParams: ReadonlyURLSearchParams
-): Pick<RecipeFilters, 'beanWeight' | 'waterTemp' | 'waterAmount'> {
-  const result: Pick<RecipeFilters, 'beanWeight' | 'waterTemp' | 'waterAmount'> = {};
-  const jsonParams = ['beanWeight', 'waterTemp', 'waterAmount'] as const;
-
-  for (const param of jsonParams) {
-    const value = searchParams.get(param);
-    if (!value) continue;
-
-    try {
-      result[param] = JSON.parse(value);
-    } catch {
-      // JSON解析エラーの場合は無視
-    }
   }
 
   return result;
@@ -130,6 +103,5 @@ export function parseFiltersFromSearchParams(
     ...parseNumberParams(searchParams),
     ...parseEnumParams(searchParams),
     ...parseArrayParams(searchParams),
-    ...parseJsonParams(searchParams),
   };
 }
